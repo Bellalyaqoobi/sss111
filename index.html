@@ -1,267 +1,1208 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Life Improvement - پلتفرم بهبود سبک زندگی</title>
-    <link rel="stylesheet" href="style.css">
+    <title>آکادمی نخبگان ستاری | مرکز آموزشهای تخصصی</title>
+    <meta name="description" content="آکادمی نخبگان ستاری - مرکز تخصصی آموزشهای حرفهای در کاپیسا افغانستان با اساتید مجرب و دوره های متنوع">
+    
+    <!-- فونت‌های جایگزین مطمئن -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- ساختار داده‌های ساختاریافته برای SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "EducationalOrganization",
+        "name": "آکادمی نخبگان ستاری",
+        "description": "مرکز تخصصی آموزشهای حرفهای در کاپیسا افغانستان",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "کاپیسا",
+            "addressCountry": "افغانستان"
+        },
+        "telephone": "0792371380",
+        "url": "https://setare-academy.af",
+        "sameAs": [
+            "https://t.me/kapisa_2",
+            "https://www.instagram.com/kapisa_2",
+            "https://youtube.com/@kapisagroup_2"
+        ]
+    }
+    </script>
+    
 </head>
 <body>
-    <!-- هدر و ناوبری -->
-    <header>
-        <div class="container">
-            <nav>
-                <div class="logo">
-                    <i class="fas fa-heartbeat"></i>
-                    Life Improvement
+    <!-- دکمه ورود به بخش مدیریت -->
+    <button class="admin-login-btn" id="adminLoginBtn" aria-label="ورود به بخش مدیریت">
+        <i class="fas fa-user-shield"></i>
+    </button>
+
+    <!-- مودال ورود ادمین -->
+    <div class="admin-modal" id="adminLoginModal">
+        <div class="admin-modal-content">
+            <h3 class="admin-modal-title">ورود به بخش مدیریت</h3>
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label for="adminEmail">ایمیل</label>
+                    <input type="email" id="adminEmail" required>
                 </div>
-                <ul class="nav-links">
-                    <li><a href="#home">خانه</a></li>
-                    <li><a href="#features">ویژگی‌ها</a></li>
-                    <li><a href="#life">بهبود زندگی</a></li>
-                    <li><a href="#management">مدیریت Life</a></li>
-                </ul>
-                <div class="auth-buttons">
-                    <button class="gmail-btn" id="gmailSignup">
-                        <i class="fab fa-google"></i> ورود با Gmail
-                    </button>
+                <div class="form-group">
+                    <label for="adminPassword">رمز عبور</label>
+                    <input type="password" id="adminPassword" required>
                 </div>
-            </nav>
+                <button type="submit" class="submit-btn">ورود به سیستم</button>
+            </form>
+            <div id="adminLoginMessage" style="color: #e74c3c; text-align: center; margin-top: 15px;"></div>
         </div>
-    </header>
+    </div>
 
-    <!-- صفحه اصلی (قبل از ورود) -->
-    <div id="mainPage">
-        <!-- بخش هیرو -->
-        <section class="hero" id="home">
-            <div class="container">
-                <h1>سفر خود را به سوی زندگی بهتر آغاز کنید</h1>
-                <p>پلتفرم ما به شما کمک می‌کند تا عادات سالم ایجاد کنید، اهداف خود را تعیین کرده و زندگی متعادل‌تری داشته باشید.</p>
-                <a href="#gmail-auth" class="cta-button">همین حالا شروع کنید</a>
-            </div>
-        </section>
-
-        <!-- بخش ویژگی‌ها -->
-        <section class="features" id="features">
-            <div class="container">
-                <h2 class="section-title">ویژگی‌های پلتفرم</h2>
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">🎯</div>
-                        <h3>هدف‌گذاری هوشمند</h3>
-                        <p>اهداف خود را به صورت مرحله‌ای تعیین کرده و پیشرفت خود را پیگیری کنید.</p>
+    <!-- داشبورد مدیریت -->
+    <div class="admin-dashboard" id="adminDashboard">
+        <div class="admin-header">
+            <h1>داشبورد مدیریت آکادمی نخبگان ستاری</h1>
+            <button class="admin-logout" id="adminLogout">خروج از سیستم</button>
+        </div>
+        
+        <div class="admin-nav">
+            <ul>
+                <li><a href="#dashboard" class="admin-nav-link active" data-section="dashboard">داشبورد</a></li>
+                <li><a href="#courses" class="admin-nav-link" data-section="courses">مدیریت دوره ها</a></li>
+                <li><a href="#students" class="admin-nav-link" data-section="students">مدیریت دانشجویان</a></li>
+                <li><a href="#sections" class="admin-nav-link" data-section="sections">مدیریت بخشها</a></li>
+                <li><a href="#announcements" class="admin-nav-link" data-section="announcements">مدیریت اعلانها</a></li>
+                <li><a href="#gallery" class="admin-nav-link" data-section="gallery">گالری آموزشی</a></li>
+                <li><a href="#blog" class="admin-nav-link" data-section="blog">مدیریت وبلاگ</a></li>
+                <li><a href="#videos" class="admin-nav-link" data-section="videos">مدیریت ویدیوها</a></li>
+                <li><a href="#downloads" class="admin-nav-link" data-section="downloads">مدیریت منابع</a></li>
+                <li><a href="#quizzes" class="admin-nav-link" data-section="quizzes">مدیریت آزمونها</a></li>
+                <li><a href="#forum" class="admin-nav-link" data-section="forum">مدیریت انجمن</a></li>
+                <li><a href="#admins" class="admin-nav-link" data-section="admins">مدیریت ادمینها</a></li>
+                <li><a href="#settings" class="admin-nav-link" data-section="settings">تنظیمات</a></li>
+            </ul>
+        </div>
+        
+        <div class="admin-content">
+            <!-- بخش داشبورد -->
+            <div class="admin-section active" id="dashboard-section">
+                <h2>داشبورد مدیریت</h2>
+                <div class="admin-stats">
+                    <div class="stat-card">
+                        <div class="stat-label">تعداد دوره ها</div>
+                        <div class="stat-number" id="totalCourses">0</div>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">📊</div>
-                        <h3>پیگیری عادات</h3>
-                        <p>عادت‌های روزانه خود را ثبت کرده و نمودار پیشرفت خود را مشاهده کنید.</p>
+                    <div class="stat-card">
+                        <div class="stat-label">تعداد دانشجویان</div>
+                        <div class="stat-number" id="totalStudents">0</div>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">📚</div>
-                        <h3>منابع آموزشی</h3>
-                        <p>به مجموعه‌ای از مقالات، ویدئوها و دوره‌های آموزشی دسترسی داشته باشید.</p>
+                    <div class="stat-card">
+                        <div class="stat-label">دوره های فعال</div>
+                        <div class="stat-number" id="activeCourses">0</div>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">👥</div>
-                        <h3>جامعه حمایتی</h3>
-                        <p>با افراد هم‌فکر ارتباط برقرار کرده و از تجربیات آن‌ها بهره‌مند شوید.</p>
+                    <div class="stat-card">
+                        <div class="stat-label">ثبتنامهای امروز</div>
+                        <div class="stat-number" id="todayRegistrations">0</div>
+                    </div>
+                </div>
+                
+                <div class="admin-card">
+                    <h3>آخرین ثبتنامها</h3>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>نام دانشجو</th>
+                                    <th>دوره</th>
+                                    <th>تاریخ ثبتنام</th>
+                                    <th>وضعیت</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentRegistrations">
+                                <!-- دادهها از طریق جاوااسکریپت پر میشوند -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-        </section>
-
-        <!-- بخش ثبت‌نام با Gmail -->
-        <section class="gmail-auth" id="gmail-auth">
-            <div class="container">
-                <h2 class="section-title">ثبت‌نام با حساب Gmail</h2>
-                <div class="auth-container">
-                    <div class="auth-content">
-                        <h3>سیستم بهبود زندگی با کنترل کامل رسانه</h3>
-                        <p>پس از ورود، دسترسی کامل به دوربین، میکروفون و اسپیکر برای تجربه‌ای غنی از Life Improvement فعال خواهد شد.</p>
-                        
-                        <div class="auth-steps">
-                            <div class="auth-step">
-                                <div class="step-number">1</div>
-                                <p>ورود امن با حساب Gmail</p>
+            
+            <!-- بخش مدیریت دورهها -->
+            <div class="admin-section" id="courses-section">
+                <h2>مدیریت دوره ها</h2>
+                <button class="btn-add" id="addCourseBtn">افزودن دوره جدید</button>
+                
+                <div class="admin-card">
+                    <h3>لیست دوره ها</h3>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>نام دوره</th>
+                                    <th>مدت زمان</th>
+                                    <th>ظرفیت</th>
+                                    <th>ثبتنام شده</th>
+                                    <th>وضعیت</th>
+                                    <th>عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="coursesList">
+                                <!-- دادهها از طریق جاوااسکریپت پر میشوند -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="admin-form" id="courseForm" style="display: none;">
+                    <h3 id="courseFormTitle">افزودن دوره جدید</h3>
+                    <form id="courseEditForm">
+                        <input type="hidden" id="editCourseId">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="courseName">نام دوره</label>
+                                <input type="text" id="courseName" required>
                             </div>
-                            <div class="auth-step">
-                                <div class="step-number">2</div>
-                                <p>اعطای دسترسی به دوربین و میکروفون</p>
-                            </div>
-                            <div class="auth-step">
-                                <div class="step-number">3</div>
-                                <p>کنترل کامل رسانه در داشبورد</p>
-                            </div>
-                            <div class="auth-step">
-                                <div class="step-number">4</div>
-                                <p>گزارش خودکار به تلگرام از فعالیت‌ها</p>
+                            <div class="form-group">
+                                <label for="courseDuration">مدت زمان (ماه)</label>
+                                <input type="number" id="courseDuration" required>
                             </div>
                         </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="courseCapacity">ظرفیت</label>
+                                <input type="number" id="courseCapacity" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="courseStatus">وضعیت</label>
+                                <select id="courseStatus">
+                                    <option value="active">فعال</option>
+                                    <option value="inactive">غیرفعال</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="courseDescription">توضیحات</label>
+                            <textarea id="courseDescription" rows="3"></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-edit">ذخیره</button>
+                            <button type="button" class="btn-delete" id="cancelCourseEdit">لغو</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- بخش مدیریت دانشجویان -->
+            <div class="admin-section" id="students-section">
+                <h2>مدیریت دانشجویان</h2>
+                
+                <div class="admin-card">
+                    <h3>لیست دانشجویان</h3>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>نام دانشجو</th>
+                                    <th>ایمیل</th>
+                                    <th>دوره های ثبتنام شده</th>
+                                    <th>تاریخ عضویت</th>
+                                    <th>عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentsList">
+                                <!-- دادهها از طریق جاوااسکریپت پر میشوند -->
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="auth-image">
-                        <div class="gmail-form">
-                            <h3>ورود / ثبت‌نام با Gmail</h3>
-                            <p>برای استفاده از تمامی امکانات پلتفرم، لطفاً با حساب Gmail خود وارد شوید.</p>
-                            
-                            <button class="gmail-login-btn" id="gmailLogin">
-                                <i class="fab fa-google"></i> ادامه با Gmail
-                            </button>
+                </div>
+            </div>
+            
+            <!-- بخش جدید: مدیریت بخشها -->
+            <div class="admin-section" id="sections-section">
+                <h2>مدیریت بخشهای سایت</h2>
+                <p>در این بخش میتوانید بخشهای مختلف سایت را فعال یا غیرفعال کنید و ترتیب نمایش آنها را تغییر دهید.</p>
+                
+                <div class="section-management">
+                    <div class="section-list" id="sectionsList">
+                        <!-- بخشها از طریق جاوااسکریپت اضافه خواهند شد -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- بخش جدید: مدیریت اعلانها -->
+            <div class="admin-section" id="announcements-section">
+                <h2>مدیریت اعلانها</h2>
+                <button class="btn-add" id="addAnnouncementBtn">افزودن اعلان جدید</button>
+                
+                <div class="announcement-management">
+                    <div class="announcement-list" id="announcementsList">
+                        <!-- اعلانها از طریق جاوااسکریپت اضافه خواهند شد -->
+                    </div>
+                </div>
+                
+                <div class="admin-form" id="announcementForm" style="display: none;">
+                    <h3 id="announcementFormTitle">افزودن اعلان جدید</h3>
+                    <form id="announcementEditForm">
+                        <input type="hidden" id="editAnnouncementId">
+                        <div class="form-group">
+                            <label for="announcementTitle">عنوان اعلان</label>
+                            <input type="text" id="announcementTitle" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="announcementContent">متن اعلان</label>
+                            <textarea id="announcementContent" rows="4" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="announcementPriority">اولویت نمایش</label>
+                            <select id="announcementPriority">
+                                <option value="low">کم</option>
+                                <option value="medium">متوسط</option>
+                                <option value="high">بالا</option>
+                            </select>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-edit">ذخیره</button>
+                            <button type="button" class="btn-delete" id="cancelAnnouncementEdit">لغو</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- بخش جدید: گالری آموزشی -->
+            <div class="admin-section" id="gallery-section">
+                <h2>مدیریت گالری آموزشی</h2>
+                <button class="btn-add" id="addGalleryItemBtn">افزودن عکس جدید</button>
+                
+                <div class="gallery-management">
+                    <div class="admin-card">
+                        <h3>آپلود عکس جدید</h3>
+                        <form id="galleryUploadForm">
+                            <div class="upload-area" id="uploadArea" tabindex="0">
+                                <div class="upload-icon">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                </div>
+                                <p>برای آپلود عکس، اینجا کلیک کنید یا عکس را بکشید و رها کنید</p>
+                                <input type="file" id="galleryImage" accept="image/*" style="display: none;">
+                                <img id="imagePreview" class="image-preview" alt="پیشنمایش عکس">
+                            </div>
                             
                             <div class="form-group">
-                                <label for="email">آدرس ایمیل (برای تست)</label>
-                                <input type="email" id="email" placeholder="example@gmail.com">
+                                <label for="galleryTitle">عنوان عکس</label>
+                                <input type="text" id="galleryTitle" required>
                             </div>
-                            <button class="submit-btn" id="manualLogin">ورود با ایمیل</button>
+                            
+                            <div class="form-group">
+                                <label for="galleryDescription">توضیحات عکس</label>
+                                <textarea id="galleryDescription" rows="3"></textarea>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="btn-edit">آپلود عکس</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <div class="admin-card">
+                        <h3>عکسهای گالری</h3>
+                        <div class="gallery-grid" id="galleryGrid">
+                            <!-- عکسها از طریق جاوااسکریپت اضافه خواهند شد -->
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
+            
+            <!-- بخش مدیریت ادمینها -->
+            <div class="admin-section" id="admins-section">
+                <h2>مدیریت ادمینها</h2>
+                <button class="btn-add" id="addAdminBtn">افزودن ادمین جدید</button>
+                
+                <div class="admin-card">
+                    <h3>لیست ادمینها</h3>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>نام</th>
+                                    <th>ایمیل</th>
+                                    <th>سطح دسترسی</th>
+                                    <th>تاریخ ایجاد</th>
+                                    <th>عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminsList">
+                                <!-- دادهها از طریق جاوااسکریپت پر میشوند -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="admin-form" id="adminForm" style="display: none;">
+                    <h3 id="adminFormTitle">افزودن ادمین جدید</h3>
+                    <form id="adminEditForm">
+                        <input type="hidden" id="editAdminId">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="adminName">نام کامل</label>
+                                <input type="text" id="adminName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="adminEmail">ایمیل</label>
+                                <input type="email" id="adminEmail" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="adminPassword">رمز عبور</label>
+                                <input type="password" id="adminPassword" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="adminRole">سطح دسترسی</label>
+                                <select id="adminRole">
+                                    <option value="super">سوپر ادمین</option>
+                                    <option value="admin">ادمین</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-edit">ذخیره</button>
+                            <button type="button" class="btn-delete" id="cancelAdminEdit">لغو</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- بخش تنظیمات -->
+            <div class="admin-section" id="settings-section">
+                <h2>تنظیمات سیستم</h2>
+                
+                <div class="admin-card">
+                    <h3>تنظیمات عمومی</h3>
+                    <form id="generalSettings">
+                        <div class="form-group">
+                            <label for="siteTitle">عنوان سایت</label>
+                            <input type="text" id="siteTitle" value="آکادمی نخبگان ستاری">
+                        </div>
+                        <div class="form-group">
+                            <label for="siteDescription">توضیحات سایت</label>
+                            <textarea id="siteDescription" rows="3">مرکز تخصصی آموزشهای حرفهای در کاپیسا افغانستان</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactPhone">شماره تماس</label>
+                            <input type="text" id="contactPhone" value="0792371380">
+                        </div>
+                        <div class="form-group">
+                            <label for="contactEmail">ایمیل تماس</label>
+                            <input type="email" id="contactEmail" value="info@setare-academy.af">
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-edit">ذخیره تنظیمات</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="admin-card">
+                    <h3>پشتیبانگیری و بازیابی</h3>
+                    <div class="form-actions">
+                        <button class="btn-edit" id="backupData">پشتیبانگیری از دادهها</button>
+                        <button class="btn-delete" id="restoreData">بازیابی دادهها</button>
+                    </div>
+                    <div class="form-group" style="margin-top: 15px;">
+                        <label for="backupFile">فایل پشتیبان</label>
+                        <input type="file" id="backupFile" accept=".json">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- صفحه داشبورد (پس از ورود) -->
-    <div class="dashboard container" id="dashboardPage">
-        <div class="dashboard-header">
-            <div class="user-info">
-                <div class="user-avatar" id="userAvatar">
-                    <i class="fas fa-user"></i>
-                </div>
-                <div>
-                    <h3 id="userName">کاربر مهمان</h3>
-                    <p id="userEmail">user@example.com</p>
-                </div>
+    <!-- بقیه کدهای HTML اصلی -->
+    <header id="header">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-graduation-cap"></i>
             </div>
-            <div class="media-controls">
-                <button class="control-btn camera-btn" id="startCamera">
-                    <i class="fas fa-video"></i> شروع دوربین
-                </button>
-                <button class="control-btn stop-btn" id="stopCamera" disabled>
-                    <i class="fas fa-video-slash"></i> توقف دوربین
-                </button>
-                <button class="control-btn mic-btn" id="startMic">
-                    <i class="fas fa-microphone"></i> شروع میکروفون
-                </button>
-                <button class="control-btn stop-btn" id="stopMic" disabled>
-                    <i class="fas fa-microphone-slash"></i> توقف میکروفون
-                </button>
-                <button class="control-btn screen-btn" id="startScreen">
-                    <i class="fas fa-desktop"></i> اشتراک‌گذاری صفحه
-                </button>
-                <button class="control-btn stop-btn" id="stopScreen" disabled>
-                    <i class="fas fa-stop-circle"></i> توقف اشتراک
-                </button>
+            <div>
+                <h1>آکادمی نخبگان ستاری</h1>
+                <span>کاپیسا، افغانستان</span>
             </div>
         </div>
+        <nav>
+            <ul>
+                <li><a href="#">خانه</a></li>
+                <li><a href="#courses">دوره ها</a></li>
+                <li><a href="#online-courses">ظرفیت آنلاین</a></li>
+                <li><a href="#blog">مقالات</a></li>
+                <li><a href="#videos">ویدیوها</a></li>
+                <li><a href="#downloads">منابع</a></li>
+                <li><a href="#forum">انجمن</a></li>
+                <li><a href="#instructors">اساتید</a></li>
+                <li><a href="#students">شاگردان ممتاز</a></li>
+                <li><a href="#registration">ثبت نام</a></li>
+                <li><a href="#dashboard">داشبورد</a></li>
+            </ul>
+        </nav>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="منوی موبایل">
+            <i class="fas fa-bars"></i>
+        </button>
+    </header>
 
-        <div class="media-container">
-            <div class="video-panel">
-                <video id="localVideo" autoplay muted></video>
-                <div class="video-overlay">دوربین شما</div>
-                <div class="status-indicator status-inactive" id="cameraStatus"></div>
+    <main>
+        <section class="hero">
+            <div class="pattern-dots"></div>
+            <div class="hero-content">
+                <h2>پرورش استعدادهای درخشان در آکادمی نخبگان ستاری</h2>
+                <p>مرکز تخصصی آموزشهای حرفهای در کاپیسا افغانستان با بهرهگیری از اساتید مجرب و برجسته کشور</p>
+                <div class="location-badge">
+                    <i class="fas fa-map-marker-alt"></i> کاپیسا، افغانستان
+                </div>
+                <div style="margin-top: 30px;">
+                    <a href="#registration" class="btn">ثبت نام در دوره ها</a>
+                    <a href="https://wa.me/93792371380" class="btn btn-whatsapp" style="margin-right: 15px;">
+                        <i class="fab fa-whatsapp"></i> ارتباط در واتساپ
+                    </a>
+                </div>
             </div>
-            <div class="video-panel">
-                <video id="screenShare" autoplay></video>
-                <div class="video-overlay">اشتراک‌گذاری صفحه</div>
-                <div class="status-indicator status-inactive" id="screenStatus"></div>
+            
+            <div class="floating-elements">
+                <div class="floating-element" style="width: 60px; height: 60px; top: 20%; right: 20%;"></div>
+                <div class="floating-element" style="width: 80px; height: 80px; top: 50%; right: 60%;"></div>
+                <div class="floating-element" style="width: 40px; height: 40px; top: 70%; right: 30%;"></div>
+                <div class="floating-element" style="width: 70px; height: 70px; top: 30%; right: 70%;"></div>
             </div>
-        </div>
+        </section>
 
-        <!-- بخش مدیریت Life -->
-        <section class="life-management" id="management">
+        <!-- بخش جستجو -->
+        <section class="search-section">
             <div class="container">
-                <h2 class="section-title">مدیریت Life Improvement</h2>
-                <div class="management-container">
-                    <div class="management-sidebar">
-                        <h3>Lifeهای شما</h3>
-                        <div class="action-buttons">
-                            <button class="action-btn create-btn" id="createLifeBtn">ایجاد Life جدید</button>
-                            <button class="action-btn join-btn" id="joinLifeBtn">پیوستن به Life</button>
-                            <button class="action-btn report-btn" id="telegramReportBtn">ارسال گزارش به تلگرام</button>
-                        </div>
-                        <ul class="life-list" id="lifeList">
-                            <li>در حال بارگذاری...</li>
-                        </ul>
+                <div class="search-container">
+                    <div class="search-box">
+                        <input type="text" class="search-input" placeholder="جستجو در دوره ها، مقالات و منابع...">
+                        <button class="search-button"><i class="fas fa-search"></i></button>
                     </div>
-                    <div class="management-content">
-                        <h3 id="selectedLifeTitle">یک Life را انتخاب کنید</h3>
-                        <div id="lifeDetails">
-                            <p>برای مشاهده جزئیات و مدیریت اعضا، یک Life از لیست سمت راست انتخاب کنید.</p>
+                    <div class="search-filters">
+                        <button class="search-filter active">همه</button>
+                        <button class="search-filter">دوره ها</button>
+                        <button class="search-filter">مقالات</button>
+                        <button class="search-filter">ویدیوها</button>
+                        <button class="search-filter">منابع</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="courses">
+            <div class="container">
+                <div class="section-title">
+                    <h2>دوره‌های تخصصی</h2>
+                    <p>برترین دوره‌های آموزشی با استانداردهای بین‌المللی و اساتید مجرب</p>
+                </div>
+                
+                <div class="courses-grid">
+                    <div class="course-card">
+                        <div class="course-icon">
+                            <i class="fas fa-microphone"></i>
                         </div>
-                        
-                        <!-- لینک Life -->
-                        <div class="life-link-container" id="lifeLinkContainer" style="display: none;">
-                            <h4>لینک دعوت به Life</h4>
-                            <p>این لینک را با دیگران به اشتراک بگذارید تا بتوانند به Life شما بپیوندند:</p>
-                            <div class="life-link">
-                                <input type="text" id="lifeLinkInput" readonly>
-                                <button class="copy-btn" id="copyLifeLink">کپی</button>
+                        <div class="course-content">
+                            <h3>خبرنگاری شش ماهه</h3>
+                            <p>دوره فشرده خبرنگاری حرفه‌ای با تمرکز بر اصول روزنامه‌نگاری مدرن و گزارش‌نویسی</p>
+                            <span class="course-duration">۶ ماه</span>
+                            <a href="#registration" class="btn">ثبت نام</a>
+                        </div>
+                    </div>
+                    
+                    <div class="course-card">
+                        <div class="course-icon">
+                            <i class="fas fa-comment-dots"></i>
+                        </div>
+                        <div class="course-content">
+                            <h3>فن بیان</h3>
+                            <p>آموزش تکنیک‌های حرفه‌ای سخنوری، کنترل صدا و اعتماد به نفس در صحبت کردن</p>
+                            <span class="course-duration">۳ ماه</span>
+                            <a href="#registration" class="btn">ثبت نام</a>
+                        </div>
+                    </div>
+                    
+                    <div class="course-card">
+                        <div class="course-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="course-content">
+                            <h3>روان‌شناسی تاریک</h3>
+                            <p>آشنایی با جنبه‌های پیچیده روانشناسی و تاثیر آن بر روابط اجتماعی و فردی</p>
+                            <span class="course-duration">۴ ماه</span>
+                            <a href="#registration" class="btn">ثبت نام</a>
+                        </div>
+                    </div>
+                    
+                    <div class="course-card">
+                        <div class="course-icon">
+                            <i class="fas fa-newspaper"></i>
+                        </div>
+                        <div class="course-content">
+                            <h3>ژورنالیسم حرفه‌ای</h3>
+                            <p>آموزش اصول پیشرفته روزنامه‌نگاری، تحقیق و تولید محتوای حرفه‌ای</p>
+                            <span class="course-duration">۵ ماه</span>
+                            <a href="#registration" class="btn">ثبت نام</a>
+                        </div>
+                    </div>
+                    
+                    <div class="course-card">
+                        <div class="course-icon">
+                            <i class="fas fa-volume-up"></i>
+                        </div>
+                        <div class="course-content">
+                            <h3>صدا سازی</h3>
+                            <p>تمرینات تخصصی برای تقویت صدا، کنترل تنفس و بهبود کیفیت vocal</p>
+                            <span class="course-duration">۲ ماه</span>
+                            <a href="#registration" class="btn">ثبت نام</a>
+                        </div>
+                    </div>
+                    
+                    <div class="course-card">
+                        <div class="course-icon">
+                            <i class="fas fa-theater-masks"></i>
+                        </div>
+                        <div class="course-content">
+                            <h3>دکلمه</h3>
+                            <p>آموزش هنر دکلمه و بیان شعر و نثر با تکنیک‌های حرفه‌ای</p>
+                            <span class="course-duration">۳ ماه</span>
+                            <a href="#registration" class="btn">ثبت نام</a>
+                        </div>
+                    </div>
+                    
+                    <div class="course-card">
+                        <div class="course-icon">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <div class="course-content">
+                            <h3>ارتباطات</h3>
+                            <p>تقویت مهارت‌های ارتباطی و فراگیری اصول مذاکره و تعامل موثر</p>
+                            <span class="course-duration">۳ ماه</span>
+                            <a href="#registration" class="btn">ثبت نام</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- بخش جدید: ظرفیت درس آنلاین -->
+        <section id="online-courses" class="online-courses-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>ظرفیت درس آنلاین</h2>
+                    <p>ثبت‌نام در دوره‌های آنلاین آکادمی و دسترسی به کلاس‌های مجازی</p>
+                </div>
+                
+                <div class="courses-container">
+                    <!-- درس اول -->
+                    <div class="course-card-online">
+                        <div class="course-header">
+                            <h3 class="course-title">خبرنگاری حرفه‌ای آنلاین</h3>
+                            <div class="course-capacity">
+                                <span class="capacity-text">ظرفیت باقی‌مانده:</span>
+                                <span class="capacity-value" id="capacity-1">20 نفر</span>
                             </div>
                         </div>
-                        
-                        <div class="members-list" id="membersList" style="display: none;">
-                            <h4>اعضای Life</h4>
-                            <div id="membersContainer">
-                                <!-- لیست اعضا اینجا نمایش داده می‌شود -->
+                        <div class="course-content-online">
+                            <p class="course-description">دوره جامع خبرنگاری آنلاین با تمرکز بر اصول روزنامه‌نگاری مدرن، گزارش‌نویسی و مصاحبه‌های حرفه‌ای</p>
+                            
+                            <button class="register-btn" onclick="openModal('خبرنگاری حرفه‌ای آنلاین', 1)">
+                                ثبت‌نام در درس
+                            </button>
+                            
+                            <div class="online-class-link" id="class-link-1">
+                                <a href="#"><i class="fas fa-video"></i> ورود به کلاس آنلاین</a>
+                            </div>
+                            
+                            <div class="registered-students">
+                                <h4 class="students-title">شاگردان ثبت‌نام شده</h4>
+                                <div class="students-list" id="students-list-1">
+                                    <!-- لیست دانشجویان از طریق جاوااسکریپت اضافه خواهد شد -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- درس دوم -->
+                    <div class="course-card-online">
+                        <div class="course-header">
+                            <h3 class="course-title">فن بیان و گویندگی آنلاین</h3>
+                            <div class="course-capacity">
+                                <span class="capacity-text">ظرفیت باقی‌مانده:</span>
+                                <span class="capacity-value" id="capacity-2">15 نفر</span>
+                            </div>
+                        </div>
+                        <div class="course-content-online">
+                            <p class="course-description">آموزش تکنیک‌های حرفه‌ای سخنوری، کنترل صدا، اعتماد به نفس و هنر گویندگی در محیط آنلاین</p>
+                            
+                            <button class="register-btn" onclick="openModal('فن بیان و گویندگی آنلاین', 2)">
+                                ثبت‌نام در درس
+                            </button>
+                            
+                            <div class="online-class-link" id="class-link-2">
+                                <a href="#"><i class="fas fa-video"></i> ورود به کلاس آنلاین</a>
+                            </div>
+                            
+                            <div class="registered-students">
+                                <h4 class="students-title">شاگردان ثبت‌نام شده</h4>
+                                <div class="students-list" id="students-list-2">
+                                    <!-- لیست دانشجویان از طریق جاوااسکریپت اضافه خواهد شد -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- درس سوم -->
+                    <div class="course-card-online">
+                        <div class="course-header">
+                            <h3 class="course-title">روان‌شناسی ارتباطات آنلاین</h3>
+                            <div class="course-capacity">
+                                <span class="capacity-text">ظرفیت باقی‌مانده:</span>
+                                <span class="capacity-value" id="capacity-3">10 نفر</span>
+                            </div>
+                        </div>
+                        <div class="course-content-online">
+                            <p class="course-description">آشنایی با اصول روانشناسی ارتباطات و تاثیر آن بر روابط اجتماعی در فضای مجازی و آنلاین</p>
+                            
+                            <button class="register-btn" onclick="openModal('روان‌شناسی ارتباطات آنلاین', 3)">
+                                ثبت‌نام در درس
+                            </button>
+                            
+                            <div class="online-class-link" id="class-link-3">
+                                <a href="#"><i class="fas fa-video"></i> ورود به کلاس آنلاین</a>
+                            </div>
+                            
+                            <div class="registered-students">
+                                <h4 class="students-title">شاگردان ثبت‌نام شده</h4>
+                                <div class="students-list" id="students-list-3">
+                                    <!-- لیست دانشجویان از طریق جاوااسکریپت اضافه خواهد شد -->
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-    </div>
-
-    <!-- مودال‌ها -->
-    <div class="modal" id="confirmationModal">
-        <div class="modal-content">
-            <div class="modal-icon">
-                <i class="fab fa-google"></i>
-            </div>
-            <h3>لینک ورود ارسال شد!</h3>
-            <p>لینک ورود به پلتفرم بهبود زندگی به ایمیل Gmail شما ارسال شد. لطفاً صندوق ورودی خود را بررسی کنید.</p>
-            <div class="modal-buttons">
-                <button class="modal-btn modal-close" id="closeModal">بستن</button>
-                <button class="modal-btn modal-confirm" id="openGmail">باز کردن Gmail</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal" id="createLifeModal">
-        <div class="modal-content">
-            <h3>ایجاد Life جدید</h3>
-            <div class="form-group">
-                <label for="lifeName">نام Life</label>
-                <input type="text" id="lifeName" placeholder="نام Life خود را وارد کنید">
-            </div>
-            <div class="form-group">
-                <label for="lifeDescription">توضیحات</label>
-                <input type="text" id="lifeDescription" placeholder="توضیح مختصری درباره Life خود بنویسید">
-            </div>
-            <div class="modal-buttons">
-                <button class="modal-btn modal-close" id="cancelCreateLife">لغو</button>
-                <button class="modal-btn modal-confirm" id="confirmCreateLife">ایجاد Life</button>
+        
+        <!-- مودال ثبت نام -->
+        <div class="modal" id="registration-modal">
+            <div class="modal-content">
+                <button class="close-modal" onclick="closeModal()" aria-label="بستن">&times;</button>
+                <h3 class="modal-title" id="modal-course-title">ثبت‌نام در دوره</h3>
+                
+                <form id="registration-form">
+                    <input type="hidden" id="course-id" value="">
+                    
+                    <div class="form-group">
+                        <label for="student-name">نام و نام خانوادگی</label>
+                        <input type="text" id="student-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="student-email">آدرس ایمیل</label>
+                        <input type="email" id="student-email" required>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">تأیید و ثبت نام</button>
+                </form>
+                
+                <div class="success-message" id="success-message">
+                    ثبت‌نام شما با موفقیت انجام شد!
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="modal" id="joinLifeModal">
-        <div class="modal-content">
-            <h3>پیوستن به Life</h3>
-            <div class="form-group">
-                <label for="lifeCode">کد Life</label>
-                <input type="text" id="lifeCode" placeholder="کد Life را وارد کنید">
+        <section id="instructors" class="instructors-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>اساتید مجرب</h2>
+                    <p>با بهترین اساتید و متخصصان کشور در زمینه‌های مختلف آموزشی</p>
+                </div>
+                
+                <div class="instructors-grid">
+                    <div class="instructor-card">
+                        <div class="instructor-img">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <div class="instructor-info">
+                            <h3>احمد رضا ستاری</h3>
+                            <span class="instructor-subject">مدیریت و ارتباطات</span>
+                            <p>مدرس برجسته دوره‌های مدیریت رسانه و ارتباطات با بیش از ۱۵ سال سابقه تدریس</p>
+                        </div>
+                    </div>
+                    
+                    <div class="instructor-card">
+                        <div class="instructor-img">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <div class="instructor-info">
+                            <h3>ملیحه حیاتی</h3>
+                            <span class="instructor-subject">روانشناسی</span>
+                            <p>متخصص روانشناسی اجتماعی و مدرس دوره‌های پیشرفته روانشناسی کاربردی</p>
+                        </div>
+                    </div>
+                    
+                    <div class="instructor-card">
+                        <div class="instructor-img">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <div class="instructor-info">
+                            <h3>علی حضرت</h3>
+                            <span class="instructor-subject">ژورنالیسم</span>
+                            <p> روزنامه‌نگار برجسته و مدرس اصول خبرنگاری حرفه‌ای با تجربه بین‌المللی</p>
+                        </div>
+                    </div>
+                    
+                    <div class="instructor-card">
+                        <div class="instructor-img">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <div class="instructor-info">
+                            <h3>نيلوفر ابراهیمی</h3>
+                            <span class="instructor-subject">صدا و بیان</span>
+                            <p>متخصص فن بیان و گویندگی با سابقه همکاری با شبکه‌های ملی و بین‌المللی</p>
+                        </div>
+                    </div>
+                    
+                    <div class="instructor-card">
+                        <div class="instructor-img">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <div class="instructor-info">
+                            <h3>ریحان هاشمی</h3>
+                            <span class="instructor-subject">دکلمه و هنرهای کلامی</span>
+                            <p> artiste نامدار عرصه دکلمه و نمایش با بیش از ۲۰ سال تجربه اجرا و تدریس</p>
+                        </div>
+                    </div>
+                    
+                    <div class="instructor-card">
+                        <div class="instructor-img">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <div class="instructor-info">
+                            <h3>گلثوم حیدری</h3>
+                            <span class="instructor-subject">ارتباطات اجتماعی</span>
+                            <p>مدرس و مشاور ارتباطات بین‌فردی و توسعه مهارت‌های اجتماعی</p>
+                        </div>
+                    </div>
+                    
+                    <div class="instructor-card">
+                        <div class="instructor-img">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <div class="instructor-info">
+                            <h3>مریم میرزایی</h3>
+                            <span class="instructor-subject">رسانه و خبرنگاری</span>
+                            <p>سردبیر سابق روزنامه معتبر و مدرس اصول ویراستاری و تولید محتوا</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="modal-buttons">
-                <button class="modal-btn modal-close" id="cancelJoinLife">لغو</button>
-                <button class="modal-btn modal-confirm" id="confirmJoinLife">پیوستن</button>
+        </section>
+
+        <section id="students" class="top-students">
+            <div class="container">
+                <div class="section-title">
+                    <h2>شاگردان ممتاز</h2>
+                    <p>برترین دانش‌آموزان و دانشجویان آکادمی نخبگان ستاری</p>
+                </div>
+                
+                <div class="students-grid">
+                    <div class="student-card">
+                        <div class="student-rank">1</div>
+                        <div class="student-img">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <div class="student-info">
+                            <h3>سارا محمدی</h3>
+                            <p>رشته خبرنگاری</p>
+                            <p>معدل: ۱۹.۸</p>
+                        </div>
+                    </div>
+                    
+                    <div class="student-card">
+                        <div class="student-rank">2</div>
+                        <div class="student-img">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <div class="student-info">
+                            <h3>امیرحسین رضایی</h3>
+                            <p>رشته ارتباطات</p>
+                            <p>معدل: ۱۹.۶</p>
+                        </div>
+                    </div>
+                    
+                    <div class="student-card">
+                        <div class="student-rank">3</div>
+                        <div class="student-img">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <div class="student-info">
+                            <h3>فاطمه احمدی</h3>
+                            <p>رشته روانشناسی</p>
+                            <p>معدل: ۱۹.۵</p>
+                        </div>
+                    </div>
+                    
+                    <div class="student-card">
+                        <div class="student-rank">4</div>
+                        <div class="student-img">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <div class="student-info">
+                            <h3>محمد جوادی</h3>
+                            <p>رشته ژورنالیسم</p>
+                            <p>معدل: ۱۹.۴</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="registration" class="registration-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>ثبت نام در دوره‌ها</h2>
+                    <p>برای ثبت نام در دوره‌های آموزشی آکادمی نخبگان ستاری اقدام کنید</p>
+                </div>
+                
+                <div class="registration-box">
+                    <h2>ثبت نام از طریق واتساپ</h2>
+                    <p>برای ثبت نام در دوره‌های آموزشی آکادمی نخبگان ستاری، از طریق واتساپ با ما در ارتباط باشید. کارشناسان ما آماده پاسخگویی به سوالات و راهنمایی شما هستند.</p>
+                    <a href="https://wa.me/93792371380" class="btn btn-whatsapp">
+                        <i class="fab fa-whatsapp"></i> ثبت نام از طریق واتساپ
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="dashboard" class="dashboard-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>داشبورد دانشجویی</h2>
+                    <p>امکانات و خدمات ویژه برای دانشجویان آکادمی نخبگان ستاری</p>
+                </div>
+                
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <div class="dashboard-icon">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <h3>محتوای درسی</h3>
+                        <p>دسترسی به کلیه محتوای درسی، جزوات و منابع آموزشی</p>
+                        <a href="https://whatsapp.com/channel/0029VbBGXYdEquiMutgMHK0b" class="btn">ورود</a>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="dashboard-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <h3>تکالیف و پروژه‌ها</h3>
+                        <p>ارسال تکالیف، پیگیری نمرات و دریافت بازخورد</p>
+                        <a href="https://whatsapp.com/channel/0029VbBGXYdEquiMutgMHK0b" class="btn">ورود</a>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="dashboard-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>پیشرفت تحصیلی</h3>
+                        <p>مشاهده نمودار پیشرفت و کارنامه تحصیلی</p>
+                        <a href="https://whatsapp.com/channel/0029VbBGXYdEquiMutgMHK0b" class="btn">ورود</a>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="dashboard-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <h3>برنامه زمانی</h3>
+                        <p>مشاهده برنامه کلاس‌ها و رویدادهای آموزشی</p>
+                        <a href="https://whatsapp.com/channel/0029VbBGXYdEquiMutgMHK0b" class="btn">ورود</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- بخش مقالات و وبلاگ -->
+        <section id="blog" class="blog-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>مقالات و وبلاگ آموزشی</h2>
+                    <p>آخرین مطالب آموزشی و تخصصی در زمینه رسانه، ارتباطات و روانشناسی</p>
+                </div>
+                
+                <div class="blog-grid">
+                    <div class="blog-card">
+                        <img src="https://via.placeholder.com/400x200/1e3a5f/ffffff?text=مقاله+آموزشی" alt="مقاله آموزشی" class="blog-image lazy-image">
+                        <div class="blog-content">
+                            <div class="blog-meta">
+                                <span><i class="fas fa-calendar"></i> 15 مرداد 1403</span>
+                                <span><i class="fas fa-user"></i> احمد رضا ستاری</span>
+                            </div>
+                            <h3 class="blog-title">۱۰ تکنیک برتر برای بهبود فن بیان</h3>
+                            <p class="blog-excerpt">در این مقاله با ۱۰ تکنیک کاربردی برای بهبود مهارتهای فن بیان و سخنوری آشنا میشوید...</p>
+                            <div class="blog-tags">
+                                <span class="blog-tag">فن بیان</span>
+                                <span class="blog-tag">سخنوری</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="blog-card">
+                        <img src="https://via.placeholder.com/400x200/0a1930/ffffff?text=مقاله+تخصصی" alt="مقاله تخصصی" class="blog-image lazy-image">
+                        <div class="blog-content">
+                            <div class="blog-meta">
+                                <span><i class="fas fa-calendar"></i> 10 مرداد 1403</span>
+                                <span><i class="fas fa-user"></i> ملیحه حیاتی</span>
+                            </div>
+                            <h3 class="blog-title">روانشناسی ارتباطات مؤثر در فضای مجازی</h3>
+                            <p class="blog-excerpt">چگونه میتوانیم در فضای مجازی ارتباطات مؤثر و پایدار ایجاد کنیم؟ این مقاله به بررسی اصول روانشناسی ارتباطات میپردازد...</p>
+                            <div class="blog-tags">
+                                <span class="blog-tag">روانشناسی</span>
+                                <span class="blog-tag">ارتباطات</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="blog-card">
+                        <img src="https://via.placeholder.com/400x200/2c3e50/ffffff?text=مقاله+خبری" alt="مقاله خبری" class="blog-image lazy-image">
+                        <div class="blog-content">
+                            <div class="blog-meta">
+                                <span><i class="fas fa-calendar"></i> 5 مرداد 1403</span>
+                                <span><i class="fas fa-user"></i> علی حضرت</span>
+                            </div>
+                            <h3 class="blog-title">اصول مصاحبه حرفهای برای خبرنگاران</h3>
+                            <p class="blog-excerpt">آموزش گام به گام اصول مصاحبه حرفهای و تکنیکهای پرسشگری مؤثر برای خبرنگاران و روزنامه نگاران...</p>
+                            <div class="blog-tags">
+                                <span class="blog-tag">خبرنگاری</span>
+                                <span class="blog-tag">مصاحبه</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 40px;">
+                    <a href="#blog-archive" class="btn">مشاهده همه مقالات</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- بخش ویدیوهای آموزشی -->
+        <section id="videos" class="videos-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>ویدیوهای آموزشی</h2>
+                    <p>آموزشهای ویدیویی کوتاه و کاربردی برای یادگیری سریع</p>
+                </div>
+                
+                <div class="videos-grid">
+                    <div class="video-card">
+                        <div style="position: relative;">
+                            <img src="https://via.placeholder.com/400x200/1e3a5f/ffffff?text=ویدیو+آموزشی" alt="ویدیو آموزشی" class="video-thumbnail lazy-image">
+                            <button class="video-play" aria-label="پخش ویدیو">
+                                <i class="fas fa-play"></i>
+                            </button>
+                        </div>
+                        <div class="video-content">
+                            <h3 class="video-title">تکنیکهای کنترل استرس در سخنرانی</h3>
+                            <div class="video-meta">
+                                <span><i class="fas fa-clock"></i> ۱۵ دقیقه</span>
+                                <span><i class="fas fa-eye"></i> ۱,۲۴۵ بازدید</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="video-card">
+                        <div style="position: relative;">
+                            <img src="https://via.placeholder.com/400x200/0a1930/ffffff?text=ویدیو+تخصصی" alt="ویدیو تخصصی" class="video-thumbnail lazy-image">
+                            <button class="video-play" aria-label="پخش ویدیو">
+                                <i class="fas fa-play"></i>
+                            </button>
+                        </div>
+                        <div class="video-content">
+                            <h3 class="video-title">اصول نگارش خبر حرفهای</h3>
+                            <div class="video-meta">
+                                <span><i class="fas fa-clock"></i> ۲۲ دقیقه</span>
+                                <span><i class="fas fa-eye"></i> ۸۹۷ بازدید</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="video-card">
+                        <div style="position: relative;">
+                            <img src="https://via.placeholder.com/400x200/2c3e50/ffffff?text=ویدیو+کاربردی" alt="ویدیو کاربردی" class="video-thumbnail lazy-image">
+                            <button class="video-play" aria-label="پخش ویدیو">
+                                <i class="fas fa-play"></i>
+                            </button>
+                        </div>
+                        <div class="video-content">
+                            <h3 class="video-title">تمرینات صدا سازی برای گویندگان</h3>
+                            <div class="video-meta">
+                                <span><i class="fas fa-clock"></i> ۱۸ دقیقه</span>
+                                <span><i class="fas fa-eye"></i> ۱,۵۶۲ بازدید</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 40px;">
+                    <a href="#videos-archive" class="btn">مشاهده همه ویدیوها</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- بخش منابع قابل دانلود -->
+        <section id="downloads" class="downloads-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>منابع آموزشی قابل دانلود</h2>
+                    <p>جزوات، تمرینات و منابع آموزشی برای دانلود رایگان</p>
+                </div>
+                
+                <div class="downloads-grid">
+                    <div class="download-card">
+                        <div class="download-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <h3 class="download-title">جزوه فن بیان پیشرفته</h3>
+                        <p class="download-size">PDF - 2.4 MB</p>
+                        <a href="#" class="btn">دانلود</a>
+                    </div>
+                    
+                    <div class="download-card">
+                        <div class="download-icon">
+                            <i class="fas fa-file-word"></i>
+                        </div>
+                        <h3 class="download-title">تمرینات عملی خبرنگاری</h3>
+                        <p class="download-size">DOCX - 1.8 MB</p>
+                        <a href="#" class="btn">دانلود</a>
+                    </div>
+                    
+                    <div class="download-card">
+                        <div class="download-icon">
+                            <i class="fas fa-file-powerpoint"></i>
+                        </div>
+                        <h3 class="download-title">اسلایدهای روانشناسی ارتباطات</h3>
+                        <p class="download-size">PPTX - 3.2 MB</p>
+                        <a href="#" class="btn">دانلود</a>
+                    </div>
+                    
+                    <div class="download-card">
+                        <div class="download-icon">
+                            <i class="fas fa-file-audio"></i>
+                        </div>
+                        <h3 class="download-title">تمرینات صدا سازی</h3>
+                        <p class="download-size">MP3 - 15.7 MB</p>
+                        <a href="#" class="btn">دانلود</a>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 40px;">
+                    <a href="#downloads-archive" class="btn">مشاهده همه منابع</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- بخش انجمن -->
+        <section id="forum" class="forum-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>انجمن گفتگو</h2>
+                    <p>مکانی برای تبادل نظر، پرسش و پاسخ و تعامل با اساتید و دانشجویان</p>
+                </div>
+                
+                <div class="forum-categories">
+                    <div class="forum-category">
+                        <h3>خبرنگاری و رسانه</h3>
+                        <p>بحث و گفتگو درباره موضوعات مربوط به خبرنگاری، رسانه و روزنامهنگاری</p>
+                        <div class="forum-stats">
+                            <span>۲۴۵ موضوع</span>
+                            <span>۱,۲۴۷ پاسخ</span>
+                        </div>
+                    </div>
+                    
+                    <div class="forum-category">
+                        <h3>فن بیان و سخنوری</h3>
+                        <p>مباحث مربوط به فن بیان، سخنوری، گویندگی و مهارتهای کلامی</p>
+                        <div class="forum-stats">
+                            <span>۱۸۹ موضوع</span>
+                            <span>۹۸۷ پاسخ</span>
+                        </div>
+                    </div>
+                    
+                    <div class="forum-category">
+                        <h3>روانشناسی و ارتباطات</h3>
+                        <p>بحث درباره روانشناسی ارتباطات، مهارتهای اجتماعی و تعاملات انسانی</p>
+                        <div class="forum-stats">
+                            <span>۱۵۶ موضوع</span>
+                            <span>۸۴۵ پاسخ</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 40px;">
+                    <a href="https://whatsapp.com/channel/0029Va9jTiV4Y9lobfT2PF0V" class="btn">ورود به انجمن</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer role="contentinfo">
+        <div class="gold-accent"></div>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>درباره آکادمی</h3>
+                    <p>آکادمی نخبگان ستاری در کاپیسا افغانستان با هدف پرورش استعدادهای درخشان و تربیت متخصصان حرفهای در زمینههای رسانه, ارتباطات و هنرهای کلامی تأسیس شده است.</p>
+                    <div class="location-badge">
+                        <i class="fas fa-map-marker-alt"></i> کاپیسا, افغانستان
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>لینکهای سریع</h3>
+                    <ul>
+                        <li><a href="#">خانه</a></li>
+                        <li><a href="#courses">دوره ها</a></li>
+                        <li><a href="#online-courses">ظرفیت آنلاین</a></li>
+                        <li><a href="#blog">مقالات</a></li>
+                        <li><a href="#videos">ویدیوها</a></li>
+                        <li><a href="#downloads">منابع</a></li>
+                        <li><a href="#forum">انجمن</a></li>
+                        <li><a href="#instructors">اساتید</a></li>
+                        <li><a href="#students">شاگردان ممتاز</a></li>
+                        <li><a href="#registration">ثبت نام</a></li>
+                        <li><a href="#dashboard">داشبورد</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>تماس با ما</h3>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> کاپیسا, افغانستان</li>
+                        <li><i class="fas fa-phone"></i> 0792371380 </li>
+                        <li><i class="fab fa-whatsapp"></i> 0792371380 </li>
+                        <li><i class="fas fa-envelope"></i> info@setare-academy.af</li>
+                    </ul>
+                    <div class="social-links" style="margin-top: 20px;">
+                        <a href="https://t.me/kapisa_2" style="color: var(--gold); margin-left: 15px; font-size: 1.5rem;"><i class="fab fa-telegram"></i></a>
+                        <a href="https://www.instagram.com/kapisa_2?igsh=MW56ZGd5ZzQ4MWM5eA==" style="color: var(--gold); margin-left: 15px; font-size: 1.5rem;"><i class="fab fa-instagram"></i></a>
+                        <a href="https://youtube.com/@kapisagroup_2?si=HTdvuby3uS4L3jxu" style="color: var(--gold); margin-left: 15px; font-size: 1.5rem;"><i class="fab fa-youtube"></i></a>
+                        <a href="https://wa.me/93790310747" style="color: var(--gold); margin-left: 15px; font-size: 1.5rem;"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>کلیه حقوق مادی و معنوی این وبسایت متعلق به آکادمی نخبگان ستاری میباشد. © 1404 - کاپیسا, افغانستان</p>
             </div>
         </div>
-    </div>
+    </footer>
 
-    <!-- اعلان -->
-    <div class="notification" id="notification">
-        <i class="fas fa-bell"></i>
-        <span id="notificationText">این یک اعلان است</span>
-    </div>
+    <!-- اسکریپت‌های بهبود یافته -->
+  
 </body>
 </html>
