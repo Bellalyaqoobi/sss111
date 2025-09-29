@@ -1,4 +1,5 @@
-  let currentAdmin = null;
+ // متغیرهای جهانی
+        let currentAdmin = null;
         let adminAuthenticated = false;
 
         // دادههای نمونه برای ذخیرهسازی در localStorage
@@ -120,6 +121,7 @@
             loadDownloads();
             loadQuizzes();
             loadForumCategories();
+            loadAdmins();
             setupAnnouncementSlider();
             lazyLoadImages();
             
@@ -332,6 +334,7 @@
                     loadDownloads();
                     loadQuizzes();
                     loadForumCategories();
+                    loadAdmins();
                     
                     messageEl.textContent = '';
                     document.getElementById('adminLoginForm').reset();
@@ -961,7 +964,6 @@
                 document.getElementById('videoTitle').value = video.title;
                 document.getElementById('videoCategory').value = video.category;
                 document.getElementById('videoDuration').value = video.duration;
-                document.getElementById('videoUrl').value = video.url;
                 document.getElementById('videoDescription').value = video.description || '';
                 document.getElementById('videoTitle').focus();
             }
@@ -977,34 +979,50 @@
             try {
                 const data = getData();
                 const videoId = document.getElementById('editVideoId').value;
+                const videoFile = document.getElementById('videoFile').files[0];
+                
+                if (!videoFile) {
+                    alert('لطفاً یک فایل ویدیویی انتخاب کنید');
+                    return;
+                }
+                
                 const videoData = {
                     title: sanitizeInput(document.getElementById('videoTitle').value),
                     category: document.getElementById('videoCategory').value,
                     duration: parseInt(document.getElementById('videoDuration').value),
-                    url: sanitizeInput(document.getElementById('videoUrl').value),
                     description: sanitizeInput(document.getElementById('videoDescription').value),
                     uploadDate: new Date().toLocaleDateString('fa-IR')
                 };
                 
-                if (videoId) {
-                    // ویرایش ویدیو موجود
-                    const index = data.videos.findIndex(v => v.id === parseInt(videoId));
-                    if (index !== -1) {
-                        data.videos[index] = { ...data.videos[index], ...videoData };
+                // شبیهسازی آپلود ویدیو
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    videoData.url = URL.createObjectURL(videoFile);
+                    
+                    if (videoId) {
+                        // ویرایش ویدیو موجود
+                        const index = data.videos.findIndex(v => v.id === parseInt(videoId));
+                        if (index !== -1) {
+                            data.videos[index] = { ...data.videos[index], ...videoData };
+                        }
+                    } else {
+                        // افزودن ویدیو جدید
+                        const newId = data.videos.length > 0 ? Math.max(...data.videos.map(v => v.id)) + 1 : 1;
+                        data.videos.push({
+                            id: newId,
+                            ...videoData
+                        });
                     }
-                } else {
-                    // افزودن ویدیو جدید
-                    const newId = data.videos.length > 0 ? Math.max(...data.videos.map(v => v.id)) + 1 : 1;
-                    data.videos.push({
-                        id: newId,
-                        ...videoData
-                    });
-                }
+                    
+                    saveData(data);
+                    loadVideos();
+                    loadMainVideos();
+                    hideVideoForm();
+                    
+                    alert('ویدیو با موفقیت آپلود شد');
+                };
                 
-                saveData(data);
-                loadVideos();
-                loadMainVideos();
-                hideVideoForm();
+                reader.readAsDataURL(videoFile);
             } catch (error) {
                 console.error('خطا در ذخیره ویدیو:', error);
                 alert('خطا در ذخیره ویدیو، لطفاً دوباره تلاش کنید');
@@ -1114,7 +1132,6 @@
                 document.getElementById('downloadType').value = download.type;
                 document.getElementById('downloadSize').value = download.size;
                 document.getElementById('downloadCategory').value = download.category;
-                document.getElementById('downloadUrl').value = download.url;
                 document.getElementById('downloadDescription').value = download.description || '';
                 document.getElementById('downloadTitle').focus();
             }
@@ -1130,35 +1147,51 @@
             try {
                 const data = getData();
                 const downloadId = document.getElementById('editDownloadId').value;
+                const downloadFile = document.getElementById('downloadFile').files[0];
+                
+                if (!downloadFile) {
+                    alert('لطفاً یک فایل انتخاب کنید');
+                    return;
+                }
+                
                 const downloadData = {
                     title: sanitizeInput(document.getElementById('downloadTitle').value),
                     type: document.getElementById('downloadType').value,
                     size: parseFloat(document.getElementById('downloadSize').value),
                     category: document.getElementById('downloadCategory').value,
-                    url: sanitizeInput(document.getElementById('downloadUrl').value),
                     description: sanitizeInput(document.getElementById('downloadDescription').value),
                     uploadDate: new Date().toLocaleDateString('fa-IR')
                 };
                 
-                if (downloadId) {
-                    // ویرایش منبع موجود
-                    const index = data.downloads.findIndex(d => d.id === parseInt(downloadId));
-                    if (index !== -1) {
-                        data.downloads[index] = { ...data.downloads[index], ...downloadData };
+                // شبیهسازی آپلود فایل
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    downloadData.url = URL.createObjectURL(downloadFile);
+                    
+                    if (downloadId) {
+                        // ویرایش منبع موجود
+                        const index = data.downloads.findIndex(d => d.id === parseInt(downloadId));
+                        if (index !== -1) {
+                            data.downloads[index] = { ...data.downloads[index], ...downloadData };
+                        }
+                    } else {
+                        // افزودن منبع جدید
+                        const newId = data.downloads.length > 0 ? Math.max(...data.downloads.map(d => d.id)) + 1 : 1;
+                        data.downloads.push({
+                            id: newId,
+                            ...downloadData
+                        });
                     }
-                } else {
-                    // افزودن منبع جدید
-                    const newId = data.downloads.length > 0 ? Math.max(...data.downloads.map(d => d.id)) + 1 : 1;
-                    data.downloads.push({
-                        id: newId,
-                        ...downloadData
-                    });
-                }
+                    
+                    saveData(data);
+                    loadDownloads();
+                    loadMainDownloads();
+                    hideDownloadForm();
+                    
+                    alert('فایل با موفقیت آپلود شد');
+                };
                 
-                saveData(data);
-                loadDownloads();
-                loadMainDownloads();
-                hideDownloadForm();
+                reader.readAsDataURL(downloadFile);
             } catch (error) {
                 console.error('خطا در ذخیره منبع:', error);
                 alert('خطا در ذخیره منبع، لطفاً دوباره تلاش کنید');
@@ -1222,620 +1255,616 @@
         }
 
         // ویرایش آزمون
-     // ادامه تابع editQuiz
-function editQuiz(quizId) {
-    const data = getData();
-    const quiz = data.quizzes.find(q => q.id === quizId);
-    
-    if (quiz) {
-        document.getElementById('quizForm').style.display = 'block';
-        document.getElementById('quizFormTitle').textContent = 'ویرایش آزمون';
-        document.getElementById('editQuizId').value = quiz.id;
-        document.getElementById('quizTitle').value = quiz.title;
-        document.getElementById('quizCourse').value = quiz.course;
-        document.getElementById('quizQuestions').value = quiz.questions;
-        document.getElementById('quizDuration').value = quiz.duration;
-        document.getElementById('quizDescription').value = quiz.description || '';
-        document.getElementById('quizTitle').focus();
-    }
-}
-
-// ذخیره آزمون
-function handleQuizSave(e) {
-    e.preventDefault();
-    
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    setButtonLoading(submitBtn, true);
-    
-    try {
-        const data = getData();
-        const quizId = document.getElementById('editQuizId').value;
-        const quizData = {
-            title: sanitizeInput(document.getElementById('quizTitle').value),
-            course: document.getElementById('quizCourse').value,
-            questions: parseInt(document.getElementById('quizQuestions').value),
-            duration: parseInt(document.getElementById('quizDuration').value),
-            description: sanitizeInput(document.getElementById('quizDescription').value),
-            status: 'active'
-        };
-        
-        if (quizId) {
-            // ویرایش آزمون موجود
-            const index = data.quizzes.findIndex(q => q.id === parseInt(quizId));
-            if (index !== -1) {
-                data.quizzes[index] = { ...data.quizzes[index], ...quizData };
-            }
-        } else {
-            // افزودن آزمون جدید
-            const newId = data.quizzes.length > 0 ? Math.max(...data.quizzes.map(q => q.id)) + 1 : 1;
-            data.quizzes.push({
-                id: newId,
-                ...quizData
-            });
-        }
-        
-        saveData(data);
-        loadQuizzes();
-        hideQuizForm();
-    } catch (error) {
-        console.error('خطا در ذخیره آزمون:', error);
-        alert('خطا در ذخیره آزمون، لطفاً دوباره تلاش کنید');
-    } finally {
-        setButtonLoading(submitBtn, false);
-    }
-}
-
-// حذف آزمون
-function deleteQuiz(quizId) {
-    if (confirm('آیا از حذف این آزمون اطمینان دارید؟')) {
-        try {
+        function editQuiz(quizId) {
             const data = getData();
-            data.quizzes = data.quizzes.filter(q => q.id !== quizId);
-            saveData(data);
-            loadQuizzes();
-        } catch (error) {
-            console.error('خطا در حذف آزمون:', error);
-            alert('خطا در حذف آزمون، لطفاً دوباره تلاش کنید');
+            const quiz = data.quizzes.find(q => q.id === quizId);
+            
+            if (quiz) {
+                document.getElementById('quizForm').style.display = 'block';
+                document.getElementById('quizFormTitle').textContent = 'ویرایش آزمون';
+                document.getElementById('editQuizId').value = quiz.id;
+                document.getElementById('quizTitle').value = quiz.title;
+                document.getElementById('quizCourse').value = quiz.course;
+                document.getElementById('quizQuestions').value = quiz.questions;
+                document.getElementById('quizDuration').value = quiz.duration;
+                document.getElementById('quizDescription').value = quiz.description || '';
+                document.getElementById('quizTitle').focus();
+            }
         }
-    }
-}
 
-// بارگذاری دستهبندیهای انجمن
-function loadForumCategories() {
-    const data = getData();
-    const tbody = document.getElementById('forumCategoriesList');
-    
-    tbody.innerHTML = '';
-    
-    data.forumCategories.forEach(category => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${sanitizeInput(category.name)}</td>
-            <td>${sanitizeInput(category.description)}</td>
-            <td>${category.topics}</td>
-            <td>${category.replies}</td>
-            <td>
-                <button class="btn-edit" onclick="editCategory(${category.id})">ویرایش</button>
-                <button class="btn-delete" onclick="deleteCategory(${category.id})">حذف</button>
-            </td>
-        `;
-        tbody.appendChild(row);
-    });
-}
-
-// بارگذاری انجمن در صفحه اصلی
-function loadMainForum() {
-    const data = getData();
-    const container = document.getElementById('mainForum');
-    
-    container.innerHTML = '';
-    
-    data.forumCategories.forEach(category => {
-        const forumCategory = document.createElement('div');
-        forumCategory.className = 'forum-category';
-        forumCategory.innerHTML = `
-            <h3>${sanitizeInput(category.name)}</h3>
-            <p>${sanitizeInput(category.description)}</p>
-            <div class="forum-stats">
-                <span>${category.topics} موضوع</span>
-                <span>${category.replies} پاسخ</span>
-            </div>
-        `;
-        container.appendChild(forumCategory);
-    });
-}
-
-// نمایش فرم دستهبندی
-function showCategoryForm() {
-    document.getElementById('categoryForm').style.display = 'block';
-    document.getElementById('categoryFormTitle').textContent = 'افزودن دستهبندی جدید';
-    document.getElementById('editCategoryId').value = '';
-    document.getElementById('categoryEditForm').reset();
-    document.getElementById('categoryName').focus();
-}
-
-// مخفی کردن فرم دستهبندی
-function hideCategoryForm() {
-    document.getElementById('categoryForm').style.display = 'none';
-}
-
-// ویرایش دستهبندی
-function editCategory(categoryId) {
-    const data = getData();
-    const category = data.forumCategories.find(c => c.id === categoryId);
-    
-    if (category) {
-        document.getElementById('categoryForm').style.display = 'block';
-        document.getElementById('categoryFormTitle').textContent = 'ویرایش دستهبندی';
-        document.getElementById('editCategoryId').value = category.id;
-        document.getElementById('categoryName').value = category.name;
-        document.getElementById('categoryDescription').value = category.description;
-        document.getElementById('categoryName').focus();
-    }
-}
-
-// ذخیره دستهبندی
-function handleCategorySave(e) {
-    e.preventDefault();
-    
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    setButtonLoading(submitBtn, true);
-    
-    try {
-        const data = getData();
-        const categoryId = document.getElementById('editCategoryId').value;
-        const categoryData = {
-            name: sanitizeInput(document.getElementById('categoryName').value),
-            description: sanitizeInput(document.getElementById('categoryDescription').value)
-        };
-        
-        if (categoryId) {
-            // ویرایش دستهبندی موجود
-            const index = data.forumCategories.findIndex(c => c.id === parseInt(categoryId));
-            if (index !== -1) {
-                data.forumCategories[index] = { 
-                    ...data.forumCategories[index], 
-                    ...categoryData 
+        // ذخیره آزمون
+        function handleQuizSave(e) {
+            e.preventDefault();
+            
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            setButtonLoading(submitBtn, true);
+            
+            try {
+                const data = getData();
+                const quizId = document.getElementById('editQuizId').value;
+                const quizData = {
+                    title: sanitizeInput(document.getElementById('quizTitle').value),
+                    course: document.getElementById('quizCourse').value,
+                    questions: parseInt(document.getElementById('quizQuestions').value),
+                    duration: parseInt(document.getElementById('quizDuration').value),
+                    description: sanitizeInput(document.getElementById('quizDescription').value),
+                    status: 'active'
                 };
+                
+                if (quizId) {
+                    // ویرایش آزمون موجود
+                    const index = data.quizzes.findIndex(q => q.id === parseInt(quizId));
+                    if (index !== -1) {
+                        data.quizzes[index] = { ...data.quizzes[index], ...quizData };
+                    }
+                } else {
+                    // افزودن آزمون جدید
+                    const newId = data.quizzes.length > 0 ? Math.max(...data.quizzes.map(q => q.id)) + 1 : 1;
+                    data.quizzes.push({
+                        id: newId,
+                        ...quizData
+                    });
+                }
+                
+                saveData(data);
+                loadQuizzes();
+                hideQuizForm();
+            } catch (error) {
+                console.error('خطا در ذخیره آزمون:', error);
+                alert('خطا در ذخیره آزمون، لطفاً دوباره تلاش کنید');
+            } finally {
+                setButtonLoading(submitBtn, false);
             }
-        } else {
-            // افزودن دستهبندی جدید
-            const newId = data.forumCategories.length > 0 ? Math.max(...data.forumCategories.map(c => c.id)) + 1 : 1;
-            data.forumCategories.push({
-                id: newId,
-                topics: 0,
-                replies: 0,
-                ...categoryData
+        }
+
+        // حذف آزمون
+        function deleteQuiz(quizId) {
+            if (confirm('آیا از حذف این آزمون اطمینان دارید؟')) {
+                try {
+                    const data = getData();
+                    data.quizzes = data.quizzes.filter(q => q.id !== quizId);
+                    saveData(data);
+                    loadQuizzes();
+                } catch (error) {
+                    console.error('خطا در حذف آزمون:', error);
+                    alert('خطا در حذف آزمون، لطفاً دوباره تلاش کنید');
+                }
+            }
+        }
+
+        // بارگذاری دستهبندیهای انجمن
+        function loadForumCategories() {
+            const data = getData();
+            const tbody = document.getElementById('forumCategoriesList');
+            
+            tbody.innerHTML = '';
+            
+            data.forumCategories.forEach(category => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${sanitizeInput(category.name)}</td>
+                    <td>${sanitizeInput(category.description)}</td>
+                    <td>${category.topics}</td>
+                    <td>${category.replies}</td>
+                    <td>
+                        <button class="btn-edit" onclick="editCategory(${category.id})">ویرایش</button>
+                        <button class="btn-delete" onclick="deleteCategory(${category.id})">حذف</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
             });
         }
-        
-        saveData(data);
-        loadForumCategories();
-        loadMainForum();
-        hideCategoryForm();
-    } catch (error) {
-        console.error('خطا در ذخیره دستهبندی:', error);
-        alert('خطا در ذخیره دستهبندی، لطفاً دوباره تلاش کنید');
-    } finally {
-        setButtonLoading(submitBtn, false);
-    }
-}
 
-// حذف دستهبندی
-function deleteCategory(categoryId) {
-    if (confirm('آیا از حذف این دستهبندی اطمینان دارید؟')) {
-        try {
+        // بارگذاری انجمن در صفحه اصلی
+        function loadMainForum() {
             const data = getData();
-            data.forumCategories = data.forumCategories.filter(c => c.id !== categoryId);
-            saveData(data);
-            loadForumCategories();
-            loadMainForum();
-        } catch (error) {
-            console.error('خطا در حذف دستهبندی:', error);
-            alert('خطا در حذف دستهبندی، لطفاً دوباره تلاش کنید');
+            const container = document.getElementById('mainForum');
+            
+            container.innerHTML = '';
+            
+            data.forumCategories.forEach(category => {
+                const forumCategory = document.createElement('div');
+                forumCategory.className = 'forum-category';
+                forumCategory.innerHTML = `
+                    <h3>${sanitizeInput(category.name)}</h3>
+                    <p>${sanitizeInput(category.description)}</p>
+                    <div class="forum-stats">
+                        <span>${category.topics} موضوع</span>
+                        <span>${category.replies} پاسخ</span>
+                    </div>
+                `;
+                container.appendChild(forumCategory);
+            });
         }
-    }
-}
 
-// مدیریت ادمینها
-function loadAdmins() {
-    const data = getData();
-    const tbody = document.getElementById('adminsList');
-    
-    tbody.innerHTML = '';
-    
-    data.admins.forEach(admin => {
-        // عدم نمایش رمز عبور
-        const adminCopy = {...admin, password: '••••••••'};
-        
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${sanitizeInput(adminCopy.name)}</td>
-            <td>${sanitizeInput(adminCopy.email)}</td>
-            <td>${adminCopy.role === 'super' ? 'سوپر ادمین' : 'ادمین'}</td>
-            <td>${adminCopy.joinDate || '1403/01/01'}</td>
-            <td>
-                <button class="btn-edit" onclick="editAdmin(${adminCopy.id})">ویرایش</button>
-                ${adminCopy.id !== 1 ? `<button class="btn-delete" onclick="deleteAdmin(${adminCopy.id})">حذف</button>` : ''}
-            </td>
-        `;
-        tbody.appendChild(row);
-    });
-}
-
-// نمایش فرم ادمین
-function showAdminForm() {
-    document.getElementById('adminForm').style.display = 'block';
-    document.getElementById('adminFormTitle').textContent = 'افزودن ادمین جدید';
-    document.getElementById('editAdminId').value = '';
-    document.getElementById('adminEditForm').reset();
-    document.getElementById('adminName').focus();
-}
-
-// مخفی کردن فرم ادمین
-function hideAdminForm() {
-    document.getElementById('adminForm').style.display = 'none';
-}
-
-// ویرایش ادمین
-function editAdmin(adminId) {
-    const data = getData();
-    const admin = data.admins.find(a => a.id === adminId);
-    
-    if (admin) {
-        document.getElementById('adminForm').style.display = 'block';
-        document.getElementById('adminFormTitle').textContent = 'ویرایش ادمین';
-        document.getElementById('editAdminId').value = admin.id;
-        document.getElementById('adminName').value = admin.name;
-        document.getElementById('adminEmail').value = admin.email;
-        document.getElementById('adminRole').value = admin.role;
-        document.getElementById('adminPassword').value = ''; // عدم نمایش رمز عبور
-        document.getElementById('adminPassword').required = false;
-        document.getElementById('adminName').focus();
-    }
-}
-
-// ذخیره ادمین
-function handleAdminSave(e) {
-    e.preventDefault();
-    
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    setButtonLoading(submitBtn, true);
-    
-    try {
-        const data = getData();
-        const adminId = document.getElementById('editAdminId').value;
-        const adminData = {
-            name: sanitizeInput(document.getElementById('adminName').value),
-            email: sanitizeInput(document.getElementById('adminEmail').value),
-            role: document.getElementById('adminRole').value
-        };
-        
-        // اگر رمز عبور وارد شده باشد
-        const password = document.getElementById('adminPassword').value;
-        if (password) {
-            adminData.password = password;
+        // نمایش فرم دستهبندی
+        function showCategoryForm() {
+            document.getElementById('categoryForm').style.display = 'block';
+            document.getElementById('categoryFormTitle').textContent = 'افزودن دستهبندی جدید';
+            document.getElementById('editCategoryId').value = '';
+            document.getElementById('categoryEditForm').reset();
+            document.getElementById('categoryName').focus();
         }
-        
-        if (adminId) {
-            // ویرایش ادمین موجود
-            const index = data.admins.findIndex(a => a.id === parseInt(adminId));
-            if (index !== -1) {
-                // اگر رمز عبور جدید وارد نشده، رمز قبلی را حفظ کن
-                if (!password) {
-                    adminData.password = data.admins[index].password;
-                }
-                data.admins[index] = { ...data.admins[index], ...adminData };
+
+        // مخفی کردن فرم دستهبندی
+        function hideCategoryForm() {
+            document.getElementById('categoryForm').style.display = 'none';
+        }
+
+        // ویرایش دستهبندی
+        function editCategory(categoryId) {
+            const data = getData();
+            const category = data.forumCategories.find(c => c.id === categoryId);
+            
+            if (category) {
+                document.getElementById('categoryForm').style.display = 'block';
+                document.getElementById('categoryFormTitle').textContent = 'ویرایش دستهبندی';
+                document.getElementById('editCategoryId').value = category.id;
+                document.getElementById('categoryName').value = category.name;
+                document.getElementById('categoryDescription').value = category.description;
+                document.getElementById('categoryName').focus();
             }
-        } else {
-            // افزودن ادمین جدید
-            if (!password) {
-                alert('لطفاً رمز عبور را وارد کنید');
+        }
+
+        // ذخیره دستهبندی
+        function handleCategorySave(e) {
+            e.preventDefault();
+            
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            setButtonLoading(submitBtn, true);
+            
+            try {
+                const data = getData();
+                const categoryId = document.getElementById('editCategoryId').value;
+                const categoryData = {
+                    name: sanitizeInput(document.getElementById('categoryName').value),
+                    description: sanitizeInput(document.getElementById('categoryDescription').value)
+                };
+                
+                if (categoryId) {
+                    // ویرایش دستهبندی موجود
+                    const index = data.forumCategories.findIndex(c => c.id === parseInt(categoryId));
+                    if (index !== -1) {
+                        data.forumCategories[index] = { 
+                            ...data.forumCategories[index], 
+                            ...categoryData 
+                        };
+                    }
+                } else {
+                    // افزودن دستهبندی جدید
+                    const newId = data.forumCategories.length > 0 ? Math.max(...data.forumCategories.map(c => c.id)) + 1 : 1;
+                    data.forumCategories.push({
+                        id: newId,
+                        topics: 0,
+                        replies: 0,
+                        ...categoryData
+                    });
+                }
+                
+                saveData(data);
+                loadForumCategories();
+                loadMainForum();
+                hideCategoryForm();
+            } catch (error) {
+                console.error('خطا در ذخیره دستهبندی:', error);
+                alert('خطا در ذخیره دستهبندی، لطفاً دوباره تلاش کنید');
+            } finally {
+                setButtonLoading(submitBtn, false);
+            }
+        }
+
+        // حذف دستهبندی
+        function deleteCategory(categoryId) {
+            if (confirm('آیا از حذف این دستهبندی اطمینان دارید؟')) {
+                try {
+                    const data = getData();
+                    data.forumCategories = data.forumCategories.filter(c => c.id !== categoryId);
+                    saveData(data);
+                    loadForumCategories();
+                    loadMainForum();
+                } catch (error) {
+                    console.error('خطا در حذف دستهبندی:', error);
+                    alert('خطا در حذف دستهبندی، لطفاً دوباره تلاش کنید');
+                }
+            }
+        }
+
+        // مدیریت ادمینها
+        function loadAdmins() {
+            const data = getData();
+            const tbody = document.getElementById('adminsList');
+            
+            tbody.innerHTML = '';
+            
+            data.admins.forEach(admin => {
+                // عدم نمایش رمز عبور
+                const adminCopy = {...admin, password: '••••••••'};
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${sanitizeInput(adminCopy.name)}</td>
+                    <td>${sanitizeInput(adminCopy.email)}</td>
+                    <td>${adminCopy.role === 'super' ? 'سوپر ادمین' : 'ادمین'}</td>
+                    <td>${adminCopy.joinDate || '1403/01/01'}</td>
+                    <td>
+                        <button class="btn-edit" onclick="editAdmin(${adminCopy.id})">ویرایش</button>
+                        ${adminCopy.id !== 1 ? `<button class="btn-delete" onclick="deleteAdmin(${adminCopy.id})">حذف</button>` : ''}
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // نمایش فرم ادمین
+        function showAdminForm() {
+            document.getElementById('adminForm').style.display = 'block';
+            document.getElementById('adminFormTitle').textContent = 'افزودن ادمین جدید';
+            document.getElementById('editAdminId').value = '';
+            document.getElementById('adminEditForm').reset();
+            document.getElementById('adminName').focus();
+        }
+
+        // مخفی کردن فرم ادمین
+        function hideAdminForm() {
+            document.getElementById('adminForm').style.display = 'none';
+        }
+
+        // ویرایش ادمین
+        function editAdmin(adminId) {
+            const data = getData();
+            const admin = data.admins.find(a => a.id === adminId);
+            
+            if (admin) {
+                document.getElementById('adminForm').style.display = 'block';
+                document.getElementById('adminFormTitle').textContent = 'ویرایش ادمین';
+                document.getElementById('editAdminId').value = admin.id;
+                document.getElementById('adminName').value = admin.name;
+                document.getElementById('adminEmail').value = admin.email;
+                document.getElementById('adminRole').value = admin.role;
+                document.getElementById('adminPassword').value = ''; // عدم نمایش رمز عبور
+                document.getElementById('adminPassword').required = false;
+                document.getElementById('adminName').focus();
+            }
+        }
+
+        // ذخیره ادمین
+        function handleAdminSave(e) {
+            e.preventDefault();
+            
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            setButtonLoading(submitBtn, true);
+            
+            try {
+                const data = getData();
+                const adminId = document.getElementById('editAdminId').value;
+                const adminData = {
+                    name: sanitizeInput(document.getElementById('adminName').value),
+                    email: sanitizeInput(document.getElementById('adminEmail').value),
+                    role: document.getElementById('adminRole').value
+                };
+                
+                // اگر رمز عبور وارد شده باشد
+                const password = document.getElementById('adminPassword').value;
+                if (password) {
+                    adminData.password = password;
+                }
+                
+                if (adminId) {
+                    // ویرایش ادمین موجود
+                    const index = data.admins.findIndex(a => a.id === parseInt(adminId));
+                    if (index !== -1) {
+                        // اگر رمز عبور جدید وارد نشده، رمز قبلی را حفظ کن
+                        if (!password) {
+                            adminData.password = data.admins[index].password;
+                        }
+                        data.admins[index] = { ...data.admins[index], ...adminData };
+                    }
+                } else {
+                    // افزودن ادمین جدید
+                    if (!password) {
+                        alert('لطفاً رمز عبور را وارد کنید');
+                        return;
+                    }
+                    
+                    const newId = data.admins.length > 0 ? Math.max(...data.admins.map(a => a.id)) + 1 : 1;
+                    data.admins.push({
+                        id: newId,
+                        joinDate: new Date().toLocaleDateString('fa-IR'),
+                        ...adminData
+                    });
+                }
+                
+                saveData(data);
+                loadAdmins();
+                hideAdminForm();
+            } catch (error) {
+                console.error('خطا در ذخیره ادمین:', error);
+                alert('خطا در ذخیره ادمین، لطفاً دوباره تلاش کنید');
+            } finally {
+                setButtonLoading(submitBtn, false);
+            }
+        }
+
+        // حذف ادمین
+        function deleteAdmin(adminId) {
+            if (adminId === 1) {
+                alert('امکان حذف سوپر ادمین اصلی وجود ندارد');
                 return;
             }
             
-            const newId = data.admins.length > 0 ? Math.max(...data.admins.map(a => a.id)) + 1 : 1;
-            data.admins.push({
-                id: newId,
-                joinDate: new Date().toLocaleDateString('fa-IR'),
-                ...adminData
-            });
+            if (confirm('آیا از حذف این ادمین اطمینان دارید؟')) {
+                try {
+                    const data = getData();
+                    data.admins = data.admins.filter(a => a.id !== adminId);
+                    saveData(data);
+                    loadAdmins();
+                } catch (error) {
+                    console.error('خطا در حذف ادمین:', error);
+                    alert('خطا در حذف ادمین، لطفاً دوباره تلاش کنید');
+                }
+            }
         }
-        
-        saveData(data);
-        loadAdmins();
-        hideAdminForm();
-    } catch (error) {
-        console.error('خطا در ذخیره ادمین:', error);
-        alert('خطا در ذخیره ادمین، لطفاً دوباره تلاش کنید');
-    } finally {
-        setButtonLoading(submitBtn, false);
-    }
-}
 
-// حذف ادمین
-function deleteAdmin(adminId) {
-    if (adminId === 1) {
-        alert('امکان حذف سوپر ادمین اصلی وجود ندارد');
-        return;
-    }
-    
-    if (confirm('آیا از حذف این ادمین اطمینان دارید؟')) {
-        try {
-            const data = getData();
-            data.admins = data.admins.filter(a => a.id !== adminId);
-            saveData(data);
-            loadAdmins();
-        } catch (error) {
-            console.error('خطا در حذف ادمین:', error);
-            alert('خطا در حذف ادمین، لطفاً دوباره تلاش کنید');
-        }
-    }
-}
-
-// ذخیره تنظیمات عمومی
-function handleGeneralSettingsSave(e) {
-    e.preventDefault();
-    
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    setButtonLoading(submitBtn, true);
-    
-    try {
-        const data = getData();
-        
-        data.siteSettings = {
-            title: sanitizeInput(document.getElementById('siteTitle').value),
-            description: sanitizeInput(document.getElementById('siteDescription').value),
-            contactPhone: sanitizeInput(document.getElementById('contactPhone').value),
-            contactEmail: sanitizeInput(document.getElementById('contactEmail').value)
-        };
-        
-        saveData(data);
-        
-        // بهروزرسانی عنوان صفحه
-        document.title = data.siteSettings.title;
-        
-        alert('تنظیمات با موفقیت ذخیره شد');
-    } catch (error) {
-        console.error('خطا در ذخیره تنظیمات:', error);
-        alert('خطا در ذخیره تنظیمات، لطفاً دوباره تلاش کنید');
-    } finally {
-        setButtonLoading(submitBtn, false);
-    }
-}
-
-// پشتیبانگیری از دادهها
-function backupData() {
-    try {
-        const data = getData();
-        const backup = {
-            ...data,
-            backupDate: new Date().toISOString(),
-            version: '1.0'
-        };
-        
-        const dataStr = JSON.stringify(backup, null, 2);
-        const dataBlob = new Blob([dataStr], {type: 'application/json'});
-        
-        const url = URL.createObjectURL(dataBlob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `academy-backup-${new Date().toISOString().split('T')[0]}.json`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-        
-        alert('پشتیبانگیری با موفقیت انجام شد');
-    } catch (error) {
-        console.error('خطا در پشتیبانگیری:', error);
-        alert('خطا در پشتیبانگیری، لطفاً دوباره تلاش کنید');
-    }
-}
-
-// بازیابی دادهها
-function restoreData() {
-    const fileInput = document.getElementById('backupFile');
-    const file = fileInput.files[0];
-    
-    if (!file) {
-        alert('لطفاً یک فایل پشتیبان انتخاب کنید');
-        return;
-    }
-    
-    if (!confirm('آیا از بازیابی دادهها اطمینان دارید؟ تمام دادههای فعلی جایگزین خواهند شد.')) {
-        return;
-    }
-    
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const backupData = JSON.parse(e.target.result);
+        // ذخیره تنظیمات عمومی
+        function handleGeneralSettingsSave(e) {
+            e.preventDefault();
             
-            // اعتبارسنجی ساختار دادهها
-            if (!backupData.courses || !backupData.students) {
-                throw new Error('فایل پشتیبان معتبر نیست');
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            setButtonLoading(submitBtn, true);
+            
+            try {
+                const data = getData();
+                
+                data.siteSettings = {
+                    title: sanitizeInput(document.getElementById('siteTitle').value),
+                    description: sanitizeInput(document.getElementById('siteDescription').value),
+                    contactPhone: sanitizeInput(document.getElementById('contactPhone').value),
+                    contactEmail: sanitizeInput(document.getElementById('contactEmail').value)
+                };
+                
+                saveData(data);
+                
+                // بهروزرسانی عنوان صفحه
+                document.title = data.siteSettings.title;
+                
+                alert('تنظیمات با موفقیت ذخیره شد');
+            } catch (error) {
+                console.error('خطا در ذخیره تنظیمات:', error);
+                alert('خطا در ذخیره تنظیمات، لطفاً دوباره تلاش کنید');
+            } finally {
+                setButtonLoading(submitBtn, false);
+            }
+        }
+
+        // پشتیبانگیری از دادهها
+        function backupData() {
+            try {
+                const data = getData();
+                const backup = {
+                    ...data,
+                    backupDate: new Date().toISOString(),
+                    version: '1.0'
+                };
+                
+                const dataStr = JSON.stringify(backup, null, 2);
+                const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `academy-backup-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                
+                alert('پشتیبانگیری با موفقیت انجام شد');
+            } catch (error) {
+                console.error('خطا در پشتیبانگیری:', error);
+                alert('خطا در پشتیبانگیری، لطفاً دوباره تلاش کنید');
+            }
+        }
+
+        // بازیابی دادهها
+        function restoreData() {
+            const fileInput = document.getElementById('backupFile');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('لطفاً یک فایل پشتیبان انتخاب کنید');
+                return;
             }
             
-            saveData(backupData);
+            if (!confirm('آیا از بازیابی دادهها اطمینان دارید؟ تمام دادههای فعلی جایگزین خواهند شد.')) {
+                return;
+            }
             
-            // بارگذاری مجدد تمام دادهها
-            updateStats();
-            loadCourses();
-            loadStudents();
-            loadRecentRegistrations();
-            loadAnnouncements();
-            loadGallery();
-            loadSections();
-            loadVideos();
-            loadDownloads();
-            loadQuizzes();
-            loadForumCategories();
-            loadAdmins();
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const backupData = JSON.parse(e.target.result);
+                    
+                    // اعتبارسنجی ساختار دادهها
+                    if (!backupData.courses || !backupData.students) {
+                        throw new Error('فایل پشتیبان معتبر نیست');
+                    }
+                    
+                    saveData(backupData);
+                    
+                    // بارگذاری مجدد تمام دادهها
+                    updateStats();
+                    loadCourses();
+                    loadStudents();
+                    loadRecentRegistrations();
+                    loadAnnouncements();
+                    loadGallery();
+                    loadSections();
+                    loadVideos();
+                    loadDownloads();
+                    loadQuizzes();
+                    loadForumCategories();
+                    loadAdmins();
+                    
+                    // بارگذاری مجدد صفحه اصلی
+                    loadMainGallery();
+                    loadMainVideos();
+                    loadMainDownloads();
+                    loadMainForum();
+                    
+                    alert('دادهها با موفقیت بازیابی شدند');
+                    fileInput.value = '';
+                } catch (error) {
+                    console.error('خطا در بازیابی دادهها:', error);
+                    alert('خطا در بازیابی دادهها. فایل پشتیبان معتبر نیست.');
+                }
+            };
             
-            // بارگذاری مجدد صفحه اصلی
-            loadMainGallery();
-            loadMainVideos();
-            loadMainDownloads();
-            loadMainForum();
-            
-            alert('دادهها با موفقیت بازیابی شدند');
-            fileInput.value = '';
-        } catch (error) {
-            console.error('خطا در بازیابی دادهها:', error);
-            alert('خطا در بازیابی دادهها. فایل پشتیبان معتبر نیست.');
+            reader.readAsText(file);
         }
-    };
-    
-    reader.readAsText(file);
-}
 
-// تنظیم اسلایدر اعلانها
-function setupAnnouncementSlider() {
-    const slides = document.querySelectorAll('.announcement-slide');
-    const dots = document.querySelectorAll('.slider-dot');
-    let currentSlide = 0;
-    
-    if (slides.length === 0) return;
-    
-    function showSlide(n) {
-        slides.forEach(slide => slide.classList.remove('active'));
-        dots.forEach(dot => dot.classList.remove('active'));
-        
-        currentSlide = (n + slides.length) % slides.length;
-        
-        slides[currentSlide].classList.add('active');
-        dots[currentSlide].classList.add('active');
-    }
-    
-    // کلیک روی داتها
-    dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => showSlide(index));
-    });
-    
-    // اسلایدر خودکار
-    setInterval(() => {
-        showSlide(currentSlide + 1);
-    }, 5000);
-}
-
-// توابع مربوط به مودال ثبتنام
-function openModal(courseName, courseId) {
-    document.getElementById('modal-course-title').textContent = `ثبتنام در ${courseName}`;
-    document.getElementById('course-id').value = courseId;
-    document.getElementById('registration-modal').style.display = 'flex';
-    document.getElementById('student-name').focus();
-}
-
-function closeModal() {
-    document.getElementById('registration-modal').style.display = 'none';
-    document.getElementById('registration-form').reset();
-    document.getElementById('success-message').style.display = 'none';
-}
-
-// مدیریت ثبتنام در دورهها
-document.getElementById('registration-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const submitBtn = this.querySelector('button[type="submit"]');
-    const courseId = document.getElementById('course-id').value;
-    const studentName = sanitizeInput(document.getElementById('student-name').value);
-    const studentEmail = sanitizeInput(document.getElementById('student-email').value);
-    
-    setButtonLoading(submitBtn, true);
-    
-    // شبیهسازی ثبتنام (در حالت واقعی باید به سرور ارسال شود)
-    setTimeout(() => {
-        try {
-            const data = getData();
+        // تنظیم اسلایدر اعلانها
+        function setupAnnouncementSlider() {
+            const slides = document.querySelectorAll('.announcement-slide');
+            const dots = document.querySelectorAll('.slider-dot');
+            let currentSlide = 0;
             
-            // افزودن به لیست ثبتنامها
-            const newRegId = data.registrations.length > 0 ? Math.max(...data.registrations.map(r => r.id)) + 1 : 1;
-            data.registrations.push({
-                id: newRegId,
-                studentName: studentName,
-                email: studentEmail,
-                courseName: document.getElementById('modal-course-title').textContent.replace('ثبتنام در ', ''),
-                date: new Date().toLocaleDateString('fa-IR'),
-                status: 'تکمیل شده'
+            if (slides.length === 0) return;
+            
+            function showSlide(n) {
+                slides.forEach(slide => slide.classList.remove('active'));
+                dots.forEach(dot => dot.classList.remove('active'));
+                
+                currentSlide = (n + slides.length) % slides.length;
+                
+                slides[currentSlide].classList.add('active');
+                dots[currentSlide].classList.add('active');
+            }
+            
+            // کلیک روی داتها
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => showSlide(index));
             });
             
-            saveData(data);
-            
-            // نمایش پیام موفقیت
-            document.getElementById('success-message').style.display = 'block';
-            document.getElementById('registration-form').reset();
-            
-            // بهروزرسانی آمار
-            updateStats();
-            loadRecentRegistrations();
-            
-        } catch (error) {
-            console.error('خطا در ثبتنام:', error);
-            alert('خطا در ثبتنام، لطفاً دوباره تلاش کنید');
-        } finally {
-            setButtonLoading(submitBtn, false);
+            // اسلایدر خودکار
+            setInterval(() => {
+                showSlide(currentSlide + 1);
+            }, 5000);
         }
-    }, 1500);
-});
 
-// مقداردهی اولیه زمانی که DOM لود شد
-document.addEventListener('DOMContentLoaded', function() {
-    // بارگذاری تنظیمات سایت
-    const data = getData();
-    if (data.siteSettings) {
-        document.getElementById('siteTitle').value = data.siteSettings.title;
-        document.getElementById('siteDescription').value = data.siteSettings.description;
-        document.getElementById('contactPhone').value = data.siteSettings.contactPhone;
-        document.getElementById('contactEmail').value = data.siteSettings.contactEmail;
-    }
-    
-    // بارگذاری ادمینها
-    loadAdmins();
-});
+        // توابع مربوط به مودال ثبتنام
+        function openModal(courseName, courseId) {
+            document.getElementById('modal-course-title').textContent = `ثبتنام در ${courseName}`;
+            document.getElementById('course-id').value = courseId;
+            document.getElementById('registration-modal').style.display = 'flex';
+            document.getElementById('student-name').focus();
+        }
 
-// تابع کمکی برای نمایش تاریخ شمسی
-function toPersianDate(date) {
-    const options = { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric',
-        calendar: 'persian',
-        numberingSystem: 'arab'
-    };
-    return new Date(date).toLocaleDateString('fa-IR', options);
-}
+        function closeModal() {
+            document.getElementById('registration-modal').style.display = 'none';
+            document.getElementById('registration-form').reset();
+            document.getElementById('success-message').style.display = 'none';
+        }
 
-// بهبود عملکرد جستجو
-document.querySelector('.search-input').addEventListener('input', function(e) {
-    const searchTerm = e.target.value.toLowerCase();
-    
-    if (searchTerm.length > 2) {
-        // اجرای جستجو
-        performSearch(searchTerm);
-    }
-});
+        // مدیریت ثبتنام در دورهها
+        document.getElementById('registration-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const courseId = document.getElementById('course-id').value;
+            const studentName = sanitizeInput(document.getElementById('student-name').value);
+            const studentEmail = sanitizeInput(document.getElementById('student-email').value);
+            
+            setButtonLoading(submitBtn, true);
+            
+            // شبیهسازی ثبتنام (در حالت واقعی باید به سرور ارسال شود)
+            setTimeout(() => {
+                try {
+                    const data = getData();
+                    
+                    // افزودن به لیست ثبتنامها
+                    const newRegId = data.registrations.length > 0 ? Math.max(...data.registrations.map(r => r.id)) + 1 : 1;
+                    data.registrations.push({
+                        id: newRegId,
+                        studentName: studentName,
+                        email: studentEmail,
+                        courseName: document.getElementById('modal-course-title').textContent.replace('ثبتنام در ', ''),
+                        date: new Date().toLocaleDateString('fa-IR'),
+                        status: 'تکمیل شده'
+                    });
+                    
+                    saveData(data);
+                    
+                    // نمایش پیام موفقیت
+                    document.getElementById('success-message').style.display = 'block';
+                    document.getElementById('registration-form').reset();
+                    
+                    // بهروزرسانی آمار
+                    updateStats();
+                    loadRecentRegistrations();
+                    
+                } catch (error) {
+                    console.error('خطا در ثبتنام:', error);
+                    alert('خطا در ثبتنام، لطفاً دوباره تلاش کنید');
+                } finally {
+                    setButtonLoading(submitBtn, false);
+                }
+            }, 1500);
+        });
 
-function performSearch(term) {
-    // در حالت واقعی این تابع باید با سرور ارتباط برقرار کند
-    console.log('جستجو برای:', term);
-    // اینجا میتوانید نتایج جستجو را نمایش دهید
-}
+        // مقداردهی اولیه زمانی که DOM لود شد
+        document.addEventListener('DOMContentLoaded', function() {
+            // بارگذاری تنظیمات سایت
+            const data = getData();
+            if (data.siteSettings) {
+                document.getElementById('siteTitle').value = data.siteSettings.title;
+                document.getElementById('siteDescription').value = data.siteSettings.description;
+                document.getElementById('contactPhone').value = data.siteSettings.contactPhone;
+                document.getElementById('contactEmail').value = data.siteSettings.contactEmail;
+            }
+        });
 
-// بهبود UX برای موبایل
-function checkTouchDevice() {
-    return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-}
+        // تابع کمکی برای نمایش تاریخ شمسی
+        function toPersianDate(date) {
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                calendar: 'persian',
+                numberingSystem: 'arab'
+            };
+            return new Date(date).toLocaleDateString('fa-IR', options);
+        }
 
-if (checkTouchDevice()) {
-    document.body.classList.add('touch-device');
-}
+        // بهبود عملکرد جستجو
+        document.querySelector('.search-input').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            if (searchTerm.length > 2) {
+                // اجرای جستجو
+                performSearch(searchTerm);
+            }
+        });
 
-// مدیریت خطاهای جهانی
-window.addEventListener('error', function(e) {
-    console.error('خطای جهانی:', e.error);
-});
+        function performSearch(term) {
+            // در حالت واقعی این تابع باید با سرور ارتباط برقرار کند
+            console.log('جستجو برای:', term);
+            // اینجا میتوانید نتایج جستجو را نمایش دهید
+        }
 
-window.addEventListener('unhandledrejection', function(e) {
-    console.error('Promise رد شده:', e.reason);
-});
+        // بهبود UX برای موبایل
+        function checkTouchDevice() {
+            return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        }
+
+        if (checkTouchDevice()) {
+            document.body.classList.add('touch-device');
+        }
+
+        // مدیریت خطاهای جهانی
+        window.addEventListener('error', function(e) {
+            console.error('خطای جهانی:', e.error);
+        });
+
+        window.addEventListener('unhandledrejection', function(e) {
+            console.error('Promise رد شده:', e.reason);
+        });
