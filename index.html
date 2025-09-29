@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>آکادمی نخبگان ستاری | مرکز آموزشهای تخصصی</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
     <meta name="description" content="آکادمی نخبگان ستاری - مرکز تخصصی آموزشهای حرفهای در کاپیسا افغانستان با اساتید مجرب و دوره های متنوع">
     
-    <!-- فونت‌های جایگزین مطمئن -->
+    <!-- فونتهای جایگزین مطمئن -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- ساختار داده‌های ساختاریافته برای SEO -->
+    <!-- ساختار دادههای ساختاریافته برای SEO -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -77,7 +77,6 @@
                 <li><a href="#sections" class="admin-nav-link" data-section="sections">مدیریت بخشها</a></li>
                 <li><a href="#announcements" class="admin-nav-link" data-section="announcements">مدیریت اعلانها</a></li>
                 <li><a href="#gallery" class="admin-nav-link" data-section="gallery">گالری آموزشی</a></li>
-                <li><a href="#blog" class="admin-nav-link" data-section="blog">مدیریت وبلاگ</a></li>
                 <li><a href="#videos" class="admin-nav-link" data-section="videos">مدیریت ویدیوها</a></li>
                 <li><a href="#downloads" class="admin-nav-link" data-section="downloads">مدیریت منابع</a></li>
                 <li><a href="#quizzes" class="admin-nav-link" data-section="quizzes">مدیریت آزمونها</a></li>
@@ -314,6 +313,260 @@
                 </div>
             </div>
             
+            <!-- بخش جدید: مدیریت ویدیوها -->
+            <div class="admin-section" id="videos-section">
+                <h2>مدیریت ویدیوهای آموزشی</h2>
+                <button class="btn-add" id="addVideoBtn">افزودن ویدیو جدید</button>
+                
+                <div class="admin-card">
+                    <h3>لیست ویدیوها</h3>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>عنوان ویدیو</th>
+                                    <th>دستهبندی</th>
+                                    <th>مدت زمان</th>
+                                    <th>تاریخ آپلود</th>
+                                    <th>عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="videosList">
+                                <!-- دادهها از طریق جاوااسکریپت پر میشوند -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="admin-form" id="videoForm" style="display: none;">
+                    <h3 id="videoFormTitle">افزودن ویدیو جدید</h3>
+                    <form id="videoEditForm">
+                        <input type="hidden" id="editVideoId">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="videoTitle">عنوان ویدیو</label>
+                                <input type="text" id="videoTitle" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="videoCategory">دستهبندی</label>
+                                <select id="videoCategory" required>
+                                    <option value="خبرنگاری">خبرنگاری</option>
+                                    <option value="فن بیان">فن بیان</option>
+                                    <option value="روانشناسی">روانشناسی</option>
+                                    <option value="ارتباطات">ارتباطات</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="videoDuration">مدت زمان (دقیقه)</label>
+                                <input type="number" id="videoDuration" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="videoUrl">لینک ویدیو</label>
+                                <input type="url" id="videoUrl" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="videoDescription">توضیحات ویدیو</label>
+                            <textarea id="videoDescription" rows="3"></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-edit">ذخیره</button>
+                            <button type="button" class="btn-delete" id="cancelVideoEdit">لغو</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- بخش جدید: مدیریت منابع -->
+            <div class="admin-section" id="downloads-section">
+                <h2>مدیریت منابع آموزشی</h2>
+                <button class="btn-add" id="addDownloadBtn">افزودن منبع جدید</button>
+                
+                <div class="admin-card">
+                    <h3>لیست منابع</h3>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>عنوان منبع</th>
+                                    <th>نوع فایل</th>
+                                    <th>حجم</th>
+                                    <th>دستهبندی</th>
+                                    <th>تاریخ آپلود</th>
+                                    <th>عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="downloadsList">
+                                <!-- دادهها از طریق جاوااسکریپت پر میشوند -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="admin-form" id="downloadForm" style="display: none;">
+                    <h3 id="downloadFormTitle">افزودن منبع جدید</h3>
+                    <form id="downloadEditForm">
+                        <input type="hidden" id="editDownloadId">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="downloadTitle">عنوان منبع</label>
+                                <input type="text" id="downloadTitle" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="downloadType">نوع فایل</label>
+                                <select id="downloadType" required>
+                                    <option value="PDF">PDF</option>
+                                    <option value="DOCX">Word</option>
+                                    <option value="PPTX">PowerPoint</option>
+                                    <option value="MP3">صوتی</option>
+                                    <option value="ZIP">فایل فشرده</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="downloadSize">حجم فایل (MB)</label>
+                                <input type="number" id="downloadSize" step="0.1" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="downloadCategory">دستهبندی</label>
+                                <select id="downloadCategory" required>
+                                    <option value="خبرنگاری">خبرنگاری</option>
+                                    <option value="فن بیان">فن بیان</option>
+                                    <option value="روانشناسی">روانشناسی</option>
+                                    <option value="ارتباطات">ارتباطات</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="downloadUrl">لینک دانلود</label>
+                            <input type="url" id="downloadUrl" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="downloadDescription">توضیحات منبع</label>
+                            <textarea id="downloadDescription" rows="3"></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-edit">ذخیره</button>
+                            <button type="button" class="btn-delete" id="cancelDownloadEdit">لغو</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- بخش جدید: مدیریت آزمونها -->
+            <div class="admin-section" id="quizzes-section">
+                <h2>مدیریت آزمونها</h2>
+                <button class="btn-add" id="addQuizBtn">افزودن آزمون جدید</button>
+                
+                <div class="admin-card">
+                    <h3>لیست آزمونها</h3>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>عنوان آزمون</th>
+                                    <th>دوره مربوطه</th>
+                                    <th>تعداد سوالات</th>
+                                    <th>مدت زمان (دقیقه)</th>
+                                    <th>وضعیت</th>
+                                    <th>عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="quizzesList">
+                                <!-- دادهها از طریق جاوااسکریپت پر میشوند -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="admin-form" id="quizForm" style="display: none;">
+                    <h3 id="quizFormTitle">افزودن آزمون جدید</h3>
+                    <form id="quizEditForm">
+                        <input type="hidden" id="editQuizId">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="quizTitle">عنوان آزمون</label>
+                                <input type="text" id="quizTitle" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="quizCourse">دوره مربوطه</label>
+                                <select id="quizCourse" required>
+                                    <option value="خبرنگاری حرفهای">خبرنگاری حرفهای</option>
+                                    <option value="فن بیان و سخنوری">فن بیان و سخنوری</option>
+                                    <option value="روانشناسی ارتباطات">روانشناسی ارتباطات</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="quizQuestions">تعداد سوالات</label>
+                                <input type="number" id="quizQuestions" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="quizDuration">مدت زمان (دقیقه)</label>
+                                <input type="number" id="quizDuration" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="quizDescription">توضیحات آزمون</label>
+                            <textarea id="quizDescription" rows="3"></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-edit">ذخیره</button>
+                            <button type="button" class="btn-delete" id="cancelQuizEdit">لغو</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- بخش جدید: مدیریت انجمن -->
+            <div class="admin-section" id="forum-section">
+                <h2>مدیریت انجمن گفتگو</h2>
+                <button class="btn-add" id="addCategoryBtn">افزودن دستهبندی جدید</button>
+                
+                <div class="admin-card">
+                    <h3>دستهبندیهای انجمن</h3>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>نام دستهبندی</th>
+                                    <th>توضیحات</th>
+                                    <th>تعداد موضوعات</th>
+                                    <th>تعداد پاسخها</th>
+                                    <th>عملیات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="forumCategoriesList">
+                                <!-- دادهها از طریق جاوااسکریپت پر میشوند -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="admin-form" id="categoryForm" style="display: none;">
+                    <h3 id="categoryFormTitle">افزودن دستهبندی جدید</h3>
+                    <form id="categoryEditForm">
+                        <input type="hidden" id="editCategoryId">
+                        <div class="form-group">
+                            <label for="categoryName">نام دستهبندی</label>
+                            <input type="text" id="categoryName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="categoryDescription">توضیحات دستهبندی</label>
+                            <textarea id="categoryDescription" rows="3" required></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-edit">ذخیره</button>
+                            <button type="button" class="btn-delete" id="cancelCategoryEdit">لغو</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
             <!-- بخش مدیریت ادمینها -->
             <div class="admin-section" id="admins-section">
                 <h2>مدیریت ادمینها</h2>
@@ -496,8 +749,8 @@
         <section id="courses">
             <div class="container">
                 <div class="section-title">
-                    <h2>دوره‌های تخصصی</h2>
-                    <p>برترین دوره‌های آموزشی با استانداردهای بین‌المللی و اساتید مجرب</p>
+                    <h2>دورههای تخصصی</h2>
+                    <p>برترین دورههای آموزشی با استانداردهای بینالمللی و اساتید مجرب</p>
                 </div>
                 
                 <div class="courses-grid">
@@ -507,7 +760,7 @@
                         </div>
                         <div class="course-content">
                             <h3>خبرنگاری شش ماهه</h3>
-                            <p>دوره فشرده خبرنگاری حرفه‌ای با تمرکز بر اصول روزنامه‌نگاری مدرن و گزارش‌نویسی</p>
+                            <p>دوره فشرده خبرنگاری حرفهای با تمرکز بر اصول روزنامهنگاری مدرن و گزارشنویسی</p>
                             <span class="course-duration">۶ ماه</span>
                             <a href="#registration" class="btn">ثبت نام</a>
                         </div>
@@ -519,7 +772,7 @@
                         </div>
                         <div class="course-content">
                             <h3>فن بیان</h3>
-                            <p>آموزش تکنیک‌های حرفه‌ای سخنوری، کنترل صدا و اعتماد به نفس در صحبت کردن</p>
+                            <p>آموزش تکنیکهای حرفهای سخنوری، کنترل صدا و اعتماد به نفس در صحبت کردن</p>
                             <span class="course-duration">۳ ماه</span>
                             <a href="#registration" class="btn">ثبت نام</a>
                         </div>
@@ -530,8 +783,8 @@
                             <i class="fas fa-brain"></i>
                         </div>
                         <div class="course-content">
-                            <h3>روان‌شناسی تاریک</h3>
-                            <p>آشنایی با جنبه‌های پیچیده روانشناسی و تاثیر آن بر روابط اجتماعی و فردی</p>
+                            <h3>روانشناسی تاریک</h3>
+                            <p>آشنایی با جنبههای پیچیده روانشناسی و تاثیر آن بر روابط اجتماعی و فردی</p>
                             <span class="course-duration">۴ ماه</span>
                             <a href="#registration" class="btn">ثبت نام</a>
                         </div>
@@ -542,8 +795,8 @@
                             <i class="fas fa-newspaper"></i>
                         </div>
                         <div class="course-content">
-                            <h3>ژورنالیسم حرفه‌ای</h3>
-                            <p>آموزش اصول پیشرفته روزنامه‌نگاری، تحقیق و تولید محتوای حرفه‌ای</p>
+                            <h3>ژورنالیسم حرفهای</h3>
+                            <p>آموزش اصول پیشرفته روزنامهنگاری، تحقیق و تولید محتوای حرفهای</p>
                             <span class="course-duration">۵ ماه</span>
                             <a href="#registration" class="btn">ثبت نام</a>
                         </div>
@@ -567,7 +820,7 @@
                         </div>
                         <div class="course-content">
                             <h3>دکلمه</h3>
-                            <p>آموزش هنر دکلمه و بیان شعر و نثر با تکنیک‌های حرفه‌ای</p>
+                            <p>آموزش هنر دکلمه و بیان شعر و نثر با تکنیکهای حرفهای</p>
                             <span class="course-duration">۳ ماه</span>
                             <a href="#registration" class="btn">ثبت نام</a>
                         </div>
@@ -579,7 +832,7 @@
                         </div>
                         <div class="course-content">
                             <h3>ارتباطات</h3>
-                            <p>تقویت مهارت‌های ارتباطی و فراگیری اصول مذاکره و تعامل موثر</p>
+                            <p>تقویت مهارتهای ارتباطی و فراگیری اصول مذاکره و تعامل موثر</p>
                             <span class="course-duration">۳ ماه</span>
                             <a href="#registration" class="btn">ثبت نام</a>
                         </div>
@@ -593,24 +846,24 @@
             <div class="container">
                 <div class="section-title">
                     <h2>ظرفیت درس آنلاین</h2>
-                    <p>ثبت‌نام در دوره‌های آنلاین آکادمی و دسترسی به کلاس‌های مجازی</p>
+                    <p>ثبتنام در دورههای آنلاین آکادمی و دسترسی به کلاسهای مجازی</p>
                 </div>
                 
                 <div class="courses-container">
                     <!-- درس اول -->
                     <div class="course-card-online">
                         <div class="course-header">
-                            <h3 class="course-title">خبرنگاری حرفه‌ای آنلاین</h3>
+                            <h3 class="course-title">خبرنگاری حرفهای آنلاین</h3>
                             <div class="course-capacity">
-                                <span class="capacity-text">ظرفیت باقی‌مانده:</span>
+                                <span class="capacity-text">ظرفیت باقیمانده:</span>
                                 <span class="capacity-value" id="capacity-1">20 نفر</span>
                             </div>
                         </div>
                         <div class="course-content-online">
-                            <p class="course-description">دوره جامع خبرنگاری آنلاین با تمرکز بر اصول روزنامه‌نگاری مدرن، گزارش‌نویسی و مصاحبه‌های حرفه‌ای</p>
+                            <p class="course-description">دوره جامع خبرنگاری آنلاین با تمرکز بر اصول روزنامهنگاری مدرن، گزارشنویسی و مصاحبههای حرفهای</p>
                             
-                            <button class="register-btn" onclick="openModal('خبرنگاری حرفه‌ای آنلاین', 1)">
-                                ثبت‌نام در درس
+                            <button class="register-btn" onclick="openModal('خبرنگاری حرفهای آنلاین', 1)">
+                                ثبتنام در درس
                             </button>
                             
                             <div class="online-class-link" id="class-link-1">
@@ -618,7 +871,7 @@
                             </div>
                             
                             <div class="registered-students">
-                                <h4 class="students-title">شاگردان ثبت‌نام شده</h4>
+                                <h4 class="students-title">شاگردان ثبتنام شده</h4>
                                 <div class="students-list" id="students-list-1">
                                     <!-- لیست دانشجویان از طریق جاوااسکریپت اضافه خواهد شد -->
                                 </div>
@@ -631,15 +884,15 @@
                         <div class="course-header">
                             <h3 class="course-title">فن بیان و گویندگی آنلاین</h3>
                             <div class="course-capacity">
-                                <span class="capacity-text">ظرفیت باقی‌مانده:</span>
+                                <span class="capacity-text">ظرفیت باقیمانده:</span>
                                 <span class="capacity-value" id="capacity-2">15 نفر</span>
                             </div>
                         </div>
                         <div class="course-content-online">
-                            <p class="course-description">آموزش تکنیک‌های حرفه‌ای سخنوری، کنترل صدا، اعتماد به نفس و هنر گویندگی در محیط آنلاین</p>
+                            <p class="course-description">آموزش تکنیکهای حرفهای سخنوری، کنترل صدا، اعتماد به نفس و هنر گویندگی در محیط آنلاین</p>
                             
                             <button class="register-btn" onclick="openModal('فن بیان و گویندگی آنلاین', 2)">
-                                ثبت‌نام در درس
+                                ثبتنام در درس
                             </button>
                             
                             <div class="online-class-link" id="class-link-2">
@@ -647,7 +900,7 @@
                             </div>
                             
                             <div class="registered-students">
-                                <h4 class="students-title">شاگردان ثبت‌نام شده</h4>
+                                <h4 class="students-title">شاگردان ثبتنام شده</h4>
                                 <div class="students-list" id="students-list-2">
                                     <!-- لیست دانشجویان از طریق جاوااسکریپت اضافه خواهد شد -->
                                 </div>
@@ -658,17 +911,17 @@
                     <!-- درس سوم -->
                     <div class="course-card-online">
                         <div class="course-header">
-                            <h3 class="course-title">روان‌شناسی ارتباطات آنلاین</h3>
+                            <h3 class="course-title">روانشناسی ارتباطات آنلاین</h3>
                             <div class="course-capacity">
-                                <span class="capacity-text">ظرفیت باقی‌مانده:</span>
+                                <span class="capacity-text">ظرفیت باقیمانده:</span>
                                 <span class="capacity-value" id="capacity-3">10 نفر</span>
                             </div>
                         </div>
                         <div class="course-content-online">
                             <p class="course-description">آشنایی با اصول روانشناسی ارتباطات و تاثیر آن بر روابط اجتماعی در فضای مجازی و آنلاین</p>
                             
-                            <button class="register-btn" onclick="openModal('روان‌شناسی ارتباطات آنلاین', 3)">
-                                ثبت‌نام در درس
+                            <button class="register-btn" onclick="openModal('روانشناسی ارتباطات آنلاین', 3)">
+                                ثبتنام در درس
                             </button>
                             
                             <div class="online-class-link" id="class-link-3">
@@ -676,7 +929,7 @@
                             </div>
                             
                             <div class="registered-students">
-                                <h4 class="students-title">شاگردان ثبت‌نام شده</h4>
+                                <h4 class="students-title">شاگردان ثبتنام شده</h4>
                                 <div class="students-list" id="students-list-3">
                                     <!-- لیست دانشجویان از طریق جاوااسکریپت اضافه خواهد شد -->
                                 </div>
@@ -691,7 +944,7 @@
         <div class="modal" id="registration-modal">
             <div class="modal-content">
                 <button class="close-modal" onclick="closeModal()" aria-label="بستن">&times;</button>
-                <h3 class="modal-title" id="modal-course-title">ثبت‌نام در دوره</h3>
+                <h3 class="modal-title" id="modal-course-title">ثبتنام در دوره</h3>
                 
                 <form id="registration-form">
                     <input type="hidden" id="course-id" value="">
@@ -710,16 +963,30 @@
                 </form>
                 
                 <div class="success-message" id="success-message">
-                    ثبت‌نام شما با موفقیت انجام شد!
+                    ثبتنام شما با موفقیت انجام شد!
                 </div>
             </div>
         </div>
+
+        <!-- بخش گالری آموزشی -->
+        <section id="gallery" class="gallery-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>گالری آموزشی</h2>
+                    <p>تصاویری از فعالیتها و رویدادهای آکادمی نخبگان ستاری</p>
+                </div>
+                
+                <div class="gallery-container" id="mainGallery">
+                    <!-- تصاویر گالری از طریق جاوااسکریپت اضافه خواهند شد -->
+                </div>
+            </div>
+        </section>
 
         <section id="instructors" class="instructors-section">
             <div class="container">
                 <div class="section-title">
                     <h2>اساتید مجرب</h2>
-                    <p>با بهترین اساتید و متخصصان کشور در زمینه‌های مختلف آموزشی</p>
+                    <p>با بهترین اساتید و متخصصان کشور در زمینههای مختلف آموزشی</p>
                 </div>
                 
                 <div class="instructors-grid">
@@ -730,7 +997,7 @@
                         <div class="instructor-info">
                             <h3>احمد رضا ستاری</h3>
                             <span class="instructor-subject">مدیریت و ارتباطات</span>
-                            <p>مدرس برجسته دوره‌های مدیریت رسانه و ارتباطات با بیش از ۱۵ سال سابقه تدریس</p>
+                            <p>مدرس برجسته دورههای مدیریت رسانه و ارتباطات با بیش از ۱۵ سال سابقه تدریس</p>
                         </div>
                     </div>
                     
@@ -741,7 +1008,7 @@
                         <div class="instructor-info">
                             <h3>ملیحه حیاتی</h3>
                             <span class="instructor-subject">روانشناسی</span>
-                            <p>متخصص روانشناسی اجتماعی و مدرس دوره‌های پیشرفته روانشناسی کاربردی</p>
+                            <p>متخصص روانشناسی اجتماعی و مدرس دورههای پیشرفته روانشناسی کاربردی</p>
                         </div>
                     </div>
                     
@@ -752,7 +1019,7 @@
                         <div class="instructor-info">
                             <h3>علی حضرت</h3>
                             <span class="instructor-subject">ژورنالیسم</span>
-                            <p> روزنامه‌نگار برجسته و مدرس اصول خبرنگاری حرفه‌ای با تجربه بین‌المللی</p>
+                            <p> روزنامهنگار برجسته و مدرس اصول خبرنگاری حرفهای با تجربه بینالمللی</p>
                         </div>
                     </div>
                     
@@ -763,7 +1030,7 @@
                         <div class="instructor-info">
                             <h3>نيلوفر ابراهیمی</h3>
                             <span class="instructor-subject">صدا و بیان</span>
-                            <p>متخصص فن بیان و گویندگی با سابقه همکاری با شبکه‌های ملی و بین‌المللی</p>
+                            <p>متخصص فن بیان و گویندگی با سابقه همکاری با شبکههای ملی و بینالمللی</p>
                         </div>
                     </div>
                     
@@ -785,7 +1052,7 @@
                         <div class="instructor-info">
                             <h3>گلثوم حیدری</h3>
                             <span class="instructor-subject">ارتباطات اجتماعی</span>
-                            <p>مدرس و مشاور ارتباطات بین‌فردی و توسعه مهارت‌های اجتماعی</p>
+                            <p>مدرس و مشاور ارتباطات بینفردی و توسعه مهارتهای اجتماعی</p>
                         </div>
                     </div>
                     
@@ -807,7 +1074,7 @@
             <div class="container">
                 <div class="section-title">
                     <h2>شاگردان ممتاز</h2>
-                    <p>برترین دانش‌آموزان و دانشجویان آکادمی نخبگان ستاری</p>
+                    <p>برترین دانشآموزان و دانشجویان آکادمی نخبگان ستاری</p>
                 </div>
                 
                 <div class="students-grid">
@@ -865,13 +1132,13 @@
         <section id="registration" class="registration-section">
             <div class="container">
                 <div class="section-title">
-                    <h2>ثبت نام در دوره‌ها</h2>
-                    <p>برای ثبت نام در دوره‌های آموزشی آکادمی نخبگان ستاری اقدام کنید</p>
+                    <h2>ثبت نام در دورهها</h2>
+                    <p>برای ثبت نام در دورههای آموزشی آکادمی نخبگان ستاری اقدام کنید</p>
                 </div>
                 
                 <div class="registration-box">
                     <h2>ثبت نام از طریق واتساپ</h2>
-                    <p>برای ثبت نام در دوره‌های آموزشی آکادمی نخبگان ستاری، از طریق واتساپ با ما در ارتباط باشید. کارشناسان ما آماده پاسخگویی به سوالات و راهنمایی شما هستند.</p>
+                    <p>برای ثبت نام در دورههای آموزشی آکادمی نخبگان ستاری، از طریق واتساپ با ما در ارتباط باشید. کارشناسان ما آماده پاسخگویی به سوالات و راهنمایی شما هستند.</p>
                     <a href="https://wa.me/93792371380" class="btn btn-whatsapp">
                         <i class="fab fa-whatsapp"></i> ثبت نام از طریق واتساپ
                     </a>
@@ -900,7 +1167,7 @@
                         <div class="dashboard-icon">
                             <i class="fas fa-tasks"></i>
                         </div>
-                        <h3>تکالیف و پروژه‌ها</h3>
+                        <h3>تکالیف و پروژهها</h3>
                         <p>ارسال تکالیف، پیگیری نمرات و دریافت بازخورد</p>
                         <a href="https://whatsapp.com/channel/0029VbBGXYdEquiMutgMHK0b" class="btn">ورود</a>
                     </div>
@@ -919,7 +1186,7 @@
                             <i class="fas fa-calendar-alt"></i>
                         </div>
                         <h3>برنامه زمانی</h3>
-                        <p>مشاهده برنامه کلاس‌ها و رویدادهای آموزشی</p>
+                        <p>مشاهده برنامه کلاسها و رویدادهای آموزشی</p>
                         <a href="https://whatsapp.com/channel/0029VbBGXYdEquiMutgMHK0b" class="btn">ورود</a>
                     </div>
                 </div>
@@ -991,7 +1258,23 @@
         </section>
 
         <!-- بخش ویدیوهای آموزشی -->
-       
+        <section id="videos" class="videos-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>ویدیوهای آموزشی</h2>
+                    <p>آموزشهای ویدیویی کوتاه و کاربردی برای یادگیری سریع</p>
+                </div>
+                
+                <div class="videos-grid" id="mainVideos">
+                    <!-- ویدیوها از طریق جاوااسکریپت اضافه خواهند شد -->
+                </div>
+                
+                <div style="text-align: center; margin-top: 40px;">
+                    <a href="#videos-archive" class="btn">مشاهده همه ویدیوها</a>
+                </div>
+            </div>
+        </section>
+
         <!-- بخش منابع قابل دانلود -->
         <section id="downloads" class="downloads-section">
             <div class="container">
@@ -1000,42 +1283,8 @@
                     <p>جزوات، تمرینات و منابع آموزشی برای دانلود رایگان</p>
                 </div>
                 
-                <div class="downloads-grid">
-                    <div class="download-card">
-                        <div class="download-icon">
-                            <i class="fas fa-file-pdf"></i>
-                        </div>
-                        <h3 class="download-title">جزوه فن بیان پیشرفته</h3>
-                        <p class="download-size">PDF - 2.4 MB</p>
-                        <a href="#" class="btn">دانلود</a>
-                    </div>
-                    
-                    <div class="download-card">
-                        <div class="download-icon">
-                            <i class="fas fa-file-word"></i>
-                        </div>
-                        <h3 class="download-title">تمرینات عملی خبرنگاری</h3>
-                        <p class="download-size">DOCX - 1.8 MB</p>
-                        <a href="#" class="btn">دانلود</a>
-                    </div>
-                    
-                    <div class="download-card">
-                        <div class="download-icon">
-                            <i class="fas fa-file-powerpoint"></i>
-                        </div>
-                        <h3 class="download-title">اسلایدهای روانشناسی ارتباطات</h3>
-                        <p class="download-size">PPTX - 3.2 MB</p>
-                        <a href="#" class="btn">دانلود</a>
-                    </div>
-                    
-                    <div class="download-card">
-                        <div class="download-icon">
-                            <i class="fas fa-file-audio"></i>
-                        </div>
-                        <h3 class="download-title">تمرینات صدا سازی</h3>
-                        <p class="download-size">MP3 - 15.7 MB</p>
-                        <a href="#" class="btn">دانلود</a>
-                    </div>
+                <div class="downloads-grid" id="mainDownloads">
+                    <!-- منابع از طریق جاوااسکریپت اضافه خواهند شد -->
                 </div>
                 
                 <div style="text-align: center; margin-top: 40px;">
@@ -1052,33 +1301,8 @@
                     <p>مکانی برای تبادل نظر، پرسش و پاسخ و تعامل با اساتید و دانشجویان</p>
                 </div>
                 
-                <div class="forum-categories">
-                    <div class="forum-category">
-                        <h3>خبرنگاری و رسانه</h3>
-                        <p>بحث و گفتگو درباره موضوعات مربوط به خبرنگاری، رسانه و روزنامهن گاری</p>
-                        <div class="forum-stats">
-                            <span>۲۴۵ موضوع</span>
-                            <span>۱,۲۴۷ پاسخ</span>
-                        </div>
-                    </div>
-                    
-                    <div class="forum-category">
-                        <h3>فن بیان و سخنوری</h3>
-                        <p>مباحث مربوط به فن بیان، سخنوری، گویندگی و مهارتهای کلامی</p>
-                        <div class="forum-stats">
-                            <span>۱۸۹ موضوع</span>
-                            <span>۹۸۷ پاسخ</span>
-                        </div>
-                    </div>
-                    
-                    <div class="forum-category">
-                        <h3>روانشناسی و ارتباطات</h3>
-                        <p>بحث درباره روانشناسی ارتباطات، مهارتهای اجتماعی و تعاملات انسانی</p>
-                        <div class="forum-stats">
-                            <span>۱۵۶ موضوع</span>
-                            <span>۸۴۵ پاسخ</span>
-                        </div>
-                    </div>
+                <div class="forum-categories" id="mainForum">
+                    <!-- دستهبندیهای انجمن از طریق جاوااسکریپت اضافه خواهند شد -->
                 </div>
                 
                 <div style="text-align: center; margin-top: 40px;">
@@ -1094,10 +1318,9 @@
             <div class="footer-content">
                 <div class="footer-column">
                     <h3>درباره آکادمی</h3>
-                    <p>آکادمی نخبگان ستاری در کاپیسا افغانستان با هدف پرورش استعدادهای درخشان و تربیت متخصصان حرفهای در زمینه های رسانه, ارتباطات و هنرهای کلامی تأسیس شده است.</p>
+                    <p>آکادمی نخبگان ستاری در کاپیسا افغانستان با هدف پرورش استعدادهای درخشان و تربیت متخصصان حرفهای در زمینههای رسانه, ارتباطات و هنرهای کلامی تأسیس شده است.</p>
                     <div class="location-badge">
                         <i class="fas fa-map-marker-alt"></i> کاپیسا, افغانستان
-                        
                     </div>
                 </div>
                 
@@ -1141,10 +1364,6 @@
         </div>
     </footer>
 
-    <!-- اسکریپت‌های بهبود یافته -->
-  
+    
 </body>
 </html>
-
-
-
