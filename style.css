@@ -1,4 +1,4 @@
-  /* استایلهای اصلی */
+ /* استایلهای اصلی */
         :root {
             --primary-dark: #0a1930;
             --primary-light: #1e3a5f;
@@ -43,7 +43,7 @@
             outline-offset: 2px;
         }
         
-        /* بهینه‌سازی تصاویر */
+        /* بهینهسازی تصاویر */
         img {
             max-width: 100%;
             height: auto;
@@ -58,7 +58,7 @@
             opacity: 1;
         }
         
-        /* استایل‌های موجود با بهبودهای جزئی */
+        /* استایلهای موجود با بهبودهای جزئی */
         .luxury-border {
             border: 2px solid transparent;
             border-image: var(--gold-gradient);
