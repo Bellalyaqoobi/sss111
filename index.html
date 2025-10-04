@@ -3,1369 +3,2573 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>آکادمی نخبگان ستاری | مرکز آموزشهای تخصصی</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
-    <meta name="description" content="آکادمی نخبگان ستاری - مرکز تخصصی آموزشهای حرفهای در کاپیسا افغانستان با اساتید مجرب و دوره های متنوع">
-    
-    <!-- فونتهای جایگزین مطمئن -->
+    <title>Kali Tools Pro | ابزارهای حرفهای کالی لینکس</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <!-- ساختار دادههای ساختاریافته برای SEO -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "EducationalOrganization",
-        "name": "آکادمی نخبگان ستاری",
-        "description": "مرکز تخصصی آموزشهای حرفهای در کاپیسا افغانستان",
-        "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "کاپیسا",
-            "addressCountry": "افغانستان"
-        },
-        "telephone": "0792371380",
-        "url": "https://setare-academy.af",
-        "sameAs": [
-            "https://t.me/kapisa_2",
-            "https://www.instagram.com/kapisa_2",
-            "https://youtube.com/@kapisagroup_2"
-        ]
-    }
-    </script>
-    
- 
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Vazirmatn, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #FF6B00; /* Kali Orange */
+            --primary-dark: #E55A00;
+            --secondary: #1A1A1A;
+            --accent: #00C853;
+            --light: #F5F5F5;
+            --dark: #121212;
+            --text: #333333;
+            --text-light: #777777;
+            --danger: #F44336;
+            --warning: #FF9800;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--secondary) 0%, #2A2A2A 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo-subtext {
+            font-size: 0.8rem;
+            color: #CCCCCC;
+            display: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+            font-size: 0.9rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            right: 0;
+            background-color: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(255, 107, 0, 0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: var(--secondary);
+        }
+
+        .btn-success {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #00B248;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #D32F2F;
+            transform: translateY(-2px);
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #F57C00;
+            transform: translateY(-2px);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            height: 100vh;
+            background: var(--secondary);
+            z-index: 2000;
+            transition: right 0.3s ease;
+            padding: 2rem;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .close-mobile-menu {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .mobile-nav-links {
+            list-style: none;
+        }
+
+        .mobile-nav-links li {
+            margin-bottom: 1.5rem;
+        }
+
+        .mobile-nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            display: block;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8));
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 4rem 1rem;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1.2rem;
+            color: var(--primary);
+            line-height: 1.3;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 4rem 1rem;
+            background-color: white;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 4px;
+            background: var(--primary);
+            bottom: -10px;
+            right: 50%;
+            transform: translateX(50%);
+            border-radius: 2px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+            border-top: 4px solid var(--primary);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1.2rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+
+        /* Gallery Section */
+        .gallery {
+            padding: 4rem 1rem;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            height: 220px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .gallery-item-overlay {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 1rem;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+        }
+
+        .gallery-item:hover .gallery-item-overlay {
+            transform: translateY(0);
+        }
+
+        .gallery-actions {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            gap: 5px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .gallery-item:hover .gallery-actions {
+            opacity: 1;
+        }
+
+        .gallery-action-btn {
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .gallery-action-btn:hover {
+            background: var(--primary);
+        }
+
+        /* Products Section */
+        .products {
+            padding: 4rem 1rem;
+            background-color: white;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-image {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            position: relative;
+        }
+
+        .product-content {
+            padding: 1.2rem;
+        }
+
+        .product-category {
+            color: var(--primary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            color: var(--secondary);
+        }
+
+        .product-description {
+            color: var(--text-light);
+            margin-bottom: 1.2rem;
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .currency {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-right: 5px;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            padding: 4rem 1rem;
+            background: linear-gradient(135deg, #1a2a3a 0%, #2c3e50 100%);
+            color: white;
+            display: none;
+        }
+
+        .admin-panel.active {
+            display: block;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 1rem;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .admin-tab {
+            background: none;
+            border: none;
+            color: #ccc;
+            padding: 0.7rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .admin-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .admin-tab-content {
+            display: none;
+        }
+
+        .admin-tab-content.active {
+            display: block;
+        }
+
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1.2rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .admin-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .control-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .control-card h3 {
+            margin-bottom: 1.2rem;
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        textarea.form-control {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .file-upload {
+            border: 2px dashed #ddd;
+            border-radius: 5px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary);
+        }
+
+        .file-upload i {
+            font-size: 2.5rem;
+            color: #ddd;
+            margin-bottom: 0.8rem;
+        }
+
+        .file-upload input {
+            display: none;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 150px;
+            margin-top: 1rem;
+            border-radius: 5px;
+            display: none;
+        }
+
+        /* Ethical Section */
+        .ethical {
+            padding: 4rem 1rem;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+        }
+
+        .ethical-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .ethical-warning {
+            background: #FFF3E0;
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            text-align: right;
+        }
+
+        .ethical-warning h3 {
+            color: var(--primary);
+            margin-bottom: 1.2rem;
+            font-size: 1.3rem;
+        }
+
+        .ethical-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.2rem;
+            text-align: right;
+            margin: 1.5rem 0;
+        }
+
+        .ethical-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .ethical-item.allowed {
+            color: var(--accent);
+        }
+
+        .ethical-item.prohibited {
+            color: var(--danger);
+        }
+
+        .ethical-icon {
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        /* Cart Sidebar */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            transition: left 0.3s ease;
+            z-index: 2000;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .cart-sidebar.active {
+            left: 0;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-title {
+            font-size: 1.3rem;
+            color: var(--secondary);
+        }
+
+        .close-cart {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        .cart-items {
+            margin-bottom: 1.5rem;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item-image {
+            width: 70px;
+            height: 70px;
+            background: var(--secondary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.3rem;
+            background-size: cover;
+            background-position: center;
+            flex-shrink: 0;
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .cart-item-price {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .remove-item {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 1.1rem;
+            align-self: flex-start;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-top: 1rem;
+            border-top: 2px solid #eee;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1rem;
+        }
+
+        /* Overlay for sidebar */
+        .overlay {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1500;
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* Login Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            transition: transform 0.3s;
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            color: var(--secondary);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--secondary);
+            color: white;
+            padding: 1rem 1.2rem;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 3000;
+            max-width: 300px;
+            font-size: 0.9rem;
+        }
+
+        .toast.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            background: var(--accent);
+        }
+
+        .toast.error {
+            background: var(--danger);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--secondary);
+            color: white;
+            padding: 3rem 1rem 1.5rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-section h4 {
+            color: var(--primary);
+            margin-bottom: 1.2rem;
+            font-size: 1.2rem;
+            position: relative;
+            padding-bottom: 8px;
+        }
+
+        .footer-section h4::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 3px;
+            background: var(--primary);
+            bottom: 0;
+            right: 0;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.7rem;
+        }
+
+        .footer-links a {
+            color: #CCCCCC;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 1.2rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (min-width: 480px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .logo-subtext {
+                display: block;
+            }
+            
+            .cart-sidebar {
+                width: 380px;
+                left: -380px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .header-container {
+                padding: 0 2rem;
+            }
+            
+            .logo-text {
+                font-size: 1.8rem;
+            }
+            
+            .nav-links {
+                gap: 2rem;
+            }
+            
+            .nav-links a {
+                font-size: 1rem;
+            }
+            
+            .btn {
+                padding: 0.7rem 1.5rem;
+                font-size: 1rem;
+            }
+            
+            .hero {
+                padding: 6rem 2rem;
+            }
+            
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .features, .gallery, .products, .ethical, .admin-panel {
+                padding: 5rem 2rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2.3rem;
+            }
+            
+            .admin-header {
+                flex-direction: row;
+            }
+            
+            .admin-tabs {
+                gap: 1rem;
+            }
+            
+            .admin-tab {
+                font-size: 1rem;
+            }
+            
+            footer {
+                padding: 4rem 2rem 2rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+            
+            .features-grid, .gallery-grid, .products-grid {
+                gap: 2rem;
+            }
+            
+            .feature-card, .gallery-item, .product-card {
+                padding: 2rem;
+            }
+            
+            .product-image {
+                height: 200px;
+            }
+            
+            .admin-controls {
+                gap: 2rem;
+            }
+            
+            .control-card {
+                padding: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .header-actions .btn-outline {
+                display: none;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .hero-buttons .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+            
+            .admin-tabs {
+                padding-bottom: 0.5rem;
+            }
+            
+            .admin-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-actions .btn-primary span {
+                display: none;
+            }
+            
+            .header-actions .btn-primary {
+                padding: 0.6rem;
+            }
+            
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .section-title h2 {
+                font-size: 1.7rem;
+            }
+            
+            .features-grid, .gallery-grid, .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- دکمه ورود به بخش مدیریت -->
-    <button class="admin-login-btn" id="adminLoginBtn" aria-label="ورود به بخش مدیریت">
-        <i class="fas fa-user-shield"></i>
-    </button>
-
-    <!-- مودال ورود ادمین -->
-    <div class="admin-modal" id="adminLoginModal">
-        <div class="admin-modal-content">
-            <h3 class="admin-modal-title">ورود به بخش مدیریت</h3>
-            <form id="adminLoginForm">
-                <div class="form-group">
-                    <label for="adminEmail">ایمیل</label>
-                    <input type="email" id="adminEmail" required>
-                </div>
-                <div class="form-group">
-                    <label for="adminPassword">رمز عبور</label>
-                    <input type="password" id="adminPassword" required>
-                </div>
-                <button type="submit" class="submit-btn">ورود به سیستم</button>
-            </form>
-            <div id="adminLoginMessage" style="color: #e74c3c; text-align: center; margin-top: 15px;"></div>
-        </div>
-    </div>
-
-    <!-- داشبورد مدیریت -->
-    <div class="admin-dashboard" id="adminDashboard">
-        <div class="admin-header">
-            <h1>داشبورد مدیریت آکادمی نخبگان ستاری</h1>
-            <button class="admin-logout" id="adminLogout">خروج از سیستم</button>
-        </div>
-        
-        <div class="admin-nav">
-            <ul>
-                <li><a href="#dashboard" class="admin-nav-link active" data-section="dashboard">داشبورد</a></li>
-                <li><a href="#courses" class="admin-nav-link" data-section="courses">مدیریت دوره ها</a></li>
-                <li><a href="#students" class="admin-nav-link" data-section="students">مدیریت دانشجویان</a></li>
-                <li><a href="#sections" class="admin-nav-link" data-section="sections">مدیریت بخشها</a></li>
-                <li><a href="#announcements" class="admin-nav-link" data-section="announcements">مدیریت اعلانها</a></li>
-                <li><a href="#gallery" class="admin-nav-link" data-section="gallery">گالری آموزشی</a></li>
-                <li><a href="#videos" class="admin-nav-link" data-section="videos">مدیریت ویدیوها</a></li>
-                <li><a href="#downloads" class="admin-nav-link" data-section="downloads">مدیریت منابع</a></li>
-                <li><a href="#quizzes" class="admin-nav-link" data-section="quizzes">مدیریت آزمونها</a></li>
-                <li><a href="#forum" class="admin-nav-link" data-section="forum">مدیریت انجمن</a></li>
-                <li><a href="#admins" class="admin-nav-link" data-section="admins">مدیریت ادمینها</a></li>
-                <li><a href="#settings" class="admin-nav-link" data-section="settings">تنظیمات</a></li>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <div class="logo-text">Kali Tools<span style="color: white;">Pro</span></div>
+                <div class="logo-subtext">ابزارهای حرفهای امنیت</div>
+            </div>
+            
+            <ul class="nav-links">
+                <li><a href="#home">صفحه اصلی</a></li>
+                <li><a href="#features">امکانات</a></li>
+                <li><a href="#gallery">گالری</a></li>
+                <li><a href="#products">محصولات</a></li>
+                <li><a href="#ethical">راهنمای اخلاقی</a></li>
+                <li><a href="#contact">تماس با ما</a></li>
             </ul>
+            
+            <div class="header-actions">
+                <button class="btn btn-outline" id="login-btn"><i class="fas fa-user"></i> <span>ورود</span></button>
+                <button class="btn btn-primary" id="cart-btn"><i class="fas fa-shopping-cart"></i> <span>سبد خرید</span> (<span id="cart-count">0</span>)</button>
+            </div>
+            
+            <button class="mobile-menu-btn" id="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
-        
-        <div class="admin-content">
-            <!-- بخش داشبورد -->
-            <div class="admin-section active" id="dashboard-section">
-                <h2>داشبورد مدیریت</h2>
-                <div class="admin-stats">
-                    <div class="stat-card">
-                        <div class="stat-label">تعداد دوره ها</div>
-                        <div class="stat-number" id="totalCourses">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">تعداد دانشجویان</div>
-                        <div class="stat-number" id="totalStudents">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">دوره های فعال</div>
-                        <div class="stat-number" id="activeCourses">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">ثبتنامهای امروز</div>
-                        <div class="stat-number" id="todayRegistrations">0</div>
-                    </div>
-                </div>
-                
-                <div class="admin-card">
-                    <h3>آخرین ثبتنامها</h3>
-                    <div class="admin-table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>نام دانشجو</th>
-                                    <th>دوره</th>
-                                    <th>تاریخ ثبتنام</th>
-                                    <th>وضعیت</th>
-                                </tr>
-                            </thead>
-                            <tbody id="recentRegistrations">
-                                <!-- دادهها از طریق جاوااسکریپت پر میشوند -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- بخش مدیریت دورهها -->
-            <div class="admin-section" id="courses-section">
-                <h2>مدیریت دوره ها</h2>
-                <button class="btn-add" id="addCourseBtn">افزودن دوره جدید</button>
-                
-                <div class="admin-card">
-                    <h3>لیست دوره ها</h3>
-                    <div class="admin-table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>نام دوره</th>
-                                    <th>مدت زمان</th>
-                                    <th>ظرفیت</th>
-                                    <th>ثبتنام شده</th>
-                                    <th>وضعیت</th>
-                                    <th>عملیات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="coursesList">
-                                <!-- دادهها از طریق جاوااسکریپت پر میشوند -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <div class="admin-form" id="courseForm" style="display: none;">
-                    <h3 id="courseFormTitle">افزودن دوره جدید</h3>
-                    <form id="courseEditForm">
-                        <input type="hidden" id="editCourseId">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="courseName">نام دوره</label>
-                                <input type="text" id="courseName" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="courseDuration">مدت زمان (ماه)</label>
-                                <input type="number" id="courseDuration" required>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="courseCapacity">ظرفیت</label>
-                                <input type="number" id="courseCapacity" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="courseStatus">وضعیت</label>
-                                <select id="courseStatus">
-                                    <option value="active">فعال</option>
-                                    <option value="inactive">غیرفعال</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="courseDescription">توضیحات</label>
-                            <textarea id="courseDescription" rows="3"></textarea>
-                        </div>
-                        <div class="form-actions">
-                            <button type="submit" class="btn-edit">ذخیره</button>
-                            <button type="button" class="btn-delete" id="cancelCourseEdit">لغو</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            
-            <!-- بخش مدیریت دانشجویان -->
-            <div class="admin-section" id="students-section">
-                <h2>مدیریت دانشجویان</h2>
-                
-                <div class="admin-card">
-                    <h3>لیست دانشجویان</h3>
-                    <div class="admin-table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>نام دانشجو</th>
-                                    <th>ایمیل</th>
-                                    <th>دوره های ثبتنام شده</th>
-                                    <th>تاریخ عضویت</th>
-                                    <th>عملیات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="studentsList">
-                                <!-- دادهها از طریق جاوااسکریپت پر میشوند -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- بخش جدید: مدیریت بخشها -->
-            <div class="admin-section" id="sections-section">
-                <h2>مدیریت بخشهای سایت</h2>
-                <p>در این بخش میتوانید بخشهای مختلف سایت را فعال یا غیرفعال کنید و ترتیب نمایش آنها را تغییر دهید.</p>
-                
-                <div class="section-management">
-                    <div class="section-list" id="sectionsList">
-                        <!-- بخشها از طریق جاوااسکریپت اضافه خواهند شد -->
-                    </div>
-                </div>
-            </div>
-            
-            <!-- بخش جدید: مدیریت اعلانها -->
-            <div class="admin-section" id="announcements-section">
-                <h2>مدیریت اعلانها</h2>
-                <button class="btn-add" id="addAnnouncementBtn">افزودن اعلان جدید</button>
-                
-                <div class="announcement-management">
-                    <div class="announcement-list" id="announcementsList">
-                        <!-- اعلانها از طریق جاوااسکریپت اضافه خواهند شد -->
-                    </div>
-                </div>
-                
-                <div class="admin-form" id="announcementForm" style="display: none;">
-                    <h3 id="announcementFormTitle">افزودن اعلان جدید</h3>
-                    <form id="announcementEditForm">
-                        <input type="hidden" id="editAnnouncementId">
-                        <div class="form-group">
-                            <label for="announcementTitle">عنوان اعلان</label>
-                            <input type="text" id="announcementTitle" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="announcementContent">متن اعلان</label>
-                            <textarea id="announcementContent" rows="4" required></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="announcementPriority">اولویت نمایش</label>
-                            <select id="announcementPriority">
-                                <option value="low">کم</option>
-                                <option value="medium">متوسط</option>
-                                <option value="high">بالا</option>
-                            </select>
-                        </div>
-                        <div class="form-actions">
-                            <button type="submit" class="btn-edit">ذخیره</button>
-                            <button type="button" class="btn-delete" id="cancelAnnouncementEdit">لغو</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            
-            <!-- بخش جدید: گالری آموزشی -->
-            <div class="admin-section" id="gallery-section">
-                <h2>مدیریت گالری آموزشی</h2>
-                <button class="btn-add" id="addGalleryItemBtn">افزودن عکس جدید</button>
-                
-                <div class="gallery-management">
-                    <div class="admin-card">
-                        <h3>آپلود عکس جدید</h3>
-                        <form id="galleryUploadForm">
-                            <div class="upload-area" id="uploadArea" tabindex="0">
-                                <div class="upload-icon">
-                                    <i class="fas fa-cloud-upload-alt"></i>
-                                </div>
-                                <p>برای آپلود عکس، اینجا کلیک کنید یا عکس را بکشید و رها کنید</p>
-                                <input type="file" id="galleryImage" accept="image/*" style="display: none;">
-                                <img id="imagePreview" class="image-preview" alt="پیشنمایش عکس">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="galleryTitle">عنوان عکس</label>
-                                <input type="text" id="galleryTitle" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="galleryDescription">توضیحات عکس</label>
-                                <textarea id="galleryDescription" rows="3"></textarea>
-                            </div>
-                            
-                            <div class="form-actions">
-                                <button type="submit" class="btn-edit">آپلود عکس</button>
-                            </div>
-                        </form>
-                    </div>
-                    
-                    <div class="admin-card">
-                        <h3>عکسهای گالری</h3>
-                        <div class="gallery-grid" id="galleryGrid">
-                            <!-- عکسها از طریق جاوااسکریپت اضافه خواهند شد -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- بخش جدید: مدیریت ویدیوها -->
-            <div class="admin-section" id="videos-section">
-                <h2>مدیریت ویدیوهای آموزشی</h2>
-                <button class="btn-add" id="addVideoBtn">افزودن ویدیو جدید</button>
-                
-                <div class="admin-card">
-                    <h3>لیست ویدیوها</h3>
-                    <div class="admin-table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>عنوان ویدیو</th>
-                                    <th>دستهبندی</th>
-                                    <th>مدت زمان</th>
-                                    <th>تاریخ آپلود</th>
-                                    <th>عملیات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="videosList">
-                                <!-- دادهها از طریق جاوااسکریپت پر میشوند -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <div class="admin-form" id="videoForm" style="display: none;">
-                    <h3 id="videoFormTitle">افزودن ویدیو جدید</h3>
-                    <form id="videoEditForm">
-                        <input type="hidden" id="editVideoId">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="videoTitle">عنوان ویدیو</label>
-                                <input type="text" id="videoTitle" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="videoCategory">دستهبندی</label>
-                                <select id="videoCategory" required>
-                                    <option value="خبرنگاری">خبرنگاری</option>
-                                    <option value="فن بیان">فن بیان</option>
-                                    <option value="روانشناسی">روانشناسی</option>
-                                    <option value="ارتباطات">ارتباطات</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="videoDuration">مدت زمان (دقیقه)</label>
-                                <input type="number" id="videoDuration" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="videoFile">آپلود ویدیو</label>
-                                <input type="file" id="videoFile" accept="video/*" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="videoDescription">توضیحات ویدیو</label>
-                            <textarea id="videoDescription" rows="3"></textarea>
-                        </div>
-                        <div class="form-actions">
-                            <button type="submit" class="btn-edit">ذخیره</button>
-                            <button type="button" class="btn-delete" id="cancelVideoEdit">لغو</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            
-            <!-- بخش جدید: مدیریت منابع -->
-            <div class="admin-section" id="downloads-section">
-                <h2>مدیریت منابع آموزشی</h2>
-                <button class="btn-add" id="addDownloadBtn">افزودن منبع جدید</button>
-                
-                <div class="admin-card">
-                    <h3>لیست منابع</h3>
-                    <div class="admin-table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>عنوان منبع</th>
-                                    <th>نوع فایل</th>
-                                    <th>حجم</th>
-                                    <th>دستهبندی</th>
-                                    <th>تاریخ آپلود</th>
-                                    <th>عملیات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="downloadsList">
-                                <!-- دادهها از طریق جاوااسکریپت پر میشوند -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <div class="admin-form" id="downloadForm" style="display: none;">
-                    <h3 id="downloadFormTitle">افزودن منبع جدید</h3>
-                    <form id="downloadEditForm">
-                        <input type="hidden" id="editDownloadId">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="downloadTitle">عنوان منبع</label>
-                                <input type="text" id="downloadTitle" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="downloadType">نوع فایل</label>
-                                <select id="downloadType" required>
-                                    <option value="PDF">PDF</option>
-                                    <option value="DOCX">Word</option>
-                                    <option value="PPTX">PowerPoint</option>
-                                    <option value="MP3">صوتی</option>
-                                    <option value="ZIP">فایل فشرده</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="downloadSize">حجم فایل (MB)</label>
-                                <input type="number" id="downloadSize" step="0.1" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="downloadCategory">دستهبندی</label>
-                                <select id="downloadCategory" required>
-                                    <option value="خبرنگاری">خبرنگاری</option>
-                                    <option value="فن بیان">فن بیان</option>
-                                    <option value="روانشناسی">روانشناسی</option>
-                                    <option value="ارتباطات">ارتباطات</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="downloadFile">آپلود فایل</label>
-                            <input type="file" id="downloadFile" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="downloadDescription">توضیحات منبع</label>
-                            <textarea id="downloadDescription" rows="3"></textarea>
-                        </div>
-                        <div class="form-actions">
-                            <button type="submit" class="btn-edit">ذخیره</button>
-                            <button type="button" class="btn-delete" id="cancelDownloadEdit">لغو</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            
-            <!-- بخش جدید: مدیریت آزمونها -->
-            <div class="admin-section" id="quizzes-section">
-                <h2>مدیریت آزمونها</h2>
-                <button class="btn-add" id="addQuizBtn">افزودن آزمون جدید</button>
-                
-                <div class="admin-card">
-                    <h3>لیست آزمونها</h3>
-                    <div class="admin-table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>عنوان آزمون</th>
-                                    <th>دوره مربوطه</th>
-                                    <th>تعداد سوالات</th>
-                                    <th>مدت زمان (دقیقه)</th>
-                                    <th>وضعیت</th>
-                                    <th>عملیات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="quizzesList">
-                                <!-- دادهها از طریق جاوااسکریپت پر میشوند -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <div class="admin-form" id="quizForm" style="display: none;">
-                    <h3 id="quizFormTitle">افزودن آزمون جدید</h3>
-                    <form id="quizEditForm">
-                        <input type="hidden" id="editQuizId">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="quizTitle">عنوان آزمون</label>
-                                <input type="text" id="quizTitle" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="quizCourse">دوره مربوطه</label>
-                                <select id="quizCourse" required>
-                                    <option value="خبرنگاری حرفهای">خبرنگاری حرفهای</option>
-                                    <option value="فن بیان و سخنوری">فن بیان و سخنوری</option>
-                                    <option value="روانشناسی ارتباطات">روانشناسی ارتباطات</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="quizQuestions">تعداد سوالات</label>
-                                <input type="number" id="quizQuestions" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="quizDuration">مدت زمان (دقیقه)</label>
-                                <input type="number" id="quizDuration" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="quizDescription">توضیحات آزمون</label>
-                            <textarea id="quizDescription" rows="3"></textarea>
-                        </div>
-                        <div class="form-actions">
-                            <button type="submit" class="btn-edit">ذخیره</button>
-                            <button type="button" class="btn-delete" id="cancelQuizEdit">لغو</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            
-            <!-- بخش جدید: مدیریت انجمن -->
-            <div class="admin-section" id="forum-section">
-                <h2>مدیریت انجمن گفتگو</h2>
-                <button class="btn-add" id="addCategoryBtn">افزودن دستهبندی جدید</button>
-                
-                <div class="admin-card">
-                    <h3>دستهبندیهای انجمن</h3>
-                    <div class="admin-table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>نام دستهبندی</th>
-                                    <th>توضیحات</th>
-                                    <th>تعداد موضوعات</th>
-                                    <th>تعداد پاسخها</th>
-                                    <th>عملیات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="forumCategoriesList">
-                                <!-- دادهها از طریق جاوااسکریپت پر میشوند -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <div class="admin-form" id="categoryForm" style="display: none;">
-                    <h3 id="categoryFormTitle">افزودن دستهبندی جدید</h3>
-                    <form id="categoryEditForm">
-                        <input type="hidden" id="editCategoryId">
-                        <div class="form-group">
-                            <label for="categoryName">نام دستهبندی</label>
-                            <input type="text" id="categoryName" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="categoryDescription">توضیحات دستهبندی</label>
-                            <textarea id="categoryDescription" rows="3" required></textarea>
-                        </div>
-                        <div class="form-actions">
-                            <button type="submit" class="btn-edit">ذخیره</button>
-                            <button type="button" class="btn-delete" id="cancelCategoryEdit">لغو</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            
-            <!-- بخش مدیریت ادمینها -->
-            <div class="admin-section" id="admins-section">
-                <h2>مدیریت ادمینها</h2>
-                <button class="btn-add" id="addAdminBtn">افزودن ادمین جدید</button>
-                
-                <div class="admin-card">
-                    <h3>لیست ادمینها</h3>
-                    <div class="admin-table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>نام</th>
-                                    <th>ایمیل</th>
-                                    <th>سطح دسترسی</th>
-                                    <th>تاریخ ایجاد</th>
-                                    <th>عملیات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="adminsList">
-                                <!-- دادهها از طریق جاوااسکریپت پر میشوند -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <div class="admin-form" id="adminForm" style="display: none;">
-                    <h3 id="adminFormTitle">افزودن ادمین جدید</h3>
-                    <form id="adminEditForm">
-                        <input type="hidden" id="editAdminId">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="adminName">نام کامل</label>
-                                <input type="text" id="adminName" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="adminEmail">ایمیل</label>
-                                <input type="email" id="adminEmail" required>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="adminPassword">رمز عبور</label>
-                                <input type="password" id="adminPassword" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="adminRole">سطح دسترسی</label>
-                                <select id="adminRole">
-                                    <option value="super">سوپر ادمین</option>
-                                    <option value="admin">ادمین</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-actions">
-                            <button type="submit" class="btn-edit">ذخیره</button>
-                            <button type="button" class="btn-delete" id="cancelAdminEdit">لغو</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            
-            <!-- بخش تنظیمات -->
-            <div class="admin-section" id="settings-section">
-                <h2>تنظیمات سیستم</h2>
-                
-                <div class="admin-card">
-                    <h3>تنظیمات عمومی</h3>
-                    <form id="generalSettings">
-                        <div class="form-group">
-                            <label for="siteTitle">عنوان سایت</label>
-                            <input type="text" id="siteTitle" value="آکادمی نخبگان ستاری">
-                        </div>
-                        <div class="form-group">
-                            <label for="siteDescription">توضیحات سایت</label>
-                            <textarea id="siteDescription" rows="3">مرکز تخصصی آموزشهای حرفهای در کاپیسا افغانستان</textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="contactPhone">شماره تماس</label>
-                            <input type="text" id="contactPhone" value="0792371380">
-                        </div>
-                        <div class="form-group">
-                            <label for="contactEmail">ایمیل تماس</label>
-                            <input type="email" id="contactEmail" value="info@setare-academy.af">
-                        </div>
-                        <div class="form-actions">
-                            <button type="submit" class="btn-edit">ذخیره تنظیمات</button>
-                        </div>
-                    </form>
-                </div>
-                
-                <div class="admin-card">
-                    <h3>پشتیبانگیری و بازیابی</h3>
-                    <div class="form-actions">
-                        <button class="btn-edit" id="backupData">پشتیبانگیری از دادهها</button>
-                        <button class="btn-delete" id="restoreData">بازیابی دادهها</button>
-                    </div>
-                    <div class="form-group" style="margin-top: 15px;">
-                        <label for="backupFile">فایل پشتیبان</label>
-                        <input type="file" id="backupFile" accept=".json">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- بقیه کدهای HTML اصلی -->
-    <header id="header">
-        <div class="logo">
-            <div class="logo-icon">
-                <i class="fas fa-graduation-cap"></i>
-            </div>
-            <div>
-                <h1>آکادمی نخبگان ستاری</h1>
-                <span>کاپیسا، افغانستان</span>
-            </div>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="#">خانه</a></li>
-                <li><a href="#courses">دوره ها</a></li>
-                <li><a href="#online-courses">ظرفیت آنلاین</a></li>
-                <li><a href="#blog">مقالات</a></li>
-                <li><a href="#videos">ویدیوها</a></li>
-                <li><a href="#downloads">منابع</a></li>
-                <li><a href="#forum">انجمن</a></li>
-                <li><a href="#instructors">اساتید</a></li>
-                <li><a href="#students">شاگردان ممتاز</a></li>
-                <li><a href="#registration">ثبت نام</a></li>
-                <li><a href="#dashboard">داشبورد</a></li>
-            </ul>
-        </nav>
-        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="منوی موبایل">
-            <i class="fas fa-bars"></i>
-        </button>
     </header>
 
-    <main>
-        <section class="hero">
-            <div class="pattern-dots"></div>
-            <div class="hero-content">
-                <h2>پرورش استعدادهای درخشان در آکادمی نخبگان ستاری</h2>
-                <p>مرکز تخصصی آموزشهای حرفهای در کاپیسا افغانستان با بهرهگیری از اساتید مجرب و برجسته کشور</p>
-                <div class="location-badge">
-                    <i class="fas fa-map-marker-alt"></i> کاپیسا، افغانستان
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobile-menu">
+        <div class="mobile-menu-header">
+            <div class="logo-text">Kali Tools<span style="color: white;">Pro</span></div>
+            <button class="close-mobile-menu" id="close-mobile-menu">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="mobile-nav-links">
+            <li><a href="#home">صفحه اصلی</a></li>
+            <li><a href="#features">امکانات</a></li>
+            <li><a href="#gallery">گالری</a></li>
+            <li><a href="#products">محصولات</a></li>
+            <li><a href="#ethical">راهنمای اخلاقی</a></li>
+            <li><a href="#contact">تماس با ما</a></li>
+            <li><a href="#" id="mobile-login-btn">ورود به حساب کاربری</a></li>
+        </ul>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1 id="hero-title">ابزارهای حرفهای کالی لینکس</h1>
+            <p id="hero-description">مجموعهای کامل از ابزارهای امنیتی و تست نفوذ برای متخصصان امنیت سایبری. تمامی ابزارها با مجوزهای قانونی و برای اهداف آموزشی ارائه میشوند.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" id="view-products-btn"><i class="fas fa-rocket"></i> مشاهده محصولات</button>
+                <button class="btn btn-outline"><i class="fas fa-book"></i> آموزشها</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-title">
+            <h2 id="features-title">چرا Kali Tools Pro؟</h2>
+            <p id="features-description">با ابزارهای تخصصی کالی لینکس، امنیت دیجیتال خود را به سطح جدیدی ببرید</p>
+        </div>
+        
+        <div class="features-grid" id="features-grid">
+            <!-- Features will be loaded here -->
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery" id="gallery">
+        <div class="section-title">
+            <h2 id="gallery-title">گالری کالی لینکس</h2>
+            <p id="gallery-description">نمایشی از محیط و ابزارهای قدرتمند کالی لینکس</p>
+        </div>
+        
+        <div class="gallery-grid" id="gallery-grid">
+            <!-- Gallery items will be loaded here -->
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products" id="products">
+        <div class="section-title">
+            <h2 id="products-title">محصولات منتخب</h2>
+            <p id="products-description">برترین ابزارهای امنیتی کالی لینکس برای متخصصان</p>
+        </div>
+        
+        <div class="products-grid" id="products-grid">
+            <!-- Products will be loaded here -->
+        </div>
+    </section>
+
+    <!-- Ethical Guidelines -->
+    <section class="ethical" id="ethical">
+        <div class="section-title">
+            <h2 id="ethical-title">راهنمای استفاده اخلاقی</h2>
+            <p id="ethical-description">همه ابزارها باید تنها برای اهداف قانونی و اخلاقی استفاده شوند</p>
+        </div>
+        
+        <div class="ethical-content">
+            <div class="ethical-warning" id="ethical-warning">
+                <!-- Ethical warning content will be loaded here -->
+            </div>
+            
+            <div class="ethical-list" id="ethical-list">
+                <!-- Ethical list will be loaded here -->
+            </div>
+            
+            <p id="ethical-footer">با خرید هر یک از محصولات، تأیید میکنید که از آنها تنها برای اهداف قانونی استفاده خواهید کرد و مسئولیت هرگونه استفاده غیرقانونی بر عهده شما خواهد بود.</p>
+        </div>
+    </section>
+
+    <!-- Admin Panel -->
+    <section class="admin-panel" id="admin-panel">
+        <div class="section-title">
+            <h2>پنل مدیریت</h2>
+            <p>مدیریت کامل وبسایت و محتوا</p>
+        </div>
+        
+        <div class="admin-header">
+            <h3>خوش آمدید، مدیر سیستم!</h3>
+            <button class="btn btn-danger" id="logout-btn"><i class="fas fa-sign-out-alt"></i> خروج</button>
+        </div>
+
+        <div class="admin-tabs">
+            <button class="admin-tab active" data-tab="dashboard">داشبورد</button>
+            <button class="admin-tab" data-tab="hero">بخش اصلی</button>
+            <button class="admin-tab" data-tab="features">امکانات</button>
+            <button class="admin-tab" data-tab="gallery">گالری</button>
+            <button class="admin-tab" data-tab="products">محصولات</button>
+            <button class="admin-tab" data-tab="ethical">راهنمای اخلاقی</button>
+            <button class="admin-tab" data-tab="footer">فوتر</button>
+        </div>
+        
+        <!-- Dashboard Tab -->
+        <div class="admin-tab-content active" id="dashboard-tab">
+            <div class="admin-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-products">0</div>
+                    <div class="stat-label">تعداد محصولات</div>
                 </div>
-                <div style="margin-top: 30px;">
-                    <a href="#registration" class="btn">ثبت نام در دوره ها</a>
-                    <a href="https://wa.me/93792371380" class="btn btn-whatsapp" style="margin-right: 15px;">
-                        <i class="fab fa-whatsapp"></i> ارتباط در واتساپ
-                    </a>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-gallery">0</div>
+                    <div class="stat-label">تعداد تصاویر گالری</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-features">0</div>
+                    <div class="stat-label">تعداد امکانات</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-sales">0</div>
+                    <div class="stat-label">فروش امروز</div>
                 </div>
             </div>
             
-            <div class="floating-elements">
-                <div class="floating-element" style="width: 60px; height: 60px; top: 20%; right: 20%;"></div>
-                <div class="floating-element" style="width: 80px; height: 80px; top: 50%; right: 60%;"></div>
-                <div class="floating-element" style="width: 40px; height: 40px; top: 70%; right: 30%;"></div>
-                <div class="floating-element" style="width: 70px; height: 70px; top: 30%; right: 70%;"></div>
-            </div>
-        </section>
-
-        <!-- بخش جستجو -->
-        <section class="search-section">
-            <div class="container">
-                <div class="search-container">
-                    <div class="search-box">
-                        <input type="text" class="search-input" placeholder="جستجو در دوره ها، مقالات و منابع...">
-                        <button class="search-button"><i class="fas fa-search"></i></button>
-                    </div>
-                    <div class="search-filters">
-                        <button class="search-filter active">همه</button>
-                        <button class="search-filter">دوره ها</button>
-                        <button class="search-filter">مقالات</button>
-                        <button class="search-filter">ویدیوها</button>
-                        <button class="search-filter">منابع</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="courses">
-            <div class="container">
-                <div class="section-title">
-                    <h2>دورههای تخصصی</h2>
-                    <p>برترین دورههای آموزشی با استانداردهای بینالمللی و اساتید مجرب</p>
+            <div class="admin-controls">
+                <div class="control-card">
+                    <h3>تنظیمات سریع</h3>
+                    <button class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;" onclick="switchTab('hero')"><i class="fas fa-edit"></i> ویرایش بخش اصلی</button>
+                    <button class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;" onclick="switchTab('products')"><i class="fas fa-box"></i> مدیریت محصولات</button>
+                    <button class="btn btn-primary" style="width: 100%;" onclick="switchTab('gallery')"><i class="fas fa-images"></i> مدیریت گالری</button>
                 </div>
                 
-                <div class="courses-grid">
-                    <div class="course-card">
-                        <div class="course-icon">
-                            <i class="fas fa-microphone"></i>
-                        </div>
-                        <div class="course-content">
-                            <h3>خبرنگاری شش ماهه</h3>
-                            <p>دوره فشرده خبرنگاری حرفهای با تمرکز بر اصول روزنامهنگاری مدرن و گزارشنویسی</p>
-                            <span class="course-duration">۶ ماه</span>
-                            <a href="#registration" class="btn">ثبت نام</a>
-                        </div>
-                    </div>
-                    
-                    <div class="course-card">
-                        <div class="course-icon">
-                            <i class="fas fa-comment-dots"></i>
-                        </div>
-                        <div class="course-content">
-                            <h3>فن بیان</h3>
-                            <p>آموزش تکنیکهای حرفهای سخنوری، کنترل صدا و اعتماد به نفس در صحبت کردن</p>
-                            <span class="course-duration">۳ ماه</span>
-                            <a href="#registration" class="btn">ثبت نام</a>
-                        </div>
-                    </div>
-                    
-                    <div class="course-card">
-                        <div class="course-icon">
-                            <i class="fas fa-brain"></i>
-                        </div>
-                        <div class="course-content">
-                            <h3>روانشناسی تاریک</h3>
-                            <p>آشنایی با جنبههای پیچیده روانشناسی و تاثیر آن بر روابط اجتماعی و فردی</p>
-                            <span class="course-duration">۴ ماه</span>
-                            <a href="#registration" class="btn">ثبت نام</a>
-                        </div>
-                    </div>
-                    
-                    <div class="course-card">
-                        <div class="course-icon">
-                            <i class="fas fa-newspaper"></i>
-                        </div>
-                        <div class="course-content">
-                            <h3>ژورنالیسم حرفهای</h3>
-                            <p>آموزش اصول پیشرفته روزنامهنگاری، تحقیق و تولید محتوای حرفهای</p>
-                            <span class="course-duration">۵ ماه</span>
-                            <a href="#registration" class="btn">ثبت نام</a>
-                        </div>
-                    </div>
-                    
-                    <div class="course-card">
-                        <div class="course-icon">
-                            <i class="fas fa-volume-up"></i>
-                        </div>
-                        <div class="course-content">
-                            <h3>صدا سازی</h3>
-                            <p>تمرینات تخصصی برای تقویت صدا، کنترل تنفس و بهبود کیفیت vocal</p>
-                            <span class="course-duration">۲ ماه</span>
-                            <a href="#registration" class="btn">ثبت نام</a>
-                        </div>
-                    </div>
-                    
-                    <div class="course-card">
-                        <div class="course-icon">
-                            <i class="fas fa-theater-masks"></i>
-                        </div>
-                        <div class="course-content">
-                            <h3>دکلمه</h3>
-                            <p>آموزش هنر دکلمه و بیان شعر و نثر با تکنیکهای حرفهای</p>
-                            <span class="course-duration">۳ ماه</span>
-                            <a href="#registration" class="btn">ثبت نام</a>
-                        </div>
-                    </div>
-                    
-                    <div class="course-card">
-                        <div class="course-icon">
-                            <i class="fas fa-handshake"></i>
-                        </div>
-                        <div class="course-content">
-                            <h3>ارتباطات</h3>
-                            <p>تقویت مهارتهای ارتباطی و فراگیری اصول مذاکره و تعامل موثر</p>
-                            <span class="course-duration">۳ ماه</span>
-                            <a href="#registration" class="btn">ثبت نام</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- بخش جدید: ظرفیت درس آنلاین -->
-        <section id="online-courses" class="online-courses-section">
-            <div class="container">
-                <div class="section-title">
-                    <h2>ظرفیت درس آنلاین</h2>
-                    <p>ثبتنام در دورههای آنلاین آکادمی و دسترسی به کلاسهای مجازی</p>
+                <div class="control-card">
+                    <h3>پشتیبانگیری</h3>
+                    <button class="btn btn-success" style="width: 100%; margin-bottom: 1rem;"><i class="fas fa-download"></i> دریافت پشتیبان</button>
+                    <button class="btn btn-warning" style="width: 100%;"><i class="fas fa-upload"></i> بازیابی پشتیبان</button>
                 </div>
                 
-                <div class="courses-container">
-                    <!-- درس اول -->
-                    <div class="course-card-online">
-                        <div class="course-header">
-                            <h3 class="course-title">خبرنگاری حرفهای آنلاین</h3>
-                            <div class="course-capacity">
-                                <span class="capacity-text">ظرفیت باقیمانده:</span>
-                                <span class="capacity-value" id="capacity-1">20 نفر</span>
-                            </div>
-                        </div>
-                        <div class="course-content-online">
-                            <p class="course-description">دوره جامع خبرنگاری آنلاین با تمرکز بر اصول روزنامهنگاری مدرن، گزارشنویسی و مصاحبههای حرفهای</p>
-                            
-                            <button class="register-btn" onclick="openModal('خبرنگاری حرفهای آنلاین', 1)">
-                                ثبتنام در درس
-                            </button>
-                            
-                            <div class="online-class-link" id="class-link-1">
-                                <a href="#"><i class="fas fa-video"></i> ورود به کلاس آنلاین</a>
-                            </div>
-                            
-                            <div class="registered-students">
-                                <h4 class="students-title">شاگردان ثبتنام شده</h4>
-                                <div class="students-list" id="students-list-1">
-                                    <!-- لیست دانشجویان از طریق جاوااسکریپت اضافه خواهد شد -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- درس دوم -->
-                    <div class="course-card-online">
-                        <div class="course-header">
-                            <h3 class="course-title">فن بیان و گویندگی آنلاین</h3>
-                            <div class="course-capacity">
-                                <span class="capacity-text">ظرفیت باقیمانده:</span>
-                                <span class="capacity-value" id="capacity-2">15 نفر</span>
-                            </div>
-                        </div>
-                        <div class="course-content-online">
-                            <p class="course-description">آموزش تکنیکهای حرفهای سخنوری، کنترل صدا، اعتماد به نفس و هنر گویندگی در محیط آنلاین</p>
-                            
-                            <button class="register-btn" onclick="openModal('فن بیان و گویندگی آنلاین', 2)">
-                                ثبتنام در درس
-                            </button>
-                            
-                            <div class="online-class-link" id="class-link-2">
-                                <a href="#"><i class="fas fa-video"></i> ورود به کلاس آنلاین</a>
-                            </div>
-                            
-                            <div class="registered-students">
-                                <h4 class="students-title">شاگردان ثبتنام شده</h4>
-                                <div class="students-list" id="students-list-2">
-                                    <!-- لیست دانشجویان از طریق جاوااسکریپت اضافه خواهد شد -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- درس سوم -->
-                    <div class="course-card-online">
-                        <div class="course-header">
-                            <h3 class="course-title">روانشناسی ارتباطات آنلاین</h3>
-                            <div class="course-capacity">
-                                <span class="capacity-text">ظرفیت باقیمانده:</span>
-                                <span class="capacity-value" id="capacity-3">10 نفر</span>
-                            </div>
-                        </div>
-                        <div class="course-content-online">
-                            <p class="course-description">آشنایی با اصول روانشناسی ارتباطات و تاثیر آن بر روابط اجتماعی در فضای مجازی و آنلاین</p>
-                            
-                            <button class="register-btn" onclick="openModal('روانشناسی ارتباطات آنلاین', 3)">
-                                ثبتنام در درس
-                            </button>
-                            
-                            <div class="online-class-link" id="class-link-3">
-                                <a href="#"><i class="fas fa-video"></i> ورود به کلاس آنلاین</a>
-                            </div>
-                            
-                            <div class="registered-students">
-                                <h4 class="students-title">شاگردان ثبتنام شده</h4>
-                                <div class="students-list" id="students-list-3">
-                                    <!-- لیست دانشجویان از طریق جاوااسکریپت اضافه خواهد شد -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- مودال ثبت نام -->
-        <div class="modal" id="registration-modal">
-            <div class="modal-content">
-                <button class="close-modal" onclick="closeModal()" aria-label="بستن">&times;</button>
-                <h3 class="modal-title" id="modal-course-title">ثبتنام در دوره</h3>
-                
-                <form id="registration-form">
-                    <input type="hidden" id="course-id" value="">
-                    
+                <div class="control-card">
+                    <h3>سیستم</h3>
                     <div class="form-group">
-                        <label for="student-name">نام و نام خانوادگی</label>
-                        <input type="text" id="student-name" required>
+                        <label>وضعیت سیستم</label>
+                        <div style="background: #00C853; color: white; padding: 0.5rem; border-radius: 5px; text-align: center;">فعال</div>
                     </div>
-                    
                     <div class="form-group">
-                        <label for="student-email">آدرس ایمیل</label>
-                        <input type="email" id="student-email" required>
+                        <label>آخرین بهروزرسانی</label>
+                        <div style="background: #f5f5f5; padding: 0.5rem; border-radius: 5px; text-align: center;" id="last-update">هم اکنون</div>
                     </div>
-                    
-                    <button type="submit" class="submit-btn">تأیید و ثبت نام</button>
-                </form>
-                
-                <div class="success-message" id="success-message">
-                    ثبتنام شما با موفقیت انجام شد!
                 </div>
             </div>
         </div>
 
-        <!-- بخش گالری آموزشی -->
-        <section id="gallery" class="gallery-section">
-            <div class="container">
-                <div class="section-title">
-                    <h2>گالری آموزشی</h2>
-                    <p>تصاویری از فعالیتها و رویدادهای آکادمی نخبگان ستاری</p>
-                </div>
-                
-                <div class="gallery-container" id="mainGallery">
-                    <!-- تصاویر گالری از طریق جاوااسکریپت اضافه خواهند شد -->
+        <!-- Hero Tab -->
+        <div class="admin-tab-content" id="hero-tab">
+            <div class="control-card">
+                <h3>ویرایش بخش اصلی</h3>
+                <form id="hero-form">
+                    <div class="form-group">
+                        <label for="hero-title-input">عنوان اصلی</label>
+                        <input type="text" id="hero-title-input" class="form-control" value="ابزارهای حرفهای کالی لینکس">
+                    </div>
+                    <div class="form-group">
+                        <label for="hero-description-input">توضیحات</label>
+                        <textarea id="hero-description-input" class="form-control" rows="4">مجموعهای کامل از ابزارهای امنیتی و تست نفوذ برای متخصصان امنیت سایبری. تمامی ابزارها با مجوزهای قانونی و برای اهداف آموزشی ارائه میشوند.</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;"><i class="fas fa-save"></i> ذخیره تغییرات</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Features Tab -->
+        <div class="admin-tab-content" id="features-tab">
+            <div class="control-card">
+                <h3>مدیریت امکانات</h3>
+                <form id="feature-form">
+                    <div class="form-group">
+                        <label for="feature-title">عنوان بخش امکانات</label>
+                        <input type="text" id="feature-title" class="form-control" value="چرا Kali Tools Pro؟">
+                    </div>
+                    <div class="form-group">
+                        <label for="feature-description">توضیحات بخش امکانات</label>
+                        <textarea id="feature-description" class="form-control">با ابزارهای تخصصی کالی لینکس، امنیت دیجیتال خود را به سطح جدیدی ببرید</textarea>
+                    </div>
+                    <hr>
+                    <h4>امکانات</h4>
+                    <div id="features-list">
+                        <!-- Features will be loaded here -->
+                    </div>
+                    <button type="button" class="btn btn-success" style="width: 100%; margin-top: 1rem;" id="add-feature-btn"><i class="fas fa-plus"></i> افزودن امکان جدید</button>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;"><i class="fas fa-save"></i> ذخیره تغییرات</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Gallery Tab -->
+        <div class="admin-tab-content" id="gallery-tab">
+            <div class="control-card">
+                <h3>مدیریت گالری</h3>
+                <form id="gallery-form">
+                    <div class="form-group">
+                        <label for="gallery-title">عنوان بخش گالری</label>
+                        <input type="text" id="gallery-title" class="form-control" value="گالری کالی لینکس">
+                    </div>
+                    <div class="form-group">
+                        <label for="gallery-description">توضیحات بخش گالری</label>
+                        <textarea id="gallery-description" class="form-control">نمایشی از محیط و ابزارهای قدرتمند کالی لینکس</textarea>
+                    </div>
+                    <hr>
+                    <h4>افزودن تصویر جدید</h4>
+                    <div class="form-group">
+                        <label for="gallery-image-title">عنوان تصویر</label>
+                        <input type="text" id="gallery-image-title" class="form-control" placeholder="عنوان تصویر">
+                    </div>
+                    <div class="form-group">
+                        <label for="gallery-image-desc">توضیحات تصویر</label>
+                        <textarea id="gallery-image-desc" class="form-control" placeholder="توضیحات تصویر"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="gallery-image-input">تصویر</label>
+                        <div class="file-upload" id="gallery-image-upload">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>برای آپلود تصویر کلیک کنید</p>
+                            <input type="file" id="gallery-image-input" accept="image/*">
+                        </div>
+                        <img id="gallery-image-preview" class="image-preview" src="" alt="Preview">
+                    </div>
+                    <button type="button" class="btn btn-success" style="width: 100%;" id="add-gallery-item-btn"><i class="fas fa-plus"></i> افزودن به گالری</button>
+                </form>
+            </div>
+            
+            <div class="control-card">
+                <h3>تصاویر گالری</h3>
+                <div id="gallery-items-list" style="max-height: 400px; overflow-y: auto;">
+                    <!-- Gallery items will be listed here -->
                 </div>
             </div>
-        </section>
+        </div>
 
-        <section id="instructors" class="instructors-section">
-            <div class="container">
-                <div class="section-title">
-                    <h2>اساتید مجرب</h2>
-                    <p>با بهترین اساتید و متخصصان کشور در زمینههای مختلف آموزشی</p>
-                </div>
-                
-                <div class="instructors-grid">
-                    <div class="instructor-card">
-                        <div class="instructor-img">
-                            <i class="fas fa-user-tie"></i>
-                        </div>
-                        <div class="instructor-info">
-                            <h3>احمد رضا ستاری</h3>
-                            <span class="instructor-subject">مدیریت و ارتباطات</span>
-                            <p>مدرس برجسته دورههای مدیریت رسانه و ارتباطات با بیش از ۱۵ سال سابقه تدریس</p>
-                        </div>
+        <!-- Products Tab -->
+        <div class="admin-tab-content" id="products-tab">
+            <div class="control-card">
+                <h3>مدیریت محصولات</h3>
+                <form id="product-form">
+                    <div class="form-group">
+                        <label for="products-title">عنوان بخش محصولات</label>
+                        <input type="text" id="products-title" class="form-control" value="محصولات منتخب">
                     </div>
-                    
-                    <div class="instructor-card">
-                        <div class="instructor-img">
-                            <i class="fas fa-user-tie"></i>
-                        </div>
-                        <div class="instructor-info">
-                            <h3>ملیحه حیاتی</h3>
-                            <span class="instructor-subject">روانشناسی</span>
-                            <p>متخصص روانشناسی اجتماعی و مدرس دورههای پیشرفته روانشناسی کاربردی</p>
-                        </div>
+                    <div class="form-group">
+                        <label for="products-description">توضیحات بخش محصولات</label>
+                        <textarea id="products-description" class="form-control">برترین ابزارهای امنیتی کالی لینکس برای متخصصان</textarea>
                     </div>
-                    
-                    <div class="instructor-card">
-                        <div class="instructor-img">
-                            <i class="fas fa-user-tie"></i>
-                        </div>
-                        <div class="instructor-info">
-                            <h3>علی حضرت</h3>
-                            <span class="instructor-subject">ژورنالیسم</span>
-                            <p> روزنامهنگار برجسته و مدرس اصول خبرنگاری حرفهای با تجربه بینالمللی</p>
-                        </div>
+                    <hr>
+                    <h4>افزودن محصول جدید</h4>
+                    <div class="form-group">
+                        <label for="product-name">نام محصول</label>
+                        <input type="text" id="product-name" class="form-control" placeholder="نام محصول">
                     </div>
-                    
-                    <div class="instructor-card">
-                        <div class="instructor-img">
-                            <i class="fas fa-user-tie"></i>
-                        </div>
-                        <div class="instructor-info">
-                            <h3>نيلوفر ابراهیمی</h3>
-                            <span class="instructor-subject">صدا و بیان</span>
-                            <p>متخصص فن بیان و گویندگی با سابقه همکاری با شبکههای ملی و بینالمللی</p>
-                        </div>
+                    <div class="form-group">
+                        <label for="product-category">دستهبندی</label>
+                        <input type="text" id="product-category" class="form-control" placeholder="دستهبندی محصول">
                     </div>
-                    
-                    <div class="instructor-card">
-                        <div class="instructor-img">
-                            <i class="fas fa-user-tie"></i>
-                        </div>
-                        <div class="instructor-info">
-                            <h3>ریحان هاشمی</h3>
-                            <span class="instructor-subject">دکلمه و هنرهای کلامی</span>
-                            <p> artiste نامدار عرصه دکلمه و نمایش با بیش از ۲۰ سال تجربه اجرا و تدریس</p>
-                        </div>
+                    <div class="form-group">
+                        <label for="product-price">قیمت (AFN)</label>
+                        <input type="number" id="product-price" class="form-control" placeholder="قیمت محصول">
                     </div>
-                    
-                    <div class="instructor-card">
-                        <div class="instructor-img">
-                            <i class="fas fa-user-tie"></i>
-                        </div>
-                        <div class="instructor-info">
-                            <h3>گلثوم حیدری</h3>
-                            <span class="instructor-subject">ارتباطات اجتماعی</span>
-                            <p>مدرس و مشاور ارتباطات بینفردی و توسعه مهارتهای اجتماعی</p>
-                        </div>
+                    <div class="form-group">
+                        <label for="product-description">توضیحات محصول</label>
+                        <textarea id="product-description" class="form-control" placeholder="توضیحات محصول"></textarea>
                     </div>
-                    
-                    <div class="instructor-card">
-                        <div class="instructor-img">
-                            <i class="fas fa-user-tie"></i>
+                    <div class="form-group">
+                        <label for="product-image-input">تصویر محصول</label>
+                        <div class="file-upload" id="product-image-upload">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>برای آپلود تصویر کلیک کنید</p>
+                            <input type="file" id="product-image-input" accept="image/*">
                         </div>
-                        <div class="instructor-info">
-                            <h3>مریم میرزایی</h3>
-                            <span class="instructor-subject">رسانه و خبرنگاری</span>
-                            <p>سردبیر سابق روزنامه معتبر و مدرس اصول ویراستاری و تولید محتوا</p>
-                        </div>
+                        <img id="product-image-preview" class="image-preview" src="" alt="Preview">
                     </div>
+                    <button type="button" class="btn btn-success" style="width: 100%;" id="add-product-btn"><i class="fas fa-plus"></i> افزودن محصول</button>
+                </form>
+            </div>
+            
+            <div class="control-card">
+                <h3>محصولات موجود</h3>
+                <div id="products-list" style="max-height: 400px; overflow-y: auto;">
+                    <!-- Products will be listed here -->
                 </div>
             </div>
-        </section>
+        </div>
 
-        <section id="students" class="top-students">
-            <div class="container">
-                <div class="section-title">
-                    <h2>شاگردان ممتاز</h2>
-                    <p>برترین دانشآموزان و دانشجویان آکادمی نخبگان ستاری</p>
-                </div>
-                
-                <div class="students-grid">
-                    <div class="student-card">
-                        <div class="student-rank">1</div>
-                        <div class="student-img">
-                            <i class="fas fa-user-graduate"></i>
-                        </div>
-                        <div class="student-info">
-                            <h3>سارا محمدی</h3>
-                            <p>رشته خبرنگاری</p>
-                            <p>معدل: ۱۹.۸</p>
-                        </div>
+        <!-- Ethical Tab -->
+        <div class="admin-tab-content" id="ethical-tab">
+            <div class="control-card">
+                <h3>مدیریت راهنمای اخلاقی</h3>
+                <form id="ethical-form">
+                    <div class="form-group">
+                        <label for="ethical-title">عنوان بخش اخلاقی</label>
+                        <input type="text" id="ethical-title" class="form-control" value="راهنمای استفاده اخلاقی">
                     </div>
-                    
-                    <div class="student-card">
-                        <div class="student-rank">2</div>
-                        <div class="student-img">
-                            <i class="fas fa-user-graduate"></i>
-                        </div>
-                        <div class="student-info">
-                            <h3>امیرحسین رضایی</h3>
-                            <p>رشته ارتباطات</p>
-                            <p>معدل: ۱۹.۶</p>
-                        </div>
+                    <div class="form-group">
+                        <label for="ethical-description">توضیحات بخش اخلاقی</label>
+                        <textarea id="ethical-description" class="form-control">همه ابزارها باید تنها برای اهداف قانونی و اخلاقی استفاده شوند</textarea>
                     </div>
-                    
-                    <div class="student-card">
-                        <div class="student-rank">3</div>
-                        <div class="student-img">
-                            <i class="fas fa-user-graduate"></i>
-                        </div>
-                        <div class="student-info">
-                            <h3>فاطمه احمدی</h3>
-                            <p>رشته روانشناسی</p>
-                            <p>معدل: ۱۹.۵</p>
-                        </div>
+                    <div class="form-group">
+                        <label for="ethical-warning">هشدار اخلاقی</label>
+                        <textarea id="ethical-warning" class="form-control" rows="4">کلیه ابزارهای ارائه شده در این وبسایت تنها برای اهداف آموزشی، تست نفوذ مجاز و ارزیابی امنیت سیستمهایی که مالکیت آنها را دارید، طراحی شدهاند.</textarea>
                     </div>
-                    
-                    <div class="student-card">
-                        <div class="student-rank">4</div>
-                        <div class="student-img">
-                            <i class="fas fa-user-graduate"></i>
-                        </div>
-                        <div class="student-info">
-                            <h3>محمد جوادی</h3>
-                            <p>رشته ژورنالیسم</p>
-                            <p>معدل: ۱۹.۴</p>
-                        </div>
+                    <div class="form-group">
+                        <label for="ethical-footer">متن پایین بخش اخلاقی</label>
+                        <textarea id="ethical-footer" class="form-control" rows="3">با خرید هر یک از محصولات، تأیید میکنید که از آنها تنها برای اهداف قانونی استفاده خواهید کرد و مسئولیت هرگونه استفاده غیرقانونی بر عهده شما خواهد بود.</textarea>
                     </div>
-                </div>
+                    <hr>
+                    <h4>موارد مجاز و غیرمجاز</h4>
+                    <div class="form-group">
+                        <label>موارد مجاز</label>
+                        <textarea id="ethical-allowed" class="form-control" rows="3">تست نفوذ با مجوز کتبی، آموزش امنیت، تحقیق امنیتی قانونی</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>موارد غیرمجاز</label>
+                        <textarea id="ethical-prohibited" class="form-control" rows="3">دسترسی غیرمجاز، حملات مخرب، نقض حریم خصوصی دیگران</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;"><i class="fas fa-save"></i> ذخیره تغییرات</button>
+                </form>
             </div>
-        </section>
+        </div>
 
-        <section id="registration" class="registration-section">
-            <div class="container">
-                <div class="section-title">
-                    <h2>ثبت نام در دورهها</h2>
-                    <p>برای ثبت نام در دورههای آموزشی آکادمی نخبگان ستاری اقدام کنید</p>
-                </div>
-                
-                <div class="registration-box">
-                    <h2>ثبت نام از طریق واتساپ</h2>
-                    <p>برای ثبت نام در دورههای آموزشی آکادمی نخبگان ستاری، از طریق واتساپ با ما در ارتباط باشید. کارشناسان ما آماده پاسخگویی به سوالات و راهنمایی شما هستند.</p>
-                    <a href="https://wa.me/93792371380" class="btn btn-whatsapp">
-                        <i class="fab fa-whatsapp"></i> ثبت نام از طریق واتساپ
-                    </a>
-                </div>
+        <!-- Footer Tab -->
+        <div class="admin-tab-content" id="footer-tab">
+            <div class="control-card">
+                <h3>مدیریت فوتر</h3>
+                <form id="footer-form">
+                    <div class="form-group">
+                        <label for="footer-about">درباره ما</label>
+                        <textarea id="footer-about" class="form-control" rows="4">Kali Tools Pro ارائهدهنده ابزارهای تخصصی امنیت سایبری و تست نفوذ برای متخصصان و علاقهمندان به امنیت اطلاعات است.</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="footer-address">آدرس</label>
+                        <input type="text" id="footer-address" class="form-control" value="کابل، افغانستان">
+                    </div>
+                    <div class="form-group">
+                        <label for="footer-phone">تلفن</label>
+                        <input type="text" id="footer-phone" class="form-control" value="۰۷۹۰ ۱۲۳ ۴۵۶">
+                    </div>
+                    <div class="form-group">
+                        <label for="footer-email">ایمیل</label>
+                        <input type="email" id="footer-email" class="form-control" value="info@kalitoolspro.af">
+                    </div>
+                    <div class="form-group">
+                        <label for="footer-copyright">متن کپیرایت</label>
+                        <input type="text" id="footer-copyright" class="form-control" value="کلیه حقوق مادی و معنوی این وبسایت متعلق به Kali Tools Pro میباشد. (۱۴۰۳)">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;"><i class="fas fa-save"></i> ذخیره تغییرات</button>
+                </form>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section id="dashboard" class="dashboard-section">
-            <div class="container">
-                <div class="section-title">
-                    <h2>داشبورد دانشجویی</h2>
-                    <p>امکانات و خدمات ویژه برای دانشجویان آکادمی نخبگان ستاری</p>
-                </div>
-                
-                <div class="dashboard-grid">
-                    <div class="dashboard-card">
-                        <div class="dashboard-icon">
-                            <i class="fas fa-book-open"></i>
-                        </div>
-                        <h3>محتوای درسی</h3>
-                        <p>دسترسی به کلیه محتوای درسی، جزوات و منابع آموزشی</p>
-                        <a href="https://whatsapp.com/channel/0029VbBGXYdEquiMutgMHK0b" class="btn">ورود</a>
-                    </div>
-                    
-                    <div class="dashboard-card">
-                        <div class="dashboard-icon">
-                            <i class="fas fa-tasks"></i>
-                        </div>
-                        <h3>تکالیف و پروژهها</h3>
-                        <p>ارسال تکالیف، پیگیری نمرات و دریافت بازخورد</p>
-                        <a href="https://whatsapp.com/channel/0029VbBGXYdEquiMutgMHK0b" class="btn">ورود</a>
-                    </div>
-                    
-                    <div class="dashboard-card">
-                        <div class="dashboard-icon">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <h3>پیشرفت تحصیلی</h3>
-                        <p>مشاهده نمودار پیشرفت و کارنامه تحصیلی</p>
-                        <a href="https://whatsapp.com/channel/0029VbBGXYdEquiMutgMHK0b" class="btn">ورود</a>
-                    </div>
-                    
-                    <div class="dashboard-card">
-                        <div class="dashboard-icon">
-                            <i class="fas fa-calendar-alt"></i>
-                        </div>
-                        <h3>برنامه زمانی</h3>
-                        <p>مشاهده برنامه کلاسها و رویدادهای آموزشی</p>
-                        <a href="https://whatsapp.com/channel/0029VbBGXYdEquiMutgMHK0b" class="btn">ورود</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- بخش مقالات و وبلاگ -->
-        <section id="blog" class="blog-section">
-            <div class="container">
-                <div class="section-title">
-                    <h2>مقالات و وبلاگ آموزشی</h2>
-                    <p>آخرین مطالب آموزشی و تخصصی در زمینه رسانه، ارتباطات و روانشناسی</p>
-                </div>
-                
-                <div class="blog-grid">
-                    <div class="blog-card">
-                        <img src="https://via.placeholder.com/400x200/1e3a5f/ffffff?text=مقاله+آموزشی" alt="مقاله آموزشی" class="blog-image lazy-image">
-                        <div class="blog-content">
-                            <div class="blog-meta">
-                                <span><i class="fas fa-calendar"></i> 15 مرداد 1403</span>
-                                <span><i class="fas fa-user"></i> احمد رضا ستاری</span>
-                            </div>
-                            <h3 class="blog-title">۱۰ تکنیک برتر برای بهبود فن بیان</h3>
-                            <p class="blog-excerpt">در این مقاله با ۱۰ تکنیک کاربردی برای بهبود مهارتهای فن بیان و سخنوری آشنا میشوید...</p>
-                            <div class="blog-tags">
-                                <span class="blog-tag">فن بیان</span>
-                                <span class="blog-tag">سخنوری</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="blog-card">
-                        <img src="https://via.placeholder.com/400x200/0a1930/ffffff?text=مقاله+تخصصی" alt="مقاله تخصصی" class="blog-image lazy-image">
-                        <div class="blog-content">
-                            <div class="blog-meta">
-                                <span><i class="fas fa-calendar"></i> 10 مرداد 1403</span>
-                                <span><i class="fas fa-user"></i> ملیحه حیاتی</span>
-                            </div>
-                            <h3 class="blog-title">روانشناسی ارتباطات مؤثر در فضای مجازی</h3>
-                            <p class="blog-excerpt">چگونه میتوانیم در فضای مجازی ارتباطات مؤثر و پایدار ایجاد کنیم؟ این مقاله به بررسی اصول روانشناسی ارتباطات میپردازد...</p>
-                            <div class="blog-tags">
-                                <span class="blog-tag">روانشناسی</span>
-                                <span class="blog-tag">ارتباطات</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="blog-card">
-                        <img src="https://via.placeholder.com/400x200/2c3e50/ffffff?text=مقاله+خبری" alt="مقاله خبری" class="blog-image lazy-image">
-                        <div class="blog-content">
-                            <div class="blog-meta">
-                                <span><i class="fas fa-calendar"></i> 5 مرداد 1403</span>
-                                <span><i class="fas fa-user"></i> علی حضرت</span>
-                            </div>
-                            <h3 class="blog-title">اصول مصاحبه حرفهای برای خبرنگاران</h3>
-                            <p class="blog-excerpt">آموزش گام به گام اصول مصاحبه حرفهای و تکنیکهای پرسشگری مؤثر برای خبرنگاران و روزنامه نگاران...</p>
-                            <div class="blog-tags">
-                                <span class="blog-tag">خبرنگاری</span>
-                                <span class="blog-tag">مصاحبه</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div style="text-align: center; margin-top: 40px;">
-                    <a href="#blog-archive" class="btn">مشاهده همه مقالات</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- بخش ویدیوهای آموزشی -->
-        <section id="videos" class="videos-section">
-            <div class="container">
-                <div class="section-title">
-                    <h2>ویدیوهای آموزشی</h2>
-                    <p>آموزشهای ویدیویی کوتاه و کاربردی برای یادگیری سریع</p>
-                </div>
-                
-                <div class="videos-grid" id="mainVideos">
-                    <!-- ویدیوها از طریق جاوااسکریپت اضافه خواهند شد -->
-                </div>
-                
-                <div style="text-align: center; margin-top: 40px;">
-                    <a href="#videos-archive" class="btn">مشاهده همه ویدیوها</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- بخش منابع قابل دانلود -->
-        <section id="downloads" class="downloads-section">
-            <div class="container">
-                <div class="section-title">
-                    <h2>منابع آموزشی قابل دانلود</h2>
-                    <p>جزوات، تمرینات و منابع آموزشی برای دانلود رایگان</p>
-                </div>
-                
-                <div class="downloads-grid" id="mainDownloads">
-                    <!-- منابع از طریق جاوااسکریپت اضافه خواهند شد -->
-                </div>
-                
-                <div style="text-align: center; margin-top: 40px;">
-                    <a href="#downloads-archive" class="btn">مشاهده همه منابع</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- بخش انجمن -->
-        <section id="forum" class="forum-section">
-            <div class="container">
-                <div class="section-title">
-                    <h2>انجمن گفتگو</h2>
-                    <p>مکانی برای تبادل نظر، پرسش و پاسخ و تعامل با اساتید و دانشجویان</p>
-                </div>
-                
-                <div class="forum-categories" id="mainForum">
-                    <!-- دستهبندیهای انجمن از طریق جاوااسکریپت اضافه خواهند شد -->
-                </div>
-                
-                <div style="text-align: center; margin-top: 40px;">
-                    <a href="https://whatsapp.com/channel/0029Va9jTiV4Y9lobfT2PF0V" class="btn">ورود به انجمن</a>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer role="contentinfo">
-        <div class="gold-accent"></div>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-column">
-                    <h3>درباره آکادمی</h3>
-                    <p>آکادمی نخبگان ستاری در کاپیسا افغانستان با هدف پرورش استعدادهای درخشان و تربیت متخصصان حرفهای در زمینههای رسانه, ارتباطات و هنرهای کلامی تأسیس شده است.</p>
-                    <div class="location-badge">
-                        <i class="fas fa-map-marker-alt"></i> کاپیسا, افغانستان
-                    </div>
-                </div>
-                
-                <div class="footer-column">
-                    <h3>لینکهای سریع</h3>
-                    <ul>
-                        <li><a href="#">خانه</a></li>
-                        <li><a href="#courses">دوره ها</a></li>
-                        <li><a href="#online-courses">ظرفیت آنلاین</a></li>
-                        <li><a href="#blog">مقالات</a></li>
-                        <li><a href="#videos">ویدیوها</a></li>
-                        <li><a href="#downloads">منابع</a></li>
-                        <li><a href="#forum">انجمن</a></li>
-                        <li><a href="#instructors">اساتید</a></li>
-                        <li><a href="#students">شاگردان ممتاز</a></li>
-                        <li><a href="#registration">ثبت نام</a></li>
-                        <li><a href="#dashboard">داشبورد</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-column">
-                    <h3>تماس با ما</h3>
-                    <ul>
-                        <li><i class="fas fa-map-marker-alt"></i> کاپیسا, افغانستان</li>
-                        <li><i class="fas fa-phone"></i> 0792371380 </li>
-                        <li><i class="fab fa-whatsapp"></i> 0792371380 </li>
-                        <li><i class="fas fa-envelope"></i> info@setare-academy.af</li>
-                    </ul>
-                    <div class="social-links" style="margin-top: 20px;">
-                        <a href="https://t.me/kapisa_2" style="color: var(--gold); margin-left: 15px; font-size: 1.5rem;"><i class="fab fa-telegram"></i></a>
-                        <a href="https://www.instagram.com/kapisa_2?igsh=MW56ZGd5ZzQ4MWM5eA==" style="color: var(--gold); margin-left: 15px; font-size: 1.5rem;"><i class="fab fa-instagram"></i></a>
-                        <a href="https://youtube.com/@kapisagroup_2?si=HTdvuby3uS4L3jxu" style="color: var(--gold); margin-left: 15px; font-size: 1.5rem;"><i class="fab fa-youtube"></i></a>
-                        <a href="https://wa.me/93790310747" style="color: var(--gold); margin-left: 15px; font-size: 1.5rem;"><i class="fab fa-whatsapp"></i></a>
-                    </div>
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>درباره ما</h4>
+                <p id="footer-about-text">Kali Tools Pro ارائهدهنده ابزارهای تخصصی امنیت سایبری و تست نفوذ برای متخصصان و علاقهمندان به امنیت اطلاعات است.</p>
+                <div class="social-links">
+                    <a href="https://t.me/kapisa_2"><i class="fab fa-telegram"></i></a>
+                    <a href=" https://www.instagram.com/kapisa_2?igsh=MW56ZGd5ZzQ4MWM5eA=="><i class="fab fa-instagram"></i></a>
+                    <a href="https://youtube.com/@kapisagroup_2?si=Y21vtn-UUZETeApj"><i class="fab fa-youtube"></i></a>
+                    <a href="https://www.facebook.com/share/17DJBdxN1D/"><i class="fab fa-facebook"></i></a>
                 </div>
             </div>
             
-            <div class="copyright">
-                <p>کلیه حقوق مادی و معنوی این وبسایت متعلق به آکادمی نخبگان ستاری میباشد. © 1404 - کاپیسا, افغانستان</p>
+            <div class="footer-section">
+                <h4>لینکهای مفید</h4>
+                <ul class="footer-links">
+                    <li><a href="#home">صفحه اصلی</a></li>
+                    <li><a href="#features">امکانات</a></li>
+                    <li><a href="#gallery">گالری</a></li>
+                    <li><a href="#products">محصولات</a></li>
+                    <li><a href="#ethical">راهنمای اخلاقی</a></li>
+                    <li><a href="#">مقالات آموزشی</a></li>
+                </ul>
             </div>
+            
+            <div class="footer-section">
+                <h4>تماس با ما</h4>
+                <ul class="footer-links">
+                    <li><i class="fas fa-map-marker-alt"></i> <span id="footer-address-text">کابل، افغانستان</span></li>
+                    <li><i class="fas fa-phone"></i> <span id="footer-phone-text">۰۷۹۰ ۱۲۳ ۴۵۶</span></li>
+                    <li><i class="fas fa-envelope"></i> <span id="footer-email-text">info@kalitoolspro.af</span></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p id="footer-copyright-text">کلیه حقوق مادی و معنوی این وبسایت متعلق به Kali Tools Pro میباشد. (۱۴۰۳)</p>
         </div>
     </footer>
 
-    <!-- اسکریپتهای بهبود یافته -->
-    
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h3 class="cart-title">سبد خرید شما</h3>
+            <button class="close-cart" id="close-cart"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="cart-items" id="cart-items">
+            <p id="empty-cart-message" style="text-align: center; color: var(--text-light); padding: 2rem 0;">سبد خرید شما خالی است</p>
+        </div>
+        <div class="cart-total">
+            <span>جمع کل:</span>
+            <span id="cart-total-price">۰ AFN</span>
+        </div>
+        <button class="btn btn-success checkout-btn" id="checkout-btn"><i class="fas fa-credit-card"></i> پرداخت نهایی</button>
+    </div>
+
+    <!-- Overlay for sidebar -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Login Modal -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">ورود به حساب کاربری</h3>
+                <button class="close-modal" id="close-login-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="email">ایمیل</label>
+                    <input type="email" id="email" class="form-control" placeholder="example@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">رمز عبور</label>
+                    <input type="password" id="password" class="form-control" placeholder="رمز عبور خود را وارد کنید" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">ورود</button>
+            </form>
+            <p style="text-align: center; margin-top: 1rem;">حساب کاربری ندارید؟ <a href="#" style="color: var(--primary);">ثبت نام کنید</a></p>
+            <div style="background: #f8f9fa; padding: 1rem; border-radius: 5px; margin-top: 1.5rem;">
+                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">اطلاعات ورود مدیریت:</h4>
+                </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Global variables
+        let cart = [];
+        let galleryItems = [];
+        let products = [];
+        let features = [];
+        let currentAdminTab = 'dashboard';
+        let isAdminLoggedIn = false;
+
+        // DOM elements
+        const cartBtn = document.getElementById('cart-btn');
+        const cartSidebar = document.getElementById('cart-sidebar');
+        const closeCart = document.getElementById('close-cart');
+        const overlay = document.getElementById('overlay');
+        const cartItems = document.getElementById('cart-items');
+        const cartCount = document.getElementById('cart-count');
+        const cartTotalPrice = document.getElementById('cart-total-price');
+        const emptyCartMessage = document.getElementById('empty-cart-message');
+        const checkoutBtn = document.getElementById('checkout-btn');
+        const viewProductsBtn = document.getElementById('view-products-btn');
+        const loginBtn = document.getElementById('login-btn');
+        const loginModal = document.getElementById('login-modal');
+        const closeLoginModal = document.getElementById('close-login-modal');
+        const loginForm = document.getElementById('login-form');
+        const adminPanel = document.getElementById('admin-panel');
+        const logoutBtn = document.getElementById('logout-btn');
+        const galleryGrid = document.getElementById('gallery-grid');
+        const productsGrid = document.getElementById('products-grid');
+        const featuresGrid = document.getElementById('features-grid');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const closeMobileMenu = document.getElementById('close-mobile-menu');
+        const mobileLoginBtn = document.getElementById('mobile-login-btn');
+        const toast = document.getElementById('toast');
+
+        // Admin credentials
+        const adminEmail = "admin@kalitools.af";
+        const adminPassword = "KaliAdmin2024";
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadInitialData();
+            updateCart();
+            loadGalleryItems();
+            loadProducts();
+            loadFeatures();
+            loadEthicalContent();
+            loadFooterContent();
+            setupEventListeners();
+            updateAdminStats();
+            
+            // Check if admin is already logged in
+            if (localStorage.getItem('adminLoggedIn') === 'true') {
+                isAdminLoggedIn = true;
+                adminPanel.classList.add('active');
+            }
+        });
+
+        // Load initial data
+        function loadInitialData() {
+            // Load default gallery items if empty
+            if (galleryItems.length === 0) {
+                galleryItems = [
+                    {
+                        id: 1,
+                        image: 'https://i.ibb.co/v6sWSFr7/kali-tiles.jpg',
+                        title: 'کالی لینکس ۲۰۲۳',
+                        description: 'جدیدترین نسخه کالی لینکس با ابزارهای به روز شده'
+                    },
+                    {
+                        id: 2,
+                        image: 'https://i.ibb.co/WWfb577V/kali-tiles-purple.jpg',
+                        title: 'ابزارهای تست نفوذ',
+                        description: 'مجموعه کامل ابزارهای امنیتی و تست نفوذ'
+                    },
+                    {
+                        id: 3,
+                        image: 'https://i.ibb.co/nq4Qq5HK/kali-waves-1.png',
+                        title: 'محیط توسعه',
+                        description: 'محیط توسعه یکپارچه برای متخصصان امنیت'
+                    }
+                ];
+            }
+
+            // Load default products if empty
+            if (products.length === 0) {
+                products = [
+                    {
+                        id: 1,
+                        name: "Nmap Pro Edition",
+                        category: "ابزار شبکه",
+                        price: 2990,
+                        description: "ابزار اسکن شبکه پیشرفته با قابلیتهای گسترده برای شناسایی میزبانها و سرویسها",
+                        image: "https://i.ibb.co/ynmdk2jb/kali-blue-matrix.png"
+                    },
+                    {
+                        id: 2,
+                        name: "Metasploit Framework",
+                        category: "تست نفوذ",
+                        price: 4590,
+                        description: "چارچوب کامل تست نفوذ با پایگاه داده گسترده از اکسپلویتها و ماژولهای پیشرفته",
+                        image: "https://i.ibb.co/5XpcNymf/kali-red-sticker.jpg"
+                    },
+                    {
+                        id: 3,
+                        name: "Wireshark Advanced",
+                        category: "تحلیل امنیتی",
+                        price: 3790,
+                        description: "ابزار تحلیل ترافیک شبکه با قابلیتهای پیشرفته برای بررسی بستههای داده",
+                        image: "https://i.ibb.co/nq4Qq5HK/kali-waves-1.png"
+                    },
+                    {
+                        id: 4,
+                        name: "John the Ripper Pro",
+                        category: "رمزنگاری",
+                        price: 3290,
+                        description: "ابزار پیشرفته شکستن رمز عبور با الگوریتمهای بهینه شده و سرعت بالا",
+                        image: "https://i.ibb.co/WWfb577V/kali-tiles-purple.jpg"
+                    }
+                ];
+            }
+
+            // Load default features if empty
+            if (features.length === 0) {
+                features = [
+                    {
+                        id: 1,
+                        icon: "fas fa-shield-alt",
+                        title: "امنیت پیشرفته",
+                        description: "ابزارهای تست نفوذ و امنیت با قابلیتهای پیشرفته برای شناسایی آسیبپذیریها"
+                    },
+                    {
+                        id: 2,
+                        icon: "fas fa-bolt",
+                        title: "کارایی بالا",
+                        description: "ابزارهای بهینهشده برای اجرای سریع و کارآمد حتی در سختافزارهای معمولی"
+                    },
+                    {
+                        id: 3,
+                        icon: "fas fa-graduation-cap",
+                        title: "آموزش کامل",
+                        description: "مستندات جامع و دورههای آموزشی برای استفاده مؤثر از تمامی ابزارها"
+                    }
+                ];
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Cart functionality
+            cartBtn.addEventListener('click', () => {
+                cartSidebar.classList.add('active');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+
+            closeCart.addEventListener('click', () => {
+                cartSidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+
+            overlay.addEventListener('click', () => {
+                cartSidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+                loginModal.classList.remove('active');
+                mobileMenu.classList.remove('active');
+            });
+
+            // Login functionality
+            loginBtn.addEventListener('click', () => {
+                loginModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+
+            mobileLoginBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                loginModal.classList.add('active');
+                mobileMenu.classList.remove('active');
+                document.body.style.overflow = 'hidden';
+            });
+
+            closeLoginModal.addEventListener('click', () => {
+                loginModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+
+            // Logout functionality
+            logoutBtn.addEventListener('click', () => {
+                adminPanel.classList.remove('active');
+                isAdminLoggedIn = false;
+                localStorage.removeItem('adminLoggedIn');
+                showToast('با موفقیت از سیستم خارج شدید', 'success');
+            });
+
+            // Mobile menu functionality
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+
+            closeMobileMenu.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+
+            // Scroll to products section
+            viewProductsBtn.addEventListener('click', () => {
+                document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+            });
+
+            // Add to cart functionality
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('add-to-cart') || e.target.closest('.add-to-cart')) {
+                    const button = e.target.classList.contains('add-to-cart') ? e.target : e.target.closest('.add-to-cart');
+                    const id = button.getAttribute('data-id');
+                    const name = button.getAttribute('data-name');
+                    const price = parseInt(button.getAttribute('data-price'));
+                    
+                    const existingItem = cart.find(item => item.id === id);
+                    
+                    if (existingItem) {
+                        existingItem.quantity += 1;
+                    } else {
+                        cart.push({
+                            id,
+                            name,
+                            price,
+                            quantity: 1
+                        });
+                    }
+                    
+                    updateCart();
+                    showToast(`"${name}" به سبد خرید اضافه شد`, 'success');
+                }
+            });
+
+            // Checkout functionality
+            checkoutBtn.addEventListener('click', () => {
+                if (cart.length > 0) {
+                    showToast('سفارش شما با موفقیت ثبت شد!', 'success');
+                    cart = [];
+                    updateCart();
+                    setTimeout(() => {
+                        cartSidebar.classList.remove('active');
+                        overlay.classList.remove('active');
+                        document.body.style.overflow = 'auto';
+                    }, 2000);
+                }
+            });
+
+            // Login form submission
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                if (email === adminEmail && password === adminPassword) {
+                    showToast('ورود به پنل مدیریت با موفقیت انجام شد!', 'success');
+                    loginModal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                    loginForm.reset();
+                    
+                    isAdminLoggedIn = true;
+                    localStorage.setItem('adminLoggedIn', 'true');
+                    adminPanel.classList.add('active');
+                    adminPanel.scrollIntoView({ behavior: 'smooth' });
+                } else if (email && password) {
+                    showToast('ورود با موفقیت انجام شد!', 'success');
+                    loginModal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                    loginForm.reset();
+                } else {
+                    showToast('لطفاً تمام فیلدها را پر کنید', 'error');
+                }
+            });
+
+            // Admin tabs
+            document.querySelectorAll('.admin-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
+            });
+
+            // File uploads
+            setupFileUpload('gallery-image-upload', 'gallery-image-input', 'gallery-image-preview');
+            setupFileUpload('product-image-upload', 'product-image-input', 'product-image-preview');
+
+            // Admin forms
+            setupAdminForms();
+
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                    // Close mobile menu after clicking a link
+                    mobileMenu.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                });
+            });
+        }
+
+        // Switch admin tab
+        function switchTab(tabId) {
+            // Update active tab
+            document.querySelectorAll('.admin-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`.admin-tab[data-tab="${tabId}"]`).classList.add('active');
+            
+            // Update active tab content
+            document.querySelectorAll('.admin-tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tabId}-tab`).classList.add('active');
+            
+            // Load tab-specific data
+            if (tabId === 'gallery') {
+                loadGalleryAdmin();
+            } else if (tabId === 'products') {
+                loadProductsAdmin();
+            } else if (tabId === 'features') {
+                loadFeaturesAdmin();
+            } else if (tabId === 'ethical') {
+                loadEthicalAdmin();
+            } else if (tabId === 'footer') {
+                loadFooterAdmin();
+            } else if (tabId === 'hero') {
+                loadHeroAdmin();
+            }
+            
+            currentAdminTab = tabId;
+        }
+
+        // Setup file upload
+        function setupFileUpload(uploadElementId, inputElementId, previewElementId) {
+            const uploadElement = document.getElementById(uploadElementId);
+            const inputElement = document.getElementById(inputElementId);
+            const previewElement = document.getElementById(previewElementId);
+            
+            uploadElement.addEventListener('click', () => {
+                inputElement.click();
+            });
+            
+            inputElement.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        previewElement.src = e.target.result;
+                        previewElement.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // Setup admin forms
+        function setupAdminForms() {
+            // Hero form
+            document.getElementById('hero-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const title = document.getElementById('hero-title-input').value;
+                const description = document.getElementById('hero-description-input').value;
+                
+                document.getElementById('hero-title').textContent = title;
+                document.getElementById('hero-description').textContent = description;
+                
+                showToast('بخش اصلی با موفقیت بهروزرسانی شد', 'success');
+                updateLastUpdate();
+            });
+
+            // Features form
+            document.getElementById('feature-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const title = document.getElementById('feature-title').value;
+                const description = document.getElementById('feature-description').value;
+                
+                document.getElementById('features-title').textContent = title;
+                document.getElementById('features-description').textContent = description;
+                
+                showToast('بخش امکانات با موفقیت بهروزرسانی شد', 'success');
+                updateLastUpdate();
+            });
+
+            // Gallery form
+            document.getElementById('add-gallery-item-btn').addEventListener('click', () => {
+                const title = document.getElementById('gallery-image-title').value;
+                const description = document.getElementById('gallery-image-desc').value;
+                const imagePreview = document.getElementById('gallery-image-preview');
+                
+                if (title && description && imagePreview.style.display === 'block') {
+                    const newItem = {
+                        id: galleryItems.length > 0 ? Math.max(...galleryItems.map(item => item.id)) + 1 : 1,
+                        image: imagePreview.src,
+                        title: title,
+                        description: description
+                    };
+                    
+                    galleryItems.push(newItem);
+                    loadGalleryItems();
+                    loadGalleryAdmin();
+                    document.getElementById('gallery-form').reset();
+                    imagePreview.style.display = 'none';
+                    showToast('تصویر جدید به گالری اضافه شد', 'success');
+                    updateAdminStats();
+                    updateLastUpdate();
+                } else {
+                    showToast('لطفاً تمام فیلدها را پر کنید و تصویر آپلود کنید', 'error');
+                }
+            });
+
+            // Products form
+            document.getElementById('add-product-btn').addEventListener('click', () => {
+                const name = document.getElementById('product-name').value;
+                const category = document.getElementById('product-category').value;
+                const price = document.getElementById('product-price').value;
+                const description = document.getElementById('product-description').value;
+                const imagePreview = document.getElementById('product-image-preview');
+                
+                if (name && category && price && description && imagePreview.style.display === 'block') {
+                    const newProduct = {
+                        id: products.length > 0 ? Math.max(...products.map(product => product.id)) + 1 : 1,
+                        name: name,
+                        category: category,
+                        price: parseInt(price),
+                        description: description,
+                        image: imagePreview.src
+                    };
+                    
+                    products.push(newProduct);
+                    loadProducts();
+                    loadProductsAdmin();
+                    document.getElementById('product-form').reset();
+                    imagePreview.style.display = 'none';
+                    showToast('محصول جدید با موفقیت اضافه شد', 'success');
+                    updateAdminStats();
+                    updateLastUpdate();
+                } else {
+                    showToast('لطفاً تمام فیلدها را پر کنید و تصویر آپلود کنید', 'error');
+                }
+            });
+
+            // Ethical form
+            document.getElementById('ethical-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const title = document.getElementById('ethical-title').value;
+                const description = document.getElementById('ethical-description').value;
+                const warning = document.getElementById('ethical-warning').value;
+                const footer = document.getElementById('ethical-footer').value;
+                const allowed = document.getElementById('ethical-allowed').value;
+                const prohibited = document.getElementById('ethical-prohibited').value;
+                
+                document.getElementById('ethical-title').textContent = title;
+                document.getElementById('ethical-description').textContent = description;
+                document.getElementById('ethical-warning').innerHTML = `<h3><i class="fas fa-exclamation-triangle"></i> هشدار مسئولیت اخلاقی</h3><p>${warning}</p>`;
+                document.getElementById('ethical-footer').textContent = footer;
+                
+                // Update ethical list
+                document.getElementById('ethical-list').innerHTML = `
+                    <div class="ethical-item allowed">
+                        <div class="ethical-icon"><i class="fas fa-check-circle"></i></div>
+                        <div>
+                            <h4>موارد مجاز</h4>
+                            <p>${allowed}</p>
+                        </div>
+                    </div>
+                    <div class="ethical-item prohibited">
+                        <div class="ethical-icon"><i class="fas fa-times-circle"></i></div>
+                        <div>
+                            <h4>موارد غیرمجاز</h4>
+                            <p>${prohibited}</p>
+                        </div>
+                    </div>
+                `;
+                
+                showToast('بخش راهنمای اخلاقی با موفقیت بهروزرسانی شد', 'success');
+                updateLastUpdate();
+            });
+
+            // Footer form
+            document.getElementById('footer-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const about = document.getElementById('footer-about').value;
+                const address = document.getElementById('footer-address').value;
+                const phone = document.getElementById('footer-phone').value;
+                const email = document.getElementById('footer-email').value;
+                const copyright = document.getElementById('footer-copyright').value;
+                
+                document.getElementById('footer-about-text').textContent = about;
+                document.getElementById('footer-address-text').textContent = address;
+                document.getElementById('footer-phone-text').textContent = phone;
+                document.getElementById('footer-email-text').textContent = email;
+                document.getElementById('footer-copyright-text').textContent = copyright;
+                
+                showToast('فوتر با موفقیت بهروزرسانی شد', 'success');
+                updateLastUpdate();
+            });
+
+            // Add feature button
+            document.getElementById('add-feature-btn').addEventListener('click', () => {
+                const featuresList = document.getElementById('features-list');
+                const newFeatureId = features.length > 0 ? Math.max(...features.map(feature => feature.id)) + 1 : 1;
+                
+                const featureElement = document.createElement('div');
+                featureElement.className = 'feature-admin-item';
+                featureElement.innerHTML = `
+                    <div class="form-group">
+                        <label>آیکون</label>
+                        <input type="text" class="form-control feature-icon" value="fas fa-shield-alt" placeholder="کلاس آیکون FontAwesome">
+                    </div>
+                    <div class="form-group">
+                        <label>عنوان</label>
+                        <input type="text" class="form-control feature-title" placeholder="عنوان امکان">
+                    </div>
+                    <div class="form-group">
+                        <label>توضیحات</label>
+                        <textarea class="form-control feature-description" placeholder="توضیحات امکان"></textarea>
+                    </div>
+                    <button type="button" class="btn btn-danger remove-feature" data-id="${newFeatureId}"><i class="fas fa-trash"></i> حذف</button>
+                    <hr>
+                `;
+                
+                featuresList.appendChild(featureElement);
+                
+                // Add event listener to remove button
+                featureElement.querySelector('.remove-feature').addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    featuresList.removeChild(featureElement);
+                });
+            });
+        }
+
+        // Load gallery items
+        function loadGalleryItems() {
+            galleryGrid.innerHTML = '';
+            
+            galleryItems.forEach(item => {
+                const galleryItem = document.createElement('div');
+                galleryItem.className = 'gallery-item';
+                galleryItem.style.backgroundImage = `url('${item.image}')`;
+                galleryItem.innerHTML = `
+                    <div class="gallery-actions">
+                        <button class="gallery-action-btn delete-gallery-item" data-id="${item.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    <div class="gallery-item-overlay">
+                        <h3>${item.title}</h3>
+                        <p>${item.description}</p>
+                    </div>
+                `;
+                galleryGrid.appendChild(galleryItem);
+            });
+            
+            // Add event listeners to delete buttons
+            document.querySelectorAll('.delete-gallery-item').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const id = parseInt(button.getAttribute('data-id'));
+                    deleteGalleryItem(id);
+                });
+            });
+        }
+
+        // Load products
+        function loadProducts() {
+            productsGrid.innerHTML = '';
+            
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <div class="product-image" style="background-image: url('${product.image}')">
+                    </div>
+                    <div class="product-content">
+                        <div class="product-category">${product.category}</div>
+                        <h3 class="product-title">${product.name}</h3>
+                        <p class="product-description">${product.description}</p>
+                        <div class="product-footer">
+                            <div class="product-price"><span class="currency">AFN</span> ${formatPrice(product.price)}</div>
+                            <button class="btn btn-primary add-to-cart" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}"><i class="fas fa-cart-plus"></i> افزودن</button>
+                        </div>
+                    </div>
+                `;
+                productsGrid.appendChild(productCard);
+            });
+        }
+
+        // Load features
+        function loadFeatures() {
+            featuresGrid.innerHTML = '';
+            
+            features.forEach(feature => {
+                const featureCard = document.createElement('div');
+                featureCard.className = 'feature-card';
+                featureCard.innerHTML = `
+                    <div class="feature-icon">
+                        <i class="${feature.icon}"></i>
+                    </div>
+                    <h3>${feature.title}</h3>
+                    <p>${feature.description}</p>
+                `;
+                featuresGrid.appendChild(featureCard);
+            });
+        }
+
+        // Load ethical content
+        function loadEthicalContent() {
+            // This is loaded from the form in admin panel
+        }
+
+        // Load footer content
+        function loadFooterContent() {
+            // This is loaded from the form in admin panel
+        }
+
+        // Load gallery admin
+        function loadGalleryAdmin() {
+            const galleryItemsList = document.getElementById('gallery-items-list');
+            galleryItemsList.innerHTML = '';
+            
+            if (galleryItems.length === 0) {
+                galleryItemsList.innerHTML = '<p style="text-align: center; color: #ccc;">هیچ تصویری در گالری وجود ندارد</p>';
+                return;
+            }
+            
+            galleryItems.forEach(item => {
+                const listItem = document.createElement('div');
+                listItem.style.display = 'flex';
+                listItem.style.justifyContent = 'space-between';
+                listItem.style.alignItems = 'center';
+                listItem.style.padding = '0.5rem 0';
+                listItem.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
+                
+                listItem.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 40px; height: 40px; background-image: url('${item.image}'); background-size: cover; background-position: center; border-radius: 5px;"></div>
+                        <span>${item.title}</span>
+                    </div>
+                    <button class="gallery-action-btn delete-gallery-item-list" data-id="${item.id}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+                
+                galleryItemsList.appendChild(listItem);
+            });
+            
+            // Add event listeners to delete buttons in list
+            document.querySelectorAll('.delete-gallery-item-list').forEach(button => {
+                button.addEventListener('click', () => {
+                    const id = parseInt(button.getAttribute('data-id'));
+                    deleteGalleryItem(id);
+                });
+            });
+        }
+
+        // Load products admin
+        function loadProductsAdmin() {
+            const productsList = document.getElementById('products-list');
+            productsList.innerHTML = '';
+            
+            if (products.length === 0) {
+                productsList.innerHTML = '<p style="text-align: center; color: #ccc;">هیچ محصولی وجود ندارد</p>';
+                return;
+            }
+            
+            products.forEach(product => {
+                const listItem = document.createElement('div');
+                listItem.style.display = 'flex';
+                listItem.style.justifyContent = 'space-between';
+                listItem.style.alignItems = 'center';
+                listItem.style.padding = '0.5rem 0';
+                listItem.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
+                
+                listItem.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 40px; height: 40px; background-image: url('${product.image}'); background-size: cover; background-position: center; border-radius: 5px;"></div>
+                        <div>
+                            <div style="font-weight: bold;">${product.name}</div>
+                            <div style="font-size: 0.8rem; color: #ccc;">${formatPrice(product.price)} AFN</div>
+                        </div>
+                    </div>
+                    <button class="gallery-action-btn delete-product-list" data-id="${product.id}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+                
+                productsList.appendChild(listItem);
+            });
+            
+            // Add event listeners to delete buttons in list
+            document.querySelectorAll('.delete-product-list').forEach(button => {
+                button.addEventListener('click', () => {
+                    const id = parseInt(button.getAttribute('data-id'));
+                    deleteProduct(id);
+                });
+            });
+        }
+
+        // Load features admin
+        function loadFeaturesAdmin() {
+            const featuresList = document.getElementById('features-list');
+            featuresList.innerHTML = '';
+            
+            features.forEach(feature => {
+                const featureElement = document.createElement('div');
+                featureElement.className = 'feature-admin-item';
+                featureElement.innerHTML = `
+                    <div class="form-group">
+                        <label>آیکون</label>
+                        <input type="text" class="form-control feature-icon" value="${feature.icon}" placeholder="کلاس آیکون FontAwesome">
+                    </div>
+                    <div class="form-group">
+                        <label>عنوان</label>
+                        <input type="text" class="form-control feature-title" value="${feature.title}" placeholder="عنوان امکان">
+                    </div>
+                    <div class="form-group">
+                        <label>توضیحات</label>
+                        <textarea class="form-control feature-description" placeholder="توضیحات امکان">${feature.description}</textarea>
+                    </div>
+                    <button type="button" class="btn btn-danger remove-feature" data-id="${feature.id}"><i class="fas fa-trash"></i> حذف</button>
+                    <hr>
+                `;
+                
+                featuresList.appendChild(featureElement);
+                
+                // Add event listener to remove button
+                featureElement.querySelector('.remove-feature').addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    deleteFeature(id);
+                });
+            });
+        }
+
+        // Load ethical admin
+        function loadEthicalAdmin() {
+            // Pre-fill the ethical form with current values
+            document.getElementById('ethical-title').value = document.getElementById('ethical-title').textContent;
+            document.getElementById('ethical-description').value = document.getElementById('ethical-description').textContent;
+            
+            const warningElement = document.getElementById('ethical-warning');
+            const warningText = warningElement.querySelector('p').textContent;
+            document.getElementById('ethical-warning').value = warningText;
+            
+            document.getElementById('ethical-footer').value = document.getElementById('ethical-footer').textContent;
+            
+            const allowedItem = document.querySelector('.ethical-item.allowed p');
+            const prohibitedItem = document.querySelector('.ethical-item.prohibited p');
+            
+            document.getElementById('ethical-allowed').value = allowedItem ? allowedItem.textContent : '';
+            document.getElementById('ethical-prohibited').value = prohibitedItem ? prohibitedItem.textContent : '';
+        }
+
+        // Load footer admin
+        function loadFooterAdmin() {
+            document.getElementById('footer-about').value = document.getElementById('footer-about-text').textContent;
+            document.getElementById('footer-address').value = document.getElementById('footer-address-text').textContent;
+            document.getElementById('footer-phone').value = document.getElementById('footer-phone-text').textContent;
+            document.getElementById('footer-email').value = document.getElementById('footer-email-text').textContent;
+            document.getElementById('footer-copyright').value = document.getElementById('footer-copyright-text').textContent;
+        }
+
+        // Load hero admin
+        function loadHeroAdmin() {
+            document.getElementById('hero-title-input').value = document.getElementById('hero-title').textContent;
+            document.getElementById('hero-description-input').value = document.getElementById('hero-description').textContent;
+        }
+
+        // Delete gallery item
+        function deleteGalleryItem(id) {
+            if (!isAdminLoggedIn) {
+                showToast('شما دسترسی لازم برای حذف تصاویر را ندارید', 'error');
+                return;
+            }
+            
+            galleryItems = galleryItems.filter(item => item.id !== id);
+            loadGalleryItems();
+            loadGalleryAdmin();
+            showToast('تصویر از گالری حذف شد', 'success');
+            updateAdminStats();
+            updateLastUpdate();
+        }
+
+        // Delete product
+        function deleteProduct(id) {
+            if (!isAdminLoggedIn) {
+                showToast('شما دسترسی لازم برای حذف محصولات را ندارید', 'error');
+                return;
+            }
+            
+            products = products.filter(product => product.id !== id);
+            loadProducts();
+            loadProductsAdmin();
+            showToast('محصول حذف شد', 'success');
+            updateAdminStats();
+            updateLastUpdate();
+        }
+
+        // Delete feature
+        function deleteFeature(id) {
+            if (!isAdminLoggedIn) {
+                showToast('شما دسترسی لازم برای حذف امکانات را ندارید', 'error');
+                return;
+            }
+            
+            features = features.filter(feature => feature.id !== id);
+            loadFeatures();
+            loadFeaturesAdmin();
+            showToast('امکان حذف شد', 'success');
+            updateAdminStats();
+            updateLastUpdate();
+        }
+
+        // Update cart
+        function updateCart() {
+            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            cartCount.textContent = totalItems;
+            
+            cartItems.innerHTML = '';
+            
+            if (cart.length === 0) {
+                cartItems.appendChild(emptyCartMessage);
+                checkoutBtn.disabled = true;
+            } else {
+                emptyCartMessage.remove();
+                checkoutBtn.disabled = false;
+                
+                cart.forEach(item => {
+                    const product = products.find(p => p.id == item.id);
+                    const cartItem = document.createElement('div');
+                    cartItem.className = 'cart-item';
+                    cartItem.innerHTML = `
+                        <div class="cart-item-image" style="background-image: url('${product ? product.image : ''}')">
+                            <i class="fas fa-box" style="display: none;"></i>
+                        </div>
+                        <div class="cart-item-details">
+                            <div class="cart-item-title">${item.name}</div>
+                            <div class="cart-item-price">${formatPrice(item.price)} AFN</div>
+                            <div>تعداد: ${item.quantity}</div>
+                        </div>
+                        <button class="remove-item" data-id="${item.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    `;
+                    cartItems.appendChild(cartItem);
+                });
+                
+                document.querySelectorAll('.remove-item').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const id = button.getAttribute('data-id');
+                        removeFromCart(id);
+                    });
+                });
+            }
+            
+            const totalPrice = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            cartTotalPrice.textContent = `${formatPrice(totalPrice)} AFN`;
+        }
+
+        // Remove item from cart
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCart();
+            showToast('محصول از سبد خرید حذف شد', 'error');
+        }
+
+        // Format price with commas
+        function formatPrice(price) {
+            return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // Show toast notification
+        function showToast(message, type = '') {
+            toast.textContent = message;
+            toast.className = 'toast';
+            toast.classList.add(type, 'active');
+            
+            setTimeout(() => {
+                toast.classList.remove('active');
+            }, 3000);
+        }
+
+        // Update admin stats
+        function updateAdminStats() {
+            document.getElementById('stat-products').textContent = products.length;
+            document.getElementById('stat-gallery').textContent = galleryItems.length;
+            document.getElementById('stat-features').textContent = features.length;
+            document.getElementById('stat-sales').textContent = Math.floor(Math.random() * 100) + 20;
+        }
+
+        // Update last update time
+        function updateLastUpdate() {
+            const now = new Date();
+            document.getElementById('last-update').textContent = now.toLocaleString('fa-IR');
+        }
+    </script>
 </body>
 </html>
