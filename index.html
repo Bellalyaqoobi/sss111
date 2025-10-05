@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kali Tools Pro | ابزارهای حرفهای کالی لینکس</title>
+    <script src="server.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
     <style>
@@ -239,7 +240,7 @@
 
         /* Hero Section */
         .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('https://i.imgur.com/3Q7J5Qj.png');
+            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('img/kali-maze.jpg');
             background-size: cover;
             background-position: center;
             color: white;
@@ -1879,8 +1880,8 @@
                 <div class="social-links">
                     <a href="#"><i class="fab fa-telegram"></i></a>
                     <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
                 </div>
             </div>
             
@@ -1901,8 +1902,8 @@
                 <h4>تماس با ما</h4>
                 <ul class="footer-links">
                     <li><i class="fas fa-map-marker-alt"></i> <span id="footer-address-text">کابل، افغانستان</span></li>
-                    <li><i class="fas fa-phone"></i> <span id="footer-phone-text">۰۷۹۰ ۱۲۳ ۴۵۶</span></li>
-                    <li><i class="fas fa-envelope"></i> <span id="footer-email-text">info@kalitoolspro.af</span></li>
+                    <li><i class="fas fa-phone"></i> <span id="footer-phone-text">0790310747</span></li>
+                    <li><i class="fas fa-envelope"></i> <span id="footer-email-text">wwtn6191@gmail.com</span></li>
                 </ul>
             </div>
         </div>
@@ -1964,9 +1965,7 @@
             <p style="text-align: center; margin-top: 1rem;">حساب کاربری ندارید؟ <a href="#" style="color: var(--primary);">ثبت نام کنید</a></p>
             <div style="background: #f8f9fa; padding: 1rem; border-radius: 5px; margin-top: 1.5rem;">
                 <h4 style="color: var(--primary); margin-bottom: 0.5rem;">اطلاعات ورود مدیریت:</h4>
-                <p style="margin: 0.25rem 0;">ایمیل: <strong>admin@kalitools.af</strong></p>
-                <p style="margin: 0.25rem 0;">رمز عبور: <strong>KaliAdmin2024</strong></p>
-            </div>
+                </div>
         </div>
     </div>
 
@@ -3222,3 +3221,326 @@
                     <button class="gallery-action-btn delete-video-list" data-id="${video.id}">
                         <i class="fas fa-trash"></i>
                     </button>
+                `;
+                
+                videosList.appendChild(listItem);
+            });
+            
+            // Add event listeners to delete buttons in list
+            document.querySelectorAll('.delete-video-list').forEach(button => {
+                button.addEventListener('click', () => {
+                    const id = parseInt(button.getAttribute('data-id'));
+                    deleteVideo(id);
+                });
+            });
+        }
+
+        // Load features admin
+        function loadFeaturesAdmin() {
+            const featuresList = document.getElementById('features-list');
+            featuresList.innerHTML = '';
+            
+            features.forEach(feature => {
+                const featureElement = document.createElement('div');
+                featureElement.className = 'feature-admin-item';
+                featureElement.innerHTML = `
+                    <div class="form-group">
+                        <label>آیکون</label>
+                        <input type="text" class="form-control feature-icon" value="${feature.icon}" placeholder="کلاس آیکون FontAwesome">
+                    </div>
+                    <div class="form-group">
+                        <label>عنوان</label>
+                        <input type="text" class="form-control feature-title" value="${feature.title}" placeholder="عنوان امکان">
+                    </div>
+                    <div class="form-group">
+                        <label>توضیحات</label>
+                        <textarea class="form-control feature-description" placeholder="توضیحات امکان">${feature.description}</textarea>
+                    </div>
+                    <button type="button" class="btn btn-danger remove-feature" data-id="${feature.id}"><i class="fas fa-trash"></i> حذف</button>
+                    <hr>
+                `;
+                
+                featuresList.appendChild(featureElement);
+                
+                // Add event listener to remove button
+                featureElement.querySelector('.remove-feature').addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    deleteFeature(id);
+                });
+            });
+        }
+
+        // Load ethical admin
+        function loadEthicalAdmin() {
+            // Pre-fill the ethical form with current values
+            document.getElementById('ethical-title').value = document.getElementById('ethical-title').textContent;
+            document.getElementById('ethical-description').value = document.getElementById('ethical-description').textContent;
+            
+            const warningElement = document.getElementById('ethical-warning');
+            const warningText = warningElement.querySelector('p').textContent;
+            document.getElementById('ethical-warning').value = warningText;
+            
+            document.getElementById('ethical-footer').value = document.getElementById('ethical-footer').textContent;
+            
+            const allowedItem = document.querySelector('.ethical-item.allowed p');
+            const prohibitedItem = document.querySelector('.ethical-item.prohibited p');
+            
+            document.getElementById('ethical-allowed').value = allowedItem ? allowedItem.textContent : '';
+            document.getElementById('ethical-prohibited').value = prohibitedItem ? prohibitedItem.textContent : '';
+        }
+
+        // Load footer admin
+        function loadFooterAdmin() {
+            document.getElementById('footer-about').value = document.getElementById('footer-about-text').textContent;
+            document.getElementById('footer-address').value = document.getElementById('footer-address-text').textContent;
+            document.getElementById('footer-phone').value = document.getElementById('footer-phone-text').textContent;
+            document.getElementById('footer-email').value = document.getElementById('footer-email-text').textContent;
+            document.getElementById('footer-copyright').value = document.getElementById('footer-copyright-text').textContent;
+        }
+
+        // Load hero admin
+        function loadHeroAdmin() {
+            document.getElementById('hero-title-input').value = document.getElementById('hero-title').textContent;
+            document.getElementById('hero-description-input').value = document.getElementById('hero-description').textContent;
+        }
+
+        // Delete gallery item
+        async function deleteGalleryItem(id) {
+            if (!isAdminLoggedIn) {
+                showToast('شما دسترسی لازم برای حذف تصاویر را ندارید', 'error');
+                return;
+            }
+            
+            galleryItems = galleryItems.filter(item => item.id !== id);
+            
+            // Save to server
+            const success = await saveToServer('gallery', galleryItems);
+            if (success) {
+                loadGalleryItems();
+                loadGalleryAdmin();
+                showToast('تصویر از گالری حذف شد', 'success');
+                updateAdminStats();
+                updateLastUpdate();
+            } else {
+                showToast('خطا در حذف تصویر', 'error');
+            }
+        }
+
+        // Delete product
+        async function deleteProduct(id) {
+            if (!isAdminLoggedIn) {
+                showToast('شما دسترسی لازم برای حذف محصولات را ندارید', 'error');
+                return;
+            }
+            
+            products = products.filter(product => product.id !== id);
+            
+            // Save to server
+            const success = await saveToServer('products', products);
+            if (success) {
+                loadProducts();
+                loadProductsAdmin();
+                showToast('محصول حذف شد', 'success');
+                updateAdminStats();
+                updateLastUpdate();
+            } else {
+                showToast('خطا در حذف محصول', 'error');
+            }
+        }
+
+        // Delete video
+        async function deleteVideo(id) {
+            if (!isAdminLoggedIn) {
+                showToast('شما دسترسی لازم برای حذف ویدیوها را ندارید', 'error');
+                return;
+            }
+            
+            videos = videos.filter(video => video.id !== id);
+            
+            // Save to server
+            const success = await saveToServer('videos', videos);
+            if (success) {
+                loadVideos();
+                loadVideosAdmin();
+                showToast('ویدیو حذف شد', 'success');
+                updateAdminStats();
+                updateLastUpdate();
+            } else {
+                showToast('خطا در حذف ویدیو', 'error');
+            }
+        }
+
+        // Delete feature
+        async function deleteFeature(id) {
+            if (!isAdminLoggedIn) {
+                showToast('شما دسترسی لازم برای حذف امکانات را ندارید', 'error');
+                return;
+            }
+            
+            features = features.filter(feature => feature.id !== id);
+            
+            // Save to server
+            const success = await saveToServer('features', features);
+            if (success) {
+                loadFeatures();
+                loadFeaturesAdmin();
+                showToast('امکان حذف شد', 'success');
+                updateAdminStats();
+                updateLastUpdate();
+            } else {
+                showToast('خطا در حذف امکان', 'error');
+            }
+        }
+
+        // Update cart
+        function updateCart() {
+            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            cartCount.textContent = totalItems;
+            
+            cartItems.innerHTML = '';
+            
+            if (cart.length === 0) {
+                cartItems.appendChild(emptyCartMessage);
+                checkoutBtn.disabled = true;
+            } else {
+                emptyCartMessage.remove();
+                checkoutBtn.disabled = false;
+                
+                cart.forEach(item => {
+                    const product = products.find(p => p.id == item.id);
+                    const cartItem = document.createElement('div');
+                    cartItem.className = 'cart-item';
+                    cartItem.innerHTML = `
+                        <div class="cart-item-image" style="background-image: url('${SERVER_URL}${product ? product.image : ''}')">
+                            <i class="fas fa-box" style="display: none;"></i>
+                        </div>
+                        <div class="cart-item-details">
+                            <div class="cart-item-title">${item.name}</div>
+                            <div class="cart-item-price">${formatPrice(item.price)} AFN</div>
+                            <div>تعداد: ${item.quantity}</div>
+                        </div>
+                        <button class="remove-item" data-id="${item.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    `;
+                    cartItems.appendChild(cartItem);
+                });
+                
+                document.querySelectorAll('.remove-item').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const id = button.getAttribute('data-id');
+                        removeFromCart(id);
+                    });
+                });
+            }
+            
+            const totalPrice = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            cartTotalPrice.textContent = `${formatPrice(totalPrice)} AFN`;
+        }
+
+        // Remove item from cart
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCart();
+            showToast('محصول از سبد خرید حذف شد', 'error');
+        }
+
+        // Format price with commas
+        function formatPrice(price) {
+            return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // Show toast notification
+        function showToast(message, type = '') {
+            toast.textContent = message;
+            toast.className = 'toast';
+            toast.classList.add(type, 'active');
+            
+            setTimeout(() => {
+                toast.classList.remove('active');
+            }, 3000);
+        }
+
+        // Update admin stats
+        function updateAdminStats() {
+            document.getElementById('stat-products').textContent = products.length;
+            document.getElementById('stat-gallery').textContent = galleryItems.length;
+            document.getElementById('stat-videos').textContent = videos.length;
+            document.getElementById('stat-sales').textContent = Math.floor(Math.random() * 100) + 20;
+        }
+
+        // Update last update time
+        function updateLastUpdate() {
+            const now = new Date();
+            document.getElementById('last-update').textContent = now.toLocaleString('fa-IR');
+        }
+
+        // Backup data
+        async function backupData() {
+            try {
+                const response = await fetch(`${SERVER_URL}/api/backup`);
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `kalitools-backup-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                
+                showToast('پشتیبان با موفقیت دریافت شد', 'success');
+            } catch (error) {
+                console.error('Backup error:', error);
+                showToast('خطا در دریافت پشتیبان', 'error');
+            }
+        }
+
+        // Restore backup
+        async function restoreBackup(file) {
+            const formData = new FormData();
+            formData.append('backup', file);
+            
+            try {
+                const response = await fetch(`${SERVER_URL}/api/restore`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showToast('دادهها با موفقیت بازیابی شدند', 'success');
+                    // Reload data
+                    loadInitialData();
+                } else {
+                    showToast('خطا در بازیابی پشتیبان', 'error');
+                }
+            } catch (error) {
+                console.error('Restore error:', error);
+                showToast('خطا در بازیابی پشتیبان', 'error');
+            }
+        }
+
+        // Setup restore
+        function setupRestore() {
+            const restoreInput = document.createElement('input');
+            restoreInput.type = 'file';
+            restoreInput.accept = '.json';
+            restoreInput.id = 'restore-file';
+            restoreInput.style.display = 'none';
+            document.body.appendChild(restoreInput);
+            
+            restoreInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    restoreBackup(file);
+                }
+            });
+        }
+
+        // Initialize restore functionality
+        setupRestore();
+    </script>
+</body>
+</html>
