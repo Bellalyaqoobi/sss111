@@ -2071,1611 +2071,1811 @@
 
     <script>
         // Telegram Bot Configuration
-        const TELEGRAM_BOT_TOKEN = '8459199254:AAEqCLIMDfs9uj2LNcX_93zt69_V_QrO_uY';
-        const TELEGRAM_CHAT_ID = '6071335955';
+const TELEGRAM_BOT_TOKEN = '8459199254:AAEqCLIMDfs9uj2LNcX_93zt69_V_QrO_uY';
+const TELEGRAM_CHAT_ID = '6071335955';
 
-        // Global variables
-        let cart = [];
-        let galleryItems = [];
-        let products = [];
-        let features = [];
-        let videos = [];
-        let users = [];
-        let currentAdminTab = 'dashboard';
-        let isAdminLoggedIn = false;
+// Global variables
+let cart = [];
+let galleryItems = [];
+let products = [];
+let features = [];
+let videos = [];
+let users = [];
+let currentAdminTab = 'dashboard';
+let isAdminLoggedIn = false;
 
-        // Server URL
-        const SERVER_URL = window.location.origin;
+// Server URL
+const SERVER_URL = window.location.origin;
 
-        // DOM elements
-        const cartBtn = document.getElementById('cart-btn');
-        const cartSidebar = document.getElementById('cart-sidebar');
-        const closeCart = document.getElementById('close-cart');
-        const overlay = document.getElementById('overlay');
-        const cartItems = document.getElementById('cart-items');
-        const cartCount = document.getElementById('cart-count');
-        const cartTotalPrice = document.getElementById('cart-total-price');
-        const emptyCartMessage = document.getElementById('empty-cart-message');
-        const checkoutBtn = document.getElementById('checkout-btn');
-        const viewProductsBtn = document.getElementById('view-products-btn');
-        const viewVideosBtn = document.getElementById('view-videos-btn');
-        const loginBtn = document.getElementById('login-btn');
-        const loginModal = document.getElementById('login-modal');
-        const closeLoginModal = document.getElementById('close-login-modal');
-        const loginForm = document.getElementById('login-form');
-        const registerModal = document.getElementById('register-modal');
-        const closeRegisterModal = document.getElementById('close-register-modal');
-        const registerForm = document.getElementById('register-form');
-        const showRegister = document.getElementById('show-register');
-        const showLogin = document.getElementById('show-login');
-        const adminPanel = document.getElementById('admin-panel');
-        const logoutBtn = document.getElementById('logout-btn');
-        const galleryGrid = document.getElementById('gallery-grid');
-        const productsGrid = document.getElementById('products-grid');
-        const featuresGrid = document.getElementById('features-grid');
-        const videosGrid = document.getElementById('videos-grid');
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const closeMobileMenu = document.getElementById('close-mobile-menu');
-        const mobileLoginBtn = document.getElementById('mobile-login-btn');
-        const toast = document.getElementById('toast');
-        const checkoutModal = document.getElementById('checkout-modal');
-        const closeCheckoutModal = document.getElementById('close-checkout-modal');
-        const checkoutForm = document.getElementById('checkout-form');
-        const backupBtn = document.getElementById('backup-btn');
-        const videoModal = document.getElementById('video-modal');
-        const videoModalPlayer = document.getElementById('video-modal-player');
-        const closeVideoModal = document.getElementById('close-video-modal');
+// DOM elements
+const cartBtn = document.getElementById('cart-btn');
+const cartSidebar = document.getElementById('cart-sidebar');
+const closeCart = document.getElementById('close-cart');
+const overlay = document.getElementById('overlay');
+const cartItems = document.getElementById('cart-items');
+const cartCount = document.getElementById('cart-count');
+const cartTotalPrice = document.getElementById('cart-total-price');
+const emptyCartMessage = document.getElementById('empty-cart-message');
+const checkoutBtn = document.getElementById('checkout-btn');
+const viewProductsBtn = document.getElementById('view-products-btn');
+const viewVideosBtn = document.getElementById('view-videos-btn');
+const loginBtn = document.getElementById('login-btn');
+const loginModal = document.getElementById('login-modal');
+const closeLoginModal = document.getElementById('close-login-modal');
+const loginForm = document.getElementById('login-form');
+const registerModal = document.getElementById('register-modal');
+const closeRegisterModal = document.getElementById('close-register-modal');
+const registerForm = document.getElementById('register-form');
+const showRegister = document.getElementById('show-register');
+const showLogin = document.getElementById('show-login');
+const adminPanel = document.getElementById('admin-panel');
+const logoutBtn = document.getElementById('logout-btn');
+const galleryGrid = document.getElementById('gallery-grid');
+const productsGrid = document.getElementById('products-grid');
+const featuresGrid = document.getElementById('features-grid');
+const videosGrid = document.getElementById('videos-grid');
+const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+const closeMobileMenu = document.getElementById('close-mobile-menu');
+const mobileLoginBtn = document.getElementById('mobile-login-btn');
+const toast = document.getElementById('toast');
+const checkoutModal = document.getElementById('checkout-modal');
+const closeCheckoutModal = document.getElementById('close-checkout-modal');
+const checkoutForm = document.getElementById('checkout-form');
+const backupBtn = document.getElementById('backup-btn');
+const videoModal = document.getElementById('video-modal');
+const videoModalPlayer = document.getElementById('video-modal-player');
+const closeVideoModal = document.getElementById('close-video-modal');
 
-        // Admin credentials
-        const adminEmail = "admin@kalitools.af";
-        const adminPassword = "KaliAdmin2024";
+// Admin credentials
+const adminEmail = "admin@kalitools.af";
+const adminPassword = "KaliAdmin2024";
 
-        // Initialize the page
-        document.addEventListener('DOMContentLoaded', function() {
-            loadInitialData();
-            updateCart();
-            setupEventListeners();
-            
-            // Check if admin is already logged in
-            if (localStorage.getItem('adminLoggedIn') === 'true') {
-                isAdminLoggedIn = true;
-                adminPanel.classList.add('active');
-            }
-            
-            // Hide preloader after page loads
-            setTimeout(() => {
-                document.getElementById('preloader').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('preloader').style.display = 'none';
-                }, 500);
-            }, 2000);
-        });
+// Initialize the page
+document.addEventListener('DOMContentLoaded', function() {
+    loadInitialData();
+    updateCart();
+    setupEventListeners();
+    
+    // Check if admin is already logged in
+    if (localStorage.getItem('adminLoggedIn') === 'true') {
+        isAdminLoggedIn = true;
+        adminPanel.classList.add('active');
+    }
+    
+    // Hide preloader after page loads
+    setTimeout(() => {
+        document.getElementById('preloader').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('preloader').style.display = 'none';
+        }, 500);
+    }, 2000);
+});
 
-        // Load initial data
-        async function loadInitialData() {
-            try {
-                showToast('در حال بارگذاری دادهها...', 'success');
-                
-                // Try to load from localStorage first
-                const savedGallery = localStorage.getItem('kali_tools_gallery');
-                const savedProducts = localStorage.getItem('kali_tools_products');
-                const savedFeatures = localStorage.getItem('kali_tools_features');
-                const savedVideos = localStorage.getItem('kali_tools_videos');
-                const savedUsers = localStorage.getItem('kali_tools_users');
-                
-                if (savedGallery) galleryItems = JSON.parse(savedGallery);
-                if (savedProducts) products = JSON.parse(savedProducts);
-                if (savedFeatures) features = JSON.parse(savedFeatures);
-                if (savedVideos) videos = JSON.parse(savedVideos);
-                if (savedUsers) users = JSON.parse(savedUsers);
-                
-                // Load default data if nothing in storage
-                if (galleryItems.length === 0) {
-                    galleryItems = [
-                        {
-                            id: 1,
-                            image: 'https://i.ibb.co/5XpcNymf/kali-red-sticker.jpg',
-                            title: 'کالی لینکس ۲۰۲۳',
-                            description: 'جدیدترین نسخه کالی لینکس با ابزارهای به روز شده',
-                            type: 'image'
-                        },
-                        {
-                            id: 2,
-                            image: 'https://i.ibb.co/nq4Qq5HK/kali-waves-1.png',
-                            title: 'ابزارهای تست نفوذ',
-                            description: 'مجموعه کامل ابزارهای امنیتی و تست نفوذ',
-                            type: 'image'
-                        },
-                        {
-                            id: 3,
-                            image: 'https://i.ibb.co/WWfb577V/kali-tiles-purple.jpg',
-                            title: 'محیط توسعه',
-                            description: 'محیط توسعه یکپارچه برای متخصصان امنیت',
-                            type: 'image'
-                        }
-                    ];
-                }
-                
-                if (products.length === 0) {
-                    products = [
-                        {
-                            id: 1,
-                            name: "Nmap Pro Edition",
-                            category: "ابزار شبکه",
-                            price: 2990,
-                            description: "ابزار اسکن شبکه پیشرفته با قابلیتهای گسترده برای شناسایی میزبانها و سرویسها",
-                            image: "https://i.ibb.co/v6sWSFr7/kali-tiles.jpg",
-                            video: ""
-                        },
-                        {
-                            id: 2,
-                            name: "Metasploit Framework",
-                            category: "تست نفوذ",
-                            price: 4590,
-                            description: "چارچوب کامل تست نفوذ با پایگاه داده گسترده از اکسپلویتها و ماژولهای پیشرفته",
-                            image: "https://i.ibb.co/ynmdk2jb/kali-blue-matrix.png",
-                            video: ""
-                        },
-                        {
-                            id: 3,
-                            name: "Wireshark Advanced",
-                            category: "تحلیل امنیتی",
-                            price: 3790,
-                            description: "ابزار تحلیل ترافیک شبکه با قابلیتهای پیشرفته برای بررسی بستههای داده",
-                            image: "https://i.ibb.co/5XpcNymf/kali-red-sticker.jpg",
-                            video: ""
-                        },
-                        {
-                            id: 4,
-                            name: "John the Ripper Pro",
-                            category: "رمزنگاری",
-                            price: 3290,
-                            description: "ابزار پیشرفته شکستن رمز عبور با الگوریتمهای بهینه شده و سرعت بالا",
-                            image: "https://i.ibb.co/nq4Qq5HK/kali-waves-1.png",
-                            video: ""
-                        }
-                    ];
-                }
-                
-                if (features.length === 0) {
-                    features = [
-                        {
-                            id: 1,
-                            icon: "fas fa-shield-alt",
-                            title: "امنیت پیشرفته",
-                            description: "ابزارهای تست نفوذ و امنیت با قابلیتهای پیشرفته برای شناسایی آسیبپذیریها"
-                        },
-                        {
-                            id: 2,
-                            icon: "fas fa-bolt",
-                            title: "کارایی بالا",
-                            description: "ابزارهای بهینهشده برای اجرای سریع و کارآمد حتی در سختافزارهای معمولی"
-                        },
-                        {
-                            id: 3,
-                            icon: "fas fa-graduation-cap",
-                            title: "آموزش کامل",
-                            description: "مستندات جامع و دورههای آموزشی برای استفاده مؤثر از تمامی ابزارها"
-                        }
-                    ];
-                }
-                
-                if (videos.length === 0) {
-                    videos = [
-                        {
-                            id: 1,
-                            title: "آموزش نصب کالی لینکس",
-                            description: "آموزش کامل نصب و راهاندازی کالی لینکس",
-                            videoUrl: "https://youtu.be/lJ26h_L26LY?si=KEEz6YTKXIrQew4Q",
-                            thumbnail: "https://i.ibb.co/ynmdk2jb/kali-blue-matrix.png",
-                            duration: "15:30",
-                            category: "آموزشی"
-                        },
-                        {
-                            id: 2,
-                            title: "آموزش استفاده از Nmap",
-                            description: "آموزش کامل ابزار اسکن شبکه Nmap",
-                            videoUrl: "https://youtu.be/4t4kBkMsDbQ?si=okY5I5HzTAZPwEX8",
-                            thumbnail: "https://i.ibb.co/5XpcNymf/kali-red-sticker.jpg",
-                            duration: "22:15",
-                            category: "آموزشی"
-                        },
-                        {
-                            id: 3,
-                            title: "آموزش Metasploit Framework",
-                            description: "آموزش استفاده از چارچوب تست نفوذ Metasploit",
-                            videoUrl: "https://youtu.be/zFQBfZ6_-t0?si=AideDOHrimqXAVIb",
-                            thumbnail: "https://i.ibb.co/WWfb577V/kali-tiles-purple.jpg",
-                            duration: "18:45",
-                            category: "آموزشی"
-                        }
-                    ];
-                }
-                
-                loadGalleryItems();
-                loadProducts();
-                loadFeatures();
-                loadVideos();
-                updateAdminStats();
-                
-                showToast('دادهها با موفقیت بارگذاری شدند', 'success');
-                
-            } catch (error) {
-                console.error('Error loading initial data:', error);
-                showToast('خطا در بارگذاری دادهها', 'error');
-            }
-        }
-
-        // Setup event listeners
-        function setupEventListeners() {
-            // Cart functionality
-            cartBtn.addEventListener('click', () => {
-                cartSidebar.classList.add('active');
-                overlay.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            });
-
-            closeCart.addEventListener('click', () => {
-                cartSidebar.classList.remove('active');
-                overlay.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            });
-
-            overlay.addEventListener('click', () => {
-                cartSidebar.classList.remove('active');
-                overlay.classList.remove('active');
-                document.body.style.overflow = 'auto';
-                loginModal.style.display = 'none';
-                registerModal.style.display = 'none';
-                mobileMenu.classList.remove('active');
-                checkoutModal.style.display = 'none';
-                videoModal.classList.remove('active');
-            });
-
-            // Login functionality
-            loginBtn.addEventListener('click', () => {
-                loginModal.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-            });
-
-            mobileLoginBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                loginModal.style.display = 'flex';
-                mobileMenu.classList.remove('active');
-                document.body.style.overflow = 'hidden';
-            });
-
-            closeLoginModal.addEventListener('click', () => {
-                loginModal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            });
-
-            // Register functionality
-            showRegister.addEventListener('click', (e) => {
-                e.preventDefault();
-                loginModal.style.display = 'none';
-                registerModal.style.display = 'flex';
-            });
-
-            showLogin.addEventListener('click', (e) => {
-                e.preventDefault();
-                registerModal.style.display = 'none';
-                loginModal.style.display = 'flex';
-            });
-
-            closeRegisterModal.addEventListener('click', () => {
-                registerModal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            });
-
-            // Checkout functionality
-            checkoutBtn.addEventListener('click', () => {
-                if (cart.length > 0) {
-                    cartSidebar.classList.remove('active');
-                    checkoutModal.style.display = 'flex';
-                }
-            });
-
-            closeCheckoutModal.addEventListener('click', () => {
-                checkoutModal.style.display = 'none';
-            });
-
-            // Video modal functionality
-            closeVideoModal.addEventListener('click', () => {
-                videoModal.classList.remove('active');
-                videoModalPlayer.pause();
-                videoModalPlayer.currentTime = 0;
-                document.body.style.overflow = 'auto';
-            });
-
-            // Logout functionality
-            logoutBtn.addEventListener('click', () => {
-                adminPanel.classList.remove('active');
-                isAdminLoggedIn = false;
-                localStorage.removeItem('adminLoggedIn');
-                showToast('با موفقیت از سیستم خارج شدید', 'success');
-            });
-
-            // Mobile menu functionality
-            mobileMenuBtn.addEventListener('click', () => {
-                mobileMenu.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            });
-
-            closeMobileMenu.addEventListener('click', () => {
-                mobileMenu.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            });
-
-            // Scroll to products section
-            viewProductsBtn.addEventListener('click', () => {
-                document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
-            });
-
-            // Scroll to videos section
-            viewVideosBtn.addEventListener('click', () => {
-                document.getElementById('videos').scrollIntoView({ behavior: 'smooth' });
-            });
-
-            // Add to cart functionality
-            document.addEventListener('click', function(e) {
-                if (e.target.classList.contains('add-to-cart') || e.target.closest('.add-to-cart')) {
-                    const button = e.target.classList.contains('add-to-cart') ? e.target : e.target.closest('.add-to-cart');
-                    const id = button.getAttribute('data-id');
-                    const name = button.getAttribute('data-name');
-                    const price = parseInt(button.getAttribute('data-price'));
-                    
-                    const existingItem = cart.find(item => item.id === id);
-                    
-                    if (existingItem) {
-                        existingItem.quantity += 1;
-                    } else {
-                        cart.push({
-                            id,
-                            name,
-                            price,
-                            quantity: 1
-                        });
-                    }
-                    
-                    updateCart();
-                    showToast(`"${name}" به سبد خرید اضافه شد`, 'success');
-                }
-            });
-
-            // Play video functionality
-            document.addEventListener('click', function(e) {
-                if (e.target.classList.contains('video-play-btn') || e.target.closest('.video-play-btn')) {
-                    const button = e.target.classList.contains('video-play-btn') ? e.target : e.target.closest('.video-play-btn');
-                    const videoUrl = button.getAttribute('data-video');
-                    
-                    if (videoUrl) {
-                        videoModalPlayer.src = SERVER_URL + videoUrl;
-                        videoModal.classList.add('active');
-                        document.body.style.overflow = 'hidden';
-                    }
-                }
-            });
-
-            // Checkout form submission
-            checkoutForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                
-                const customerName = document.getElementById('customer-name').value;
-                const customerPhone = document.getElementById('customer-phone').value;
-                const customerTelegram = document.getElementById('customer-telegram').value;
-                const customerAddress = document.getElementById('customer-address').value;
-                const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
-                
-                // Send order to Telegram
-                const success = await sendOrderToTelegram(customerName, customerPhone, customerTelegram, customerAddress, paymentMethod);
-                
-                if (success) {
-                    showToast('سفارش شما با موفقیت ثبت شد! به زودی با شما تماس گرفته خواهد شد.', 'success');
-                    cart = [];
-                    updateCart();
-                    checkoutForm.reset();
-                    checkoutModal.style.display = 'none';
-                    overlay.classList.remove('active');
-                    document.body.style.overflow = 'auto';
-                } else {
-                    showToast('خطا در ارسال سفارش. لطفاً دوباره تلاش کنید.', 'error');
-                }
-            });
-
-            // Login form submission
-            loginForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
-                
-                if (email === adminEmail && password === adminPassword) {
-                    showToast('ورود به پنل مدیریت با موفقیت انجام شد!', 'success');
-                    loginModal.style.display = 'none';
-                    document.body.style.overflow = 'auto';
-                    loginForm.reset();
-                    
-                    isAdminLoggedIn = true;
-                    localStorage.setItem('adminLoggedIn', 'true');
-                    adminPanel.classList.add('active');
-                    adminPanel.scrollIntoView({ behavior: 'smooth' });
-                } else {
-                    // Check regular users
-                    const user = users.find(u => u.email === email && u.password === password);
-                    if (user) {
-                        showToast('ورود با موفقیت انجام شد!', 'success');
-                        loginModal.style.display = 'none';
-                        document.body.style.overflow = 'auto';
-                        loginForm.reset();
-                    } else {
-                        showToast('ایمیل یا رمز عبور اشتباه است', 'error');
-                    }
-                }
-            });
-
-            // Register form submission
-            registerForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const name = document.getElementById('register-name').value;
-                const email = document.getElementById('register-email').value;
-                const phone = document.getElementById('register-phone').value;
-                const password = document.getElementById('register-password').value;
-                
-                // Check if user already exists
-                const existingUser = users.find(u => u.email === email);
-                if (existingUser) {
-                    showToast('این ایمیل قبلاً ثبت شده است', 'error');
-                    return;
-                }
-                
-                // Create new user
-                const newUser = {
-                    id: Date.now(),
-                    name,
-                    email,
-                    phone,
-                    password,
-                    registrationDate: new Date().toLocaleDateString('fa-IR')
-                };
-                
-                users.push(newUser);
-                localStorage.setItem('kali_tools_users', JSON.stringify(users));
-                
-                // Send registration notification to Telegram
-                sendTelegramNotification(
-                    `👤 کاربر جدید ثبت نام کرد:\n\n📌 نام: ${name}\n📧 ایمیل: ${email}\n📞 تلفن: ${phone}\n📅 تاریخ: ${newUser.registrationDate}\n\nبه خانواده Kali Tools Pro خوش آمدید! 🎉`
-                );
-                
-                showToast('ثبت نام با موفقیت انجام شد!', 'success');
-                registerModal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-                registerForm.reset();
-            });
-
-            // Admin tabs
-            document.querySelectorAll('.admin-tab').forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const tabId = tab.getAttribute('data-tab');
-                    switchTab(tabId);
-                });
-            });
-
-            // File uploads
-            setupFileUpload('gallery-image-upload', 'gallery-image-input', 'gallery-image-preview', 'image');
-            setupFileUpload('product-image-upload', 'product-image-input', 'product-image-preview', 'image');
-            setupFileUpload('product-video-upload', 'product-video-input', 'product-video-preview', 'video');
-            setupFileUpload('video-file-upload', 'video-file-input', 'video-file-preview', 'video');
-            setupFileUpload('video-thumbnail-upload', 'video-thumbnail-input', 'video-thumbnail-preview', 'image');
-
-            // Admin forms
-            setupAdminForms();
-
-            // Backup functionality
-            backupBtn.addEventListener('click', backupData);
-
-            // Restore functionality
-            document.getElementById('restore-btn').addEventListener('click', () => {
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = '.json';
-                input.onchange = function(e) {
-                    if (e.target.files.length > 0) {
-                        restoreData(e.target.files[0]);
-                    }
-                };
-                input.click();
-            });
-
-            // Smooth scrolling for navigation links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                    // Close mobile menu after clicking a link
-                    mobileMenu.classList.remove('active');
-                    document.body.style.overflow = 'auto';
-                });
-            });
-
-            // Header scroll effect
-            window.addEventListener('scroll', () => {
-                const header = document.getElementById('header');
-                if (window.scrollY > 100) {
-                    header.classList.add('header-scrolled');
-                } else {
-                    header.classList.remove('header-scrolled');
-                }
-            });
-
-            // Delete functionality for gallery items in admin
-            document.addEventListener('click', function(e) {
-                if (e.target.classList.contains('delete-gallery-item-list') || e.target.closest('.delete-gallery-item-list')) {
-                    const button = e.target.classList.contains('delete-gallery-item-list') ? e.target : e.target.closest('.delete-gallery-item-list');
-                    const id = parseInt(button.getAttribute('data-id'));
-                    deleteGalleryItem(id);
-                }
-                
-                if (e.target.classList.contains('delete-product-list') || e.target.closest('.delete-product-list')) {
-                    const button = e.target.classList.contains('delete-product-list') ? e.target : e.target.closest('.delete-product-list');
-                    const id = parseInt(button.getAttribute('data-id'));
-                    deleteProduct(id);
-                }
-                
-                if (e.target.classList.contains('delete-video-list') || e.target.closest('.delete-video-list')) {
-                    const button = e.target.classList.contains('delete-video-list') ? e.target : e.target.closest('.delete-video-list');
-                    const id = parseInt(button.getAttribute('data-id'));
-                    deleteVideo(id);
-                }
-            });
-        }
-
-        // Send Telegram notification
-        function sendTelegramNotification(message) {
-            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-            
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
+// Load initial data
+async function loadInitialData() {
+    try {
+        showToast('در حال بارگذاری دادهها...', 'success');
+        
+        // Try to load from localStorage first
+        const savedGallery = localStorage.getItem('kali_tools_gallery');
+        const savedProducts = localStorage.getItem('kali_tools_products');
+        const savedFeatures = localStorage.getItem('kali_tools_features');
+        const savedVideos = localStorage.getItem('kali_tools_videos');
+        const savedUsers = localStorage.getItem('kali_tools_users');
+        
+        if (savedGallery) galleryItems = JSON.parse(savedGallery);
+        if (savedProducts) products = JSON.parse(savedProducts);
+        if (savedFeatures) features = JSON.parse(savedFeatures);
+        if (savedVideos) videos = JSON.parse(savedVideos);
+        if (savedUsers) users = JSON.parse(savedUsers);
+        
+        // Load default data if nothing in storage
+        if (galleryItems.length === 0) {
+            galleryItems = [
+                {
+                    id: 1,
+                    image: 'https://i.ibb.co/5XpcNymf/kali-red-sticker.jpg',
+                    title: 'کالی لینکس ۲۰۲۳',
+                    description: 'جدیدترین نسخه کالی لینکس با ابزارهای به روز شده',
+                    type: 'image'
                 },
-                body: JSON.stringify({
-                    chat_id: TELEGRAM_CHAT_ID,
-                    text: message,
-                    parse_mode: 'HTML'
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Telegram notification sent:', data);
-            })
-            .catch(error => {
-                console.error('Error sending Telegram notification:', error);
-            });
+                {
+                    id: 2,
+                    image: 'https://i.ibb.co/nq4Qq5HK/kali-waves-1.png',
+                    title: 'ابزارهای تست نفوذ',
+                    description: 'مجموعه کامل ابزارهای امنیتی و تست نفوذ',
+                    type: 'image'
+                },
+                {
+                    id: 3,
+                    image: 'https://i.ibb.co/WWfb577V/kali-tiles-purple.jpg',
+                    title: 'محیط توسعه',
+                    description: 'محیط توسعه یکپارچه برای متخصصان امنیت',
+                    type: 'image'
+                }
+            ];
         }
-
-        // Send order to Telegram
-        async function sendOrderToTelegram(name, phone, telegram, address, payment) {
-            try {
-                let orderDetails = `🛒 سفارش جدید:\n\n`;
-                orderDetails += `👤 نام مشتری: ${name}\n`;
-                orderDetails += `📞 تلفن: ${phone}\n`;
-                if (telegram) orderDetails += `📱 تلگرام: ${telegram}\n`;
-                if (address) orderDetails += `🏠 آدرس: ${address}\n`;
-                orderDetails += `💳 روش پرداخت: ${payment}\n\n`;
-                orderDetails += `🛍️ محصولات:\n`;
-                
-                let total = 0;
-                cart.forEach(item => {
-                    orderDetails += `• ${item.name} - ${item.quantity} عدد - ${formatPrice(item.price * item.quantity)} AFN\n`;
-                    total += item.price * item.quantity;
-                });
-                
-                orderDetails += `\n💰 جمع کل: ${formatPrice(total)} AFN`;
-                orderDetails += `\n\n📅 تاریخ: ${new Date().toLocaleDateString('fa-IR')}`;
-                orderDetails += `\n⏰ زمان: ${new Date().toLocaleTimeString('fa-IR')}`;
-                
-                sendTelegramNotification(orderDetails);
-                return true;
-            } catch (error) {
-                console.error('Error sending order to Telegram:', error);
-                return false;
-            }
+        
+        if (products.length === 0) {
+            products = [
+                {
+                    id: 1,
+                    name: "Nmap Pro Edition",
+                    category: "ابزار شبکه",
+                    price: 2990,
+                    description: "ابزار اسکن شبکه پیشرفته با قابلیتهای گسترده برای شناسایی میزبانها و سرویسها",
+                    image: "https://i.ibb.co/v6sWSFr7/kali-tiles.jpg",
+                    video: ""
+                },
+                {
+                    id: 2,
+                    name: "Metasploit Framework",
+                    category: "تست نفوذ",
+                    price: 4590,
+                    description: "چارچوب کامل تست نفوذ با پایگاه داده گسترده از اکسپلویتها و ماژولهای پیشرفته",
+                    image: "https://i.ibb.co/ynmdk2jb/kali-blue-matrix.png",
+                    video: ""
+                },
+                {
+                    id: 3,
+                    name: "Wireshark Advanced",
+                    category: "تحلیل امنیتی",
+                    price: 3790,
+                    description: "ابزار تحلیل ترافیک شبکه با قابلیتهای پیشرفته برای بررسی بستههای داده",
+                    image: "https://i.ibb.co/5XpcNymf/kali-red-sticker.jpg",
+                    video: ""
+                },
+                {
+                    id: 4,
+                    name: "John the Ripper Pro",
+                    category: "رمزنگاری",
+                    price: 3290,
+                    description: "ابزار پیشرفته شکستن رمز عبور با الگوریتمهای بهینه شده و سرعت بالا",
+                    image: "https://i.ibb.co/nq4Qq5HK/kali-waves-1.png",
+                    video: ""
+                }
+            ];
         }
-
-        // Switch admin tab
-        function switchTab(tabId) {
-            // Update active tab
-            document.querySelectorAll('.admin-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            document.querySelector(`.admin-tab[data-tab="${tabId}"]`).classList.add('active');
-            
-            // Update active tab content
-            document.querySelectorAll('.admin-tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            document.getElementById(`${tabId}-tab`).classList.add('active');
-            
-            // Load tab-specific data
-            if (tabId === 'gallery') {
-                loadGalleryAdmin();
-            } else if (tabId === 'products') {
-                loadProductsAdmin();
-            } else if (tabId === 'videos') {
-                loadVideosAdmin();
-            } else if (tabId === 'features') {
-                loadFeaturesAdmin();
-            } else if (tabId === 'ethical') {
-                loadEthicalAdmin();
-            } else if (tabId === 'footer') {
-                loadFooterAdmin();
-            } else if (tabId === 'hero') {
-                loadHeroAdmin();
-            }
-            
-            currentAdminTab = tabId;
+        
+        if (features.length === 0) {
+            features = [
+                {
+                    id: 1,
+                    icon: "fas fa-shield-alt",
+                    title: "امنیت پیشرفته",
+                    description: "ابزارهای تست نفوذ و امنیت با قابلیتهای پیشرفته برای شناسایی آسیبپذیریها"
+                },
+                {
+                    id: 2,
+                    icon: "fas fa-bolt",
+                    title: "کارایی بالا",
+                    description: "ابزارهای بهینهشده برای اجرای سریع و کارآمد حتی در سختافزارهای معمولی"
+                },
+                {
+                    id: 3,
+                    icon: "fas fa-graduation-cap",
+                    title: "آموزش کامل",
+                    description: "مستندات جامع و دورههای آموزشی برای استفاده مؤثر از تمامی ابزارها"
+                }
+            ];
         }
-
-        // Setup file upload
-        function setupFileUpload(uploadElementId, inputElementId, previewElementId, fileType) {
-            const uploadElement = document.getElementById(uploadElementId);
-            const inputElement = document.getElementById(inputElementId);
-            const previewElement = document.getElementById(previewElementId);
-            
-            uploadElement.addEventListener('click', () => {
-                inputElement.click();
-            });
-            
-            inputElement.addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    // Check file type
-                    if (fileType === 'image' && !file.type.match('image.*')) {
-                        showToast('لطفاً فقط تصویر آپلود کنید', 'error');
-                        inputElement.value = '';
-                        return;
-                    }
-                    
-                    if (fileType === 'video' && !file.type.match('video.*')) {
-                        showToast('لطفاً فقط ویدیو آپلود کنید', 'error');
-                        inputElement.value = '';
-                        return;
-                    }
-                    
-                    // Check file size
-                    const maxSize = fileType === 'image' ? 50 * 1024 * 1024 : 500 * 1024 * 1024;
-                    if (file.size > maxSize) {
-                        showToast(`حجم فایل باید کمتر از ${fileType === 'image' ? '۵۰' : '۵۰۰'} مگابایت باشد`, 'error');
-                        inputElement.value = '';
-                        return;
-                    }
-                    
-                    if (fileType === 'image') {
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            previewElement.src = e.target.result;
-                            previewElement.style.display = 'block';
-                            uploadElement.querySelector('p').textContent = 'تصویر انتخاب شد';
-                        };
-                        reader.readAsDataURL(file);
-                    } else if (fileType === 'video') {
-                        const url = URL.createObjectURL(file);
-                        previewElement.src = url;
-                        previewElement.style.display = 'block';
-                        uploadElement.querySelector('p').textContent = 'ویدیو انتخاب شد';
-                        
-                        // Auto-calculate duration for videos
-                        previewElement.onloadedmetadata = function() {
-                            const duration = previewElement.duration;
-                            const minutes = Math.floor(duration / 60);
-                            const seconds = Math.floor(duration % 60);
-                            document.getElementById('video-duration').value = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-                        };
-                    }
+        
+        if (videos.length === 0) {
+            videos = [
+                {
+                    id: 1,
+                    title: "آموزش نصب کالی لینکس",
+                    description: "آموزش کامل نصب و راهاندازی کالی لینکس",
+                    videoUrl: "https://www.youtube.com/embed/lJ26h_L26LY",
+                    thumbnail: "https://i.ibb.co/ynmdk2jb/kali-blue-matrix.png",
+                    duration: "15:30",
+                    category: "آموزشی"
+                },
+                {
+                    id: 2,
+                    title: "آموزش استفاده از Nmap",
+                    description: "آموزش کامل ابزار اسکن شبکه Nmap",
+                    videoUrl: "https://www.youtube.com/embed/4t4kBkMsDbQ",
+                    thumbnail: "https://i.ibb.co/5XpcNymf/kali-red-sticker.jpg",
+                    duration: "22:15",
+                    category: "آموزشی"
+                },
+                {
+                    id: 3,
+                    title: "آموزش Metasploit Framework",
+                    description: "آموزش استفاده از چارچوب تست نفوذ Metasploit",
+                    videoUrl: "https://www.youtube.com/embed/zFQBfZ6_-t0",
+                    thumbnail: "https://i.ibb.co/WWfb577V/kali-tiles-purple.jpg",
+                    duration: "18:45",
+                    category: "آموزشی"
                 }
-            });
+            ];
         }
+        
+        loadGalleryItems();
+        loadProducts();
+        loadFeatures();
+        loadVideos();
+        updateAdminStats();
+        
+        showToast('دادهها با موفقیت بارگذاری شدند', 'success');
+        
+    } catch (error) {
+        console.error('Error loading initial data:', error);
+        showToast('خطا در بارگذاری دادهها', 'error');
+    }
+}
 
-        // Setup admin forms
-        function setupAdminForms() {
-            // Hero form
-            document.getElementById('hero-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const title = document.getElementById('hero-title-input').value;
-                const description = document.getElementById('hero-description-input').value;
-                
-                document.getElementById('hero-title').textContent = title;
-                document.getElementById('hero-description').textContent = description;
-                
-                // Save to localStorage
-                const success = await saveToServer('hero', { title, description });
-                if (success) {
-                    showToast('بخش اصلی با موفقیت بهروزرسانی شد', 'success');
-                    updateLastUpdate();
-                } else {
-                    showToast('خطا در ذخیرهسازی دادهها', 'error');
-                }
-            });
+// Setup event listeners
+function setupEventListeners() {
+    // Cart functionality
+    cartBtn.addEventListener('click', () => {
+        cartSidebar.classList.add('active');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
 
-            // Features form
-            document.getElementById('feature-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const title = document.getElementById('feature-title').value;
-                const description = document.getElementById('feature-description').value;
-                
-                document.getElementById('features-title').textContent = title;
-                document.getElementById('features-description').textContent = description;
-                
-                // Save features from form
-                const featureElements = document.querySelectorAll('.feature-admin-item');
-                features = [];
-                
-                featureElements.forEach((element, index) => {
-                    const icon = element.querySelector('.feature-icon').value;
-                    const title = element.querySelector('.feature-title').value;
-                    const description = element.querySelector('.feature-description').value;
-                    
-                    if (icon && title && description) {
-                        features.push({
-                            id: index + 1,
-                            icon,
-                            title,
-                            description
-                        });
-                    }
-                });
-                
-                // Save to localStorage
-                const success = await saveToServer('features', features);
-                if (success) {
-                    loadFeatures();
-                    showToast('بخش امکانات با موفقیت بهروزرسانی شد', 'success');
-                    updateLastUpdate();
-                } else {
-                    showToast('خطا در ذخیرهسازی دادهها', 'error');
-                }
-            });
+    closeCart.addEventListener('click', () => {
+        cartSidebar.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    });
 
-            // Gallery form
-            document.getElementById('add-gallery-item-btn').addEventListener('click', async () => {
-                const title = document.getElementById('gallery-image-title').value;
-                const description = document.getElementById('gallery-image-desc').value;
-                const imageInput = document.getElementById('gallery-image-input');
-                
-                if (!title || !description || !imageInput.files[0]) {
-                    showToast('لطفاً تمام فیلدها را پر کنید و تصویر آپلود کنید', 'error');
-                    return;
-                }
-                
-                try {
-                    showToast('در حال آپلود تصویر...', 'success');
-                    
-                    // Simulate file upload
-                    const file = imageInput.files[0];
-                    const uploadResult = await uploadFile(file, 'image');
-                    
-                    if (uploadResult.success) {
-                        const newItem = {
-                            id: galleryItems.length > 0 ? Math.max(...galleryItems.map(item => item.id)) + 1 : 1,
-                            image: uploadResult.fileUrl,
-                            title: title,
-                            description: description,
-                            type: 'image'
-                        };
-                        
-                        galleryItems.push(newItem);
-                        
-                        // Save to localStorage
-                        const success = await saveToServer('gallery', galleryItems);
-                        if (success) {
-                            loadGalleryItems();
-                            loadGalleryAdmin();
-                            document.getElementById('gallery-form').reset();
-                            document.getElementById('gallery-image-preview').style.display = 'none';
-                            document.getElementById('gallery-image-upload').querySelector('p').textContent = 'برای آپلود تصویر کلیک کنید';
-                            showToast('تصویر جدید به گالری اضافه شد', 'success');
-                            updateAdminStats();
-                            updateLastUpdate();
-                        } else {
-                            showToast('خطا در ذخیرهسازی دادهها', 'error');
-                        }
-                    } else {
-                        showToast('خطا در آپلود تصویر', 'error');
-                    }
-                } catch (error) {
-                    console.error('Error adding gallery item:', error);
-                    showToast('خطا در افزودن تصویر به گالری', 'error');
-                }
-            });
+    overlay.addEventListener('click', () => {
+        cartSidebar.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = 'auto';
+        loginModal.style.display = 'none';
+        registerModal.style.display = 'none';
+        mobileMenu.classList.remove('active');
+        checkoutModal.style.display = 'none';
+        videoModal.classList.remove('active');
+    });
 
-            // Products form
-            document.getElementById('add-product-btn').addEventListener('click', async () => {
-                const name = document.getElementById('product-name').value;
-                const category = document.getElementById('product-category').value;
-                const price = document.getElementById('product-price').value;
-                const description = document.getElementById('product-description').value;
-                const imageInput = document.getElementById('product-image-input');
-                
-                if (!name || !category || !price || !description || !imageInput.files[0]) {
-                    showToast('لطفاً تمام فیلدها را پر کنید و تصویر آپلود کنید', 'error');
-                    return;
-                }
-                
-                try {
-                    showToast('در حال آپلود محصول...', 'success');
-                    
-                    // Upload image
-                    const file = imageInput.files[0];
-                    const uploadResult = await uploadFile(file, 'image');
-                    
-                    if (uploadResult.success) {
-                        let videoUrl = '';
-                        const videoFileInput = document.getElementById('product-video-input');
-                        const videoFile = videoFileInput.files[0];
-                        
-                        if (videoFile) {
-                            const videoUploadResult = await uploadFile(videoFile, 'video');
-                            if (videoUploadResult.success) {
-                                videoUrl = videoUploadResult.fileUrl;
-                            }
-                        }
-                        
-                        const newProduct = {
-                            id: products.length > 0 ? Math.max(...products.map(product => product.id)) + 1 : 1,
-                            name: name,
-                            category: category,
-                            price: parseInt(price),
-                            description: description,
-                            image: uploadResult.fileUrl,
-                            video: videoUrl
-                        };
-                        
-                        products.push(newProduct);
-                        
-                        // Save to localStorage
-                        const success = await saveToServer('products', products);
-                        if (success) {
-                            loadProducts();
-                            loadProductsAdmin();
-                            document.getElementById('product-form').reset();
-                            document.getElementById('product-image-preview').style.display = 'none';
-                            document.getElementById('product-video-preview').style.display = 'none';
-                            document.getElementById('product-image-upload').querySelector('p').textContent = 'برای آپلود تصویر کلیک کنید';
-                            document.getElementById('product-video-upload').querySelector('p').textContent = 'برای آپلود ویدیو کلیک کنید';
-                            showToast('محصول جدید با موفقیت اضافه شد', 'success');
-                            updateAdminStats();
-                            updateLastUpdate();
-                        } else {
-                            showToast('خطا در ذخیرهسازی دادهها', 'error');
-                        }
-                    } else {
-                        showToast('خطا در آپلود تصویر', 'error');
-                    }
-                } catch (error) {
-                    console.error('Error adding product:', error);
-                    showToast('خطا در افزودن محصول', 'error');
-                }
-            });
+    // Login functionality
+    loginBtn.addEventListener('click', () => {
+        loginModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    });
 
-            // Videos form
-            document.getElementById('add-video-btn').addEventListener('click', async () => {
-                const title = document.getElementById('video-title').value;
-                const category = document.getElementById('video-category').value;
-                const description = document.getElementById('video-description').value;
-                const duration = document.getElementById('video-duration').value;
-                const videoInput = document.getElementById('video-file-input');
-                
-                if (!title || !category || !description || !duration || !videoInput.files[0]) {
-                    showToast('لطفاً تمام فیلدها را پر کنید و ویدیو آپلود کنید', 'error');
-                    return;
-                }
-                
-                try {
-                    showToast('در حال آپلود ویدیو...', 'success');
-                    
-                    // Upload video
-                    const file = videoInput.files[0];
-                    const uploadResult = await uploadFile(file, 'video');
-                    
-                    if (uploadResult.success) {
-                        let thumbnailUrl = 'https://i.imgur.com/3Q7J5Qj.png'; // Default thumbnail
-                        const thumbnailFileInput = document.getElementById('video-thumbnail-input');
-                        const thumbnailFile = thumbnailFileInput.files[0];
-                        
-                        if (thumbnailFile) {
-                            const thumbnailUploadResult = await uploadFile(thumbnailFile, 'image');
-                            if (thumbnailUploadResult.success) {
-                                thumbnailUrl = thumbnailUploadResult.fileUrl;
-                            }
-                        }
-                        
-                        const newVideo = {
-                            id: videos.length > 0 ? Math.max(...videos.map(video => video.id)) + 1 : 1,
-                            title: title,
-                            description: description,
-                            videoUrl: uploadResult.fileUrl,
-                            thumbnail: thumbnailUrl,
-                            duration: duration,
-                            category: category
-                        };
-                        
-                        videos.push(newVideo);
-                        
-                        // Save to localStorage
-                        const success = await saveToServer('videos', videos);
-                        if (success) {
-                            loadVideos();
-                            loadVideosAdmin();
-                            document.getElementById('video-form').reset();
-                            document.getElementById('video-file-preview').style.display = 'none';
-                            document.getElementById('video-thumbnail-preview').style.display = 'none';
-                            document.getElementById('video-file-upload').querySelector('p').textContent = 'برای آپلود ویدیو کلیک کنید';
-                            document.getElementById('video-thumbnail-upload').querySelector('p').textContent = 'برای آپلود تصویر بندانگشتی کلیک کنید';
-                            showToast('ویدیو جدید با موفقیت اضافه شد', 'success');
-                            updateAdminStats();
-                            updateLastUpdate();
-                        } else {
-                            showToast('خطا در ذخیرهسازی دادهها', 'error');
-                        }
-                    } else {
-                        showToast('خطا در آپلود ویدیو', 'error');
-                    }
-                } catch (error) {
-                    console.error('Error adding video:', error);
-                    showToast('خطا در افزودن ویدیو', 'error');
-                }
-            });
+    mobileLoginBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        loginModal.style.display = 'flex';
+        mobileMenu.classList.remove('active');
+        document.body.style.overflow = 'hidden';
+    });
 
-            // Ethical form
-            document.getElementById('ethical-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const title = document.getElementById('ethical-title').value;
-                const description = document.getElementById('ethical-description').value;
-                const warning = document.getElementById('ethical-warning').value;
-                const footer = document.getElementById('ethical-footer').value;
-                const allowed = document.getElementById('ethical-allowed').value;
-                const prohibited = document.getElementById('ethical-prohibited').value;
-                
-                document.getElementById('ethical-title').textContent = title;
-                document.getElementById('ethical-description').textContent = description;
-                document.getElementById('ethical-warning').innerHTML = `<h3><i class="fas fa-exclamation-triangle"></i> هشدار مسئولیت اخلاقی</h3><p>${warning}</p>`;
-                document.getElementById('ethical-footer').textContent = footer;
-                
-                // Update ethical list
-                document.getElementById('ethical-list').innerHTML = `
-                    <div class="ethical-item allowed">
-                        <div class="ethical-icon"><i class="fas fa-check-circle"></i></div>
-                        <div>
-                            <h4>موارد مجاز</h4>
-                            <p>${allowed}</p>
-                        </div>
-                    </div>
-                    <div class="ethical-item prohibited">
-                        <div class="ethical-icon"><i class="fas fa-times-circle"></i></div>
-                        <div>
-                            <h4>موارد غیرمجاز</h4>
-                            <p>${prohibited}</p>
-                        </div>
-                    </div>
-                `;
-                
-                // Save to localStorage
-                const success = await saveToServer('ethical', {
-                    title,
-                    description,
-                    warning: `<h3><i class="fas fa-exclamation-triangle"></i> هشدار مسئولیت اخلاقی</h3><p>${warning}</p>`,
-                    footer,
-                    allowed,
-                    prohibited
-                });
-                
-                if (success) {
-                    showToast('بخش راهنمای اخلاقی با موفقیت بهروزرسانی شد', 'success');
-                    updateLastUpdate();
-                } else {
-                    showToast('خطا در ذخیرهسازی دادهها', 'error');
-                }
-            });
+    closeLoginModal.addEventListener('click', () => {
+        loginModal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    });
 
-            // Footer form
-            document.getElementById('footer-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const about = document.getElementById('footer-about').value;
-                const address = document.getElementById('footer-address').value;
-                const phone = document.getElementById('footer-phone').value;
-                const email = document.getElementById('footer-email').value;
-                const copyright = document.getElementById('footer-copyright').value;
-                
-                document.getElementById('footer-about-text').textContent = about;
-                document.getElementById('footer-address-text').textContent = address;
-                document.getElementById('footer-phone-text').textContent = phone;
-                document.getElementById('footer-email-text').textContent = email;
-                document.getElementById('footer-copyright-text').textContent = copyright;
-                
-                // Save to localStorage
-                const success = await saveToServer('footer', {
-                    about,
-                    address,
-                    phone,
-                    email,
-                    copyright
-                });
-                
-                if (success) {
-                    showToast('فوتر با موفقیت بهروزرسانی شد', 'success');
-                    updateLastUpdate();
-                } else {
-                    showToast('خطا در ذخیرهسازی دادهها', 'error');
-                }
-            });
+    // Register functionality
+    showRegister.addEventListener('click', (e) => {
+        e.preventDefault();
+        loginModal.style.display = 'none';
+        registerModal.style.display = 'flex';
+    });
 
-            // Add feature button
-            document.getElementById('add-feature-btn').addEventListener('click', () => {
-                const featuresList = document.getElementById('features-list');
-                const newFeatureId = features.length > 0 ? Math.max(...features.map(feature => feature.id)) + 1 : 1;
-                
-                const featureElement = document.createElement('div');
-                featureElement.className = 'feature-admin-item';
-                featureElement.innerHTML = `
-                    <div class="form-group">
-                        <label>آیکون</label>
-                        <input type="text" class="form-control feature-icon" value="fas fa-shield-alt" placeholder="کلاس آیکون FontAwesome">
-                    </div>
-                    <div class="form-group">
-                        <label>عنوان</label>
-                        <input type="text" class="form-control feature-title" placeholder="عنوان امکان">
-                    </div>
-                    <div class="form-group">
-                        <label>توضیحات</label>
-                        <textarea class="form-control feature-description" placeholder="توضیحات امکان"></textarea>
-                    </div>
-                    <button type="button" class="btn btn-danger remove-feature" data-id="${newFeatureId}"><i class="fas fa-trash"></i> حذف</button>
-                    <hr>
-                `;
-                
-                featuresList.appendChild(featureElement);
-                
-                // Add event listener to remove button
-                featureElement.querySelector('.remove-feature').addEventListener('click', function() {
-                    const id = parseInt(this.getAttribute('data-id'));
-                    featuresList.removeChild(featureElement);
-                });
-            });
+    showLogin.addEventListener('click', (e) => {
+        e.preventDefault();
+        registerModal.style.display = 'none';
+        loginModal.style.display = 'flex';
+    });
+
+    closeRegisterModal.addEventListener('click', () => {
+        registerModal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    });
+
+    // Checkout functionality
+    checkoutBtn.addEventListener('click', () => {
+        if (cart.length > 0) {
+            cartSidebar.classList.remove('active');
+            checkoutModal.style.display = 'flex';
         }
+    });
 
-        // Load gallery items
-        function loadGalleryItems() {
-            galleryGrid.innerHTML = '';
+    closeCheckoutModal.addEventListener('click', () => {
+        checkoutModal.style.display = 'none';
+    });
+
+    // Video modal functionality
+    closeVideoModal.addEventListener('click', () => {
+        videoModal.classList.remove('active');
+        videoModalPlayer.pause();
+        videoModalPlayer.currentTime = 0;
+        document.body.style.overflow = 'auto';
+    });
+
+    // Logout functionality
+    logoutBtn.addEventListener('click', () => {
+        adminPanel.classList.remove('active');
+        isAdminLoggedIn = false;
+        localStorage.removeItem('adminLoggedIn');
+        showToast('با موفقیت از سیستم خارج شدید', 'success');
+    });
+
+    // Mobile menu functionality
+    mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+
+    closeMobileMenu.addEventListener('click', () => {
+        mobileMenu.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    });
+
+    // Scroll to products section
+    viewProductsBtn.addEventListener('click', () => {
+        document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // Scroll to videos section
+    viewVideosBtn.addEventListener('click', () => {
+        document.getElementById('videos').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // Add to cart functionality
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('add-to-cart') || e.target.closest('.add-to-cart')) {
+            const button = e.target.classList.contains('add-to-cart') ? e.target : e.target.closest('.add-to-cart');
+            const id = button.getAttribute('data-id');
+            const name = button.getAttribute('data-name');
+            const price = parseInt(button.getAttribute('data-price'));
             
-            if (galleryItems.length === 0) {
-                galleryGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--text-light); padding: 2rem;">هیچ تصویری در گالری وجود ندارد</p>';
-                return;
+            const existingItem = cart.find(item => item.id === id);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id,
+                    name,
+                    price,
+                    quantity: 1
+                });
             }
             
-            galleryItems.forEach(item => {
-                const galleryItem = document.createElement('div');
-                galleryItem.className = 'gallery-item glass';
-                galleryItem.style.backgroundImage = `url('${item.image}')`;
-                galleryItem.innerHTML = `
-                    <div class="gallery-actions">
-                        <button class="gallery-action-btn delete-gallery-item" data-id="${item.id}">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                    <div class="gallery-item-overlay">
-                        <h3>${item.title}</h3>
-                        <p>${item.description}</p>
-                    </div>
-                `;
-                galleryGrid.appendChild(galleryItem);
-            });
-            
-            // Add event listeners to delete buttons
-            document.querySelectorAll('.delete-gallery-item').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const id = parseInt(button.getAttribute('data-id'));
-                    deleteGalleryItem(id);
-                });
-            });
-        }
-
-        // Load products
-        function loadProducts() {
-            productsGrid.innerHTML = '';
-            
-            if (products.length === 0) {
-                productsGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--text-light); padding: 2rem;">هیچ محصولی وجود ندارد</p>';
-                return;
-            }
-            
-            products.forEach(product => {
-                const productCard = document.createElement('div');
-                productCard.className = 'product-card glass';
-                productCard.innerHTML = `
-                    <div class="product-image" style="background-image: url('${product.image}')">
-                        ${product.video ? `<button class="video-play-btn product-video-btn" data-video="${product.video}">
-                            <i class="fas fa-play"></i>
-                        </button>` : ''}
-                    </div>
-                    <div class="product-content">
-                        <div class="product-category">${product.category}</div>
-                        <h3 class="product-title">${product.name}</h3>
-                        <p class="product-description">${product.description}</p>
-                        <div class="product-footer">
-                            <div class="product-price"><span class="currency">AFN</span> ${formatPrice(product.price)}</div>
-                            <button class="btn btn-primary add-to-cart" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}"><i class="fas fa-cart-plus"></i> افزودن</button>
-                        </div>
-                    </div>
-                `;
-                productsGrid.appendChild(productCard);
-            });
-            
-            // Add event listeners to video buttons
-            document.querySelectorAll('.product-video-btn').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const videoUrl = button.getAttribute('data-video');
-                    if (videoUrl) {
-                        videoModalPlayer.src = SERVER_URL + videoUrl;
-                        videoModal.classList.add('active');
-                        document.body.style.overflow = 'hidden';
-                    }
-                });
-            });
-        }
-
-        // Load features
-        function loadFeatures() {
-            featuresGrid.innerHTML = '';
-            
-            if (features.length === 0) {
-                featuresGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--text-light); padding: 2rem;">هیچ امکانی وجود ندارد</p>';
-                return;
-            }
-            
-            features.forEach(feature => {
-                const featureCard = document.createElement('div');
-                featureCard.className = 'feature-card glass';
-                featureCard.innerHTML = `
-                    <div class="feature-icon">
-                        <i class="${feature.icon}"></i>
-                    </div>
-                    <h3>${feature.title}</h3>
-                    <p>${feature.description}</p>
-                `;
-                featuresGrid.appendChild(featureCard);
-            });
-        }
-
-        // Load videos
-        function loadVideos() {
-            videosGrid.innerHTML = '';
-            
-            if (videos.length === 0) {
-                videosGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--text-light); padding: 2rem;">هیچ ویدیویی وجود ندارد</p>';
-                return;
-            }
-            
-            videos.forEach(video => {
-                const videoCard = document.createElement('div');
-                videoCard.className = 'video-card glass';
-                videoCard.innerHTML = `
-                    <div class="video-thumbnail" style="background-image: url('${video.thumbnail}')">
-                        <button class="video-play-btn" data-video="${video.videoUrl}">
-                            <i class="fas fa-play"></i>
-                        </button>
-                    </div>
-                    <div class="video-content">
-                        <div class="video-category">${video.category}</div>
-                        <h3 class="video-title">${video.title}</h3>
-                        <p class="video-description">${video.description}</p>
-                        <div class="video-footer">
-                            <div class="video-duration"><i class="fas fa-clock"></i> ${video.duration}</div>
-                        </div>
-                    </div>
-                `;
-                videosGrid.appendChild(videoCard);
-            });
-        }
-
-        // Upload file to server (simulated)
-        async function uploadFile(file, fileType) {
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    // Simulate successful upload
-                    const fileUrl = `/uploads/${fileType}s/${Date.now()}-${file.name}`;
-                    resolve({ 
-                        success: true, 
-                        fileUrl: fileUrl,
-                        message: 'فایل با موفقیت آپلود شد'
-                    });
-                }, 1500);
-            });
-        }
-
-        // Save data to server (using localStorage as fallback)
-        async function saveToServer(type, data) {
-            try {
-                localStorage.setItem(`kali_tools_${type}`, JSON.stringify(data));
-                return true;
-            } catch (error) {
-                console.error('Save error:', error);
-                return false;
-            }
-        }
-
-        // Update cart
-        function updateCart() {
-            cartItems.innerHTML = '';
-            let total = 0;
-            
-            if (cart.length === 0) {
-                emptyCartMessage.style.display = 'block';
-                cartCount.textContent = '0';
-                cartTotalPrice.textContent = '۰ AFN';
-                return;
-            }
-            
-            emptyCartMessage.style.display = 'none';
-            
-            cart.forEach(item => {
-                total += item.price * item.quantity;
-                
-                const cartItem = document.createElement('div');
-                cartItem.className = 'cart-item';
-                cartItem.innerHTML = `
-                    <div class="cart-item-image">
-                        <i class="fas fa-box"></i>
-                    </div>
-                    <div class="cart-item-details">
-                        <h4 class="cart-item-title">${item.name}</h4>
-                        <div class="cart-item-price">${formatPrice(item.price)} AFN</div>
-                        <div class="cart-item-quantity">تعداد: ${item.quantity}</div>
-                    </div>
-                    <button class="remove-item" data-id="${item.id}">
-                        <i class="fas fa-times"></i>
-                    </button>
-                `;
-                cartItems.appendChild(cartItem);
-            });
-            
-            cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
-            cartTotalPrice.textContent = `${formatPrice(total)} AFN`;
-            
-            // Add event listeners to remove buttons
-            document.querySelectorAll('.remove-item').forEach(button => {
-                button.addEventListener('click', function() {
-                    const id = this.getAttribute('data-id');
-                    removeFromCart(id);
-                });
-            });
-        }
-
-        // Remove from cart
-        function removeFromCart(id) {
-            cart = cart.filter(item => item.id !== id);
             updateCart();
-            showToast('محصول از سبد خرید حذف شد', 'success');
+            showToast(`"${name}" به سبد خرید اضافه شد`, 'success');
         }
+    });
 
-        // Format price
-        function formatPrice(price) {
-            return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        }
-
-        // Show toast notification
-        function showToast(message, type = 'success') {
-            toast.textContent = message;
-            toast.className = 'toast';
-            toast.classList.add(type);
-            toast.classList.add('active');
+    // Play video functionality
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('video-play-btn') || e.target.closest('.video-play-btn')) {
+            const button = e.target.classList.contains('video-play-btn') ? e.target : e.target.closest('.video-play-btn');
+            const videoUrl = button.getAttribute('data-video');
             
-            setTimeout(() => {
-                toast.classList.remove('active');
-            }, 3000);
+            if (videoUrl) {
+                if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+                    // Handle YouTube videos
+                    const videoId = extractYouTubeId(videoUrl);
+                    if (videoId) {
+                        videoModalPlayer.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+                    }
+                } else {
+                    // Handle local videos
+                    videoModalPlayer.src = videoUrl;
+                }
+                videoModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+    });
+
+    // Checkout form submission
+    checkoutForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const customerName = document.getElementById('customer-name').value;
+        const customerPhone = document.getElementById('customer-phone').value;
+        const customerTelegram = document.getElementById('customer-telegram').value;
+        const customerAddress = document.getElementById('customer-address').value;
+        const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+        
+        // Send order to Telegram
+        const success = await sendOrderToTelegram(customerName, customerPhone, customerTelegram, customerAddress, paymentMethod);
+        
+        if (success) {
+            showToast('سفارش شما با موفقیت ثبت شد! به زودی با شما تماس گرفته خواهد شد.', 'success');
+            cart = [];
+            updateCart();
+            checkoutForm.reset();
+            checkoutModal.style.display = 'none';
+            overlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        } else {
+            showToast('خطا در ارسال سفارش. لطفاً دوباره تلاش کنید.', 'error');
+        }
+    });
+
+    // Login form submission
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        
+        if (email === adminEmail && password === adminPassword) {
+            showToast('ورود به پنل مدیریت با موفقیت انجام شد!', 'success');
+            loginModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            loginForm.reset();
+            
+            isAdminLoggedIn = true;
+            localStorage.setItem('adminLoggedIn', 'true');
+            adminPanel.classList.add('active');
+            adminPanel.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            // Check regular users
+            const user = users.find(u => u.email === email && u.password === password);
+            if (user) {
+                showToast('ورود با موفقیت انجام شد!', 'success');
+                loginModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+                loginForm.reset();
+            } else {
+                showToast('ایمیل یا رمز عبور اشتباه است', 'error');
+            }
+        }
+    });
+
+    // Register form submission
+    registerForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('register-name').value;
+        const email = document.getElementById('register-email').value;
+        const phone = document.getElementById('register-phone').value;
+        const password = document.getElementById('register-password').value;
+        
+        // Check if user already exists
+        const existingUser = users.find(u => u.email === email);
+        if (existingUser) {
+            showToast('این ایمیل قبلاً ثبت شده است', 'error');
+            return;
+        }
+        
+        // Create new user
+        const newUser = {
+            id: Date.now(),
+            name,
+            email,
+            phone,
+            password,
+            registrationDate: new Date().toLocaleDateString('fa-IR')
+        };
+        
+        users.push(newUser);
+        localStorage.setItem('kali_tools_users', JSON.stringify(users));
+        
+        // Send registration notification to Telegram
+        sendTelegramNotification(
+            `👤 کاربر جدید ثبت نام کرد:\n\n📌 نام: ${name}\n📧 ایمیل: ${email}\n📞 تلفن: ${phone}\n📅 تاریخ: ${newUser.registrationDate}\n\nبه خانواده Kali Tools Pro خوش آمدید! 🎉`
+        );
+        
+        showToast('ثبت نام با موفقیت انجام شد!', 'success');
+        registerModal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        registerForm.reset();
+    });
+
+    // Admin tabs
+    document.querySelectorAll('.admin-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabId = tab.getAttribute('data-tab');
+            switchTab(tabId);
+        });
+    });
+
+    // File uploads
+    setupFileUpload('gallery-image-upload', 'gallery-image-input', 'gallery-image-preview', 'image');
+    setupFileUpload('product-image-upload', 'product-image-input', 'product-image-preview', 'image');
+    setupFileUpload('product-video-upload', 'product-video-input', 'product-video-preview', 'video');
+    setupFileUpload('video-file-upload', 'video-file-input', 'video-file-preview', 'video');
+    setupFileUpload('video-thumbnail-upload', 'video-thumbnail-input', 'video-thumbnail-preview', 'image');
+
+    // Admin forms
+    setupAdminForms();
+
+    // Backup functionality
+    backupBtn.addEventListener('click', backupData);
+
+    // Restore functionality
+    document.getElementById('restore-btn').addEventListener('click', () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        input.onchange = function(e) {
+            if (e.target.files.length > 0) {
+                restoreData(e.target.files[0]);
+            }
+        };
+        input.click();
+    });
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+            // Close mobile menu after clicking a link
+            mobileMenu.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+    });
+
+    // Header scroll effect
+    window.addEventListener('scroll', () => {
+        const header = document.getElementById('header');
+        if (window.scrollY > 100) {
+            header.classList.add('header-scrolled');
+        } else {
+            header.classList.remove('header-scrolled');
+        }
+    });
+
+    // Delete functionality for gallery items in admin
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('delete-gallery-item-list') || e.target.closest('.delete-gallery-item-list')) {
+            const button = e.target.classList.contains('delete-gallery-item-list') ? e.target : e.target.closest('.delete-gallery-item-list');
+            const id = parseInt(button.getAttribute('data-id'));
+            deleteGalleryItem(id);
+        }
+        
+        if (e.target.classList.contains('delete-product-list') || e.target.closest('.delete-product-list')) {
+            const button = e.target.classList.contains('delete-product-list') ? e.target : e.target.closest('.delete-product-list');
+            const id = parseInt(button.getAttribute('data-id'));
+            deleteProduct(id);
+        }
+        
+        if (e.target.classList.contains('delete-video-list') || e.target.closest('.delete-video-list')) {
+            const button = e.target.classList.contains('delete-video-list') ? e.target : e.target.closest('.delete-video-list');
+            const id = parseInt(button.getAttribute('data-id'));
+            deleteVideo(id);
+        }
+    });
+}
+
+// آپلود واقعی فایل با Base64
+async function uploadFile(file, fileType) {
+    return new Promise((resolve, reject) => {
+        // بررسی حجم فایل
+        const maxSize = fileType === 'image' ? 10 * 1024 * 1024 : 100 * 1024 * 1024;
+        if (file.size > maxSize) {
+            reject({
+                success: false,
+                error: `حجم فایل باید کمتر از ${fileType === 'image' ? '۱۰' : '۱۰۰'} مگابایت باشد`
+            });
+            return;
         }
 
-        // Delete gallery item
-        async function deleteGalleryItem(id) {
-            if (confirm('آیا از حذف این تصویر اطمینان دارید؟')) {
-                galleryItems = galleryItems.filter(item => item.id !== id);
+        // بررسی نوع فایل
+        const allowedImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        const allowedVideoTypes = ['video/mp4', 'video/webm', 'video/ogg'];
+        
+        const allowedTypes = fileType === 'image' ? allowedImageTypes : allowedVideoTypes;
+        if (!allowedTypes.includes(file.type)) {
+            reject({
+                success: false,
+                error: `نوع فایل مجاز نیست. انواع مجاز: ${allowedTypes.join(', ')}`
+            });
+            return;
+        }
+
+        const reader = new FileReader();
+        
+        reader.onload = (e) => {
+            const fileData = {
+                id: Date.now() + '-' + Math.random().toString(36).substr(2, 9),
+                name: file.name,
+                type: file.type,
+                size: file.size,
+                data: e.target.result,
+                uploadDate: new Date().toISOString(),
+                fileType: fileType
+            };
+            
+            const storageKey = `kali_tools_file_${fileData.id}`;
+            try {
+                localStorage.setItem(storageKey, JSON.stringify(fileData));
+                
+                resolve({
+                    success: true,
+                    fileUrl: e.target.result,
+                    storageKey: storageKey,
+                    fileName: file.name,
+                    message: 'فایل با موفقیت آپلود شد'
+                });
+            } catch (storageError) {
+                reject({
+                    success: false,
+                    error: 'خطا در ذخیره سازی فایل. فضای ذخیره سازی پر است.'
+                });
+            }
+        };
+        
+        reader.onerror = () => {
+            reject({
+                success: false,
+                error: 'خطا در خواندن فایل'
+            });
+        };
+        
+        reader.readAsDataURL(file);
+    });
+}
+
+// تابع برای بازیابی فایل از localStorage
+function getFileFromStorage(storageKey) {
+    try {
+        const fileData = localStorage.getItem(storageKey);
+        return fileData ? JSON.parse(fileData) : null;
+    } catch (error) {
+        console.error('Error retrieving file from storage:', error);
+        return null;
+    }
+}
+
+// تابع برای حذف فایل از localStorage
+function deleteFileFromStorage(storageKey) {
+    try {
+        localStorage.removeItem(storageKey);
+        return true;
+    } catch (error) {
+        console.error('Error deleting file from storage:', error);
+        return false;
+    }
+}
+
+// Send Telegram notification
+function sendTelegramNotification(message) {
+    const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+    
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            chat_id: TELEGRAM_CHAT_ID,
+            text: message,
+            parse_mode: 'HTML'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Telegram notification sent:', data);
+    })
+    .catch(error => {
+        console.error('Error sending Telegram notification:', error);
+    });
+}
+
+// Extract YouTube ID from URL
+function extractYouTubeId(url) {
+    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[7].length === 11) ? match[7] : false;
+}
+
+// Send order to Telegram
+async function sendOrderToTelegram(name, phone, telegram, address, payment) {
+    try {
+        let orderDetails = `🛒 سفارش جدید:\n\n`;
+        orderDetails += `👤 نام مشتری: ${name}\n`;
+        orderDetails += `📞 تلفن: ${phone}\n`;
+        if (telegram) orderDetails += `📱 تلگرام: ${telegram}\n`;
+        if (address) orderDetails += `🏠 آدرس: ${address}\n`;
+        orderDetails += `💳 روش پرداخت: ${payment}\n\n`;
+        orderDetails += `🛍️ محصولات:\n`;
+        
+        let total = 0;
+        cart.forEach(item => {
+            orderDetails += `• ${item.name} - ${item.quantity} عدد - ${formatPrice(item.price * item.quantity)} AFN\n`;
+            total += item.price * item.quantity;
+        });
+        
+        orderDetails += `\n💰 جمع کل: ${formatPrice(total)} AFN`;
+        orderDetails += `\n\n📅 تاریخ: ${new Date().toLocaleDateString('fa-IR')}`;
+        orderDetails += `\n⏰ زمان: ${new Date().toLocaleTimeString('fa-IR')}`;
+        
+        sendTelegramNotification(orderDetails);
+        return true;
+    } catch (error) {
+        console.error('Error sending order to Telegram:', error);
+        return false;
+    }
+}
+
+// Switch admin tab
+function switchTab(tabId) {
+    // Update active tab
+    document.querySelectorAll('.admin-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    document.querySelector(`.admin-tab[data-tab="${tabId}"]`).classList.add('active');
+    
+    // Update active tab content
+    document.querySelectorAll('.admin-tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    document.getElementById(`${tabId}-tab`).classList.add('active');
+    
+    // Load tab-specific data
+    if (tabId === 'gallery') {
+        loadGalleryAdmin();
+    } else if (tabId === 'products') {
+        loadProductsAdmin();
+    } else if (tabId === 'videos') {
+        loadVideosAdmin();
+    } else if (tabId === 'features') {
+        loadFeaturesAdmin();
+    } else if (tabId === 'ethical') {
+        loadEthicalAdmin();
+    } else if (tabId === 'footer') {
+        loadFooterAdmin();
+    } else if (tabId === 'hero') {
+        loadHeroAdmin();
+    }
+    
+    currentAdminTab = tabId;
+}
+
+// Setup file upload
+function setupFileUpload(uploadElementId, inputElementId, previewElementId, fileType) {
+    const uploadElement = document.getElementById(uploadElementId);
+    const inputElement = document.getElementById(inputElementId);
+    const previewElement = document.getElementById(previewElementId);
+    
+    uploadElement.addEventListener('click', () => {
+        inputElement.click();
+    });
+    
+    inputElement.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            // Check file type
+            if (fileType === 'image' && !file.type.match('image.*')) {
+                showToast('لطفاً فقط تصویر آپلود کنید', 'error');
+                inputElement.value = '';
+                return;
+            }
+            
+            if (fileType === 'video' && !file.type.match('video.*')) {
+                showToast('لطفاً فقط ویدیو آپلود کنید', 'error');
+                inputElement.value = '';
+                return;
+            }
+            
+            // Check file size
+            const maxSize = fileType === 'image' ? 50 * 1024 * 1024 : 500 * 1024 * 1024;
+            if (file.size > maxSize) {
+                showToast(`حجم فایل باید کمتر از ${fileType === 'image' ? '۵۰' : '۵۰۰'} مگابایت باشد`, 'error');
+                inputElement.value = '';
+                return;
+            }
+            
+            if (fileType === 'image') {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewElement.src = e.target.result;
+                    previewElement.style.display = 'block';
+                    uploadElement.querySelector('p').textContent = 'تصویر انتخاب شد';
+                };
+                reader.readAsDataURL(file);
+            } else if (fileType === 'video') {
+                const url = URL.createObjectURL(file);
+                previewElement.src = url;
+                previewElement.style.display = 'block';
+                uploadElement.querySelector('p').textContent = 'ویدیو انتخاب شد';
+                
+                // Auto-calculate duration for videos
+                previewElement.onloadedmetadata = function() {
+                    const duration = previewElement.duration;
+                    const minutes = Math.floor(duration / 60);
+                    const seconds = Math.floor(duration % 60);
+                    document.getElementById('video-duration').value = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                };
+            }
+        }
+    });
+}
+
+// Setup admin forms
+function setupAdminForms() {
+    // Hero form
+    document.getElementById('hero-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const title = document.getElementById('hero-title-input').value;
+        const description = document.getElementById('hero-description-input').value;
+        
+        document.getElementById('hero-title').textContent = title;
+        document.getElementById('hero-description').textContent = description;
+        
+        // Save to localStorage
+        const success = await saveToServer('hero', { title, description });
+        if (success) {
+            showToast('بخش اصلی با موفقیت بهروزرسانی شد', 'success');
+            updateLastUpdate();
+        } else {
+            showToast('خطا در ذخیرهسازی دادهها', 'error');
+        }
+    });
+
+    // Features form
+    document.getElementById('feature-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const title = document.getElementById('feature-title').value;
+        const description = document.getElementById('feature-description').value;
+        
+        document.getElementById('features-title').textContent = title;
+        document.getElementById('features-description').textContent = description;
+        
+        // Save features from form
+        const featureElements = document.querySelectorAll('.feature-admin-item');
+        features = [];
+        
+        featureElements.forEach((element, index) => {
+            const icon = element.querySelector('.feature-icon').value;
+            const title = element.querySelector('.feature-title').value;
+            const description = element.querySelector('.feature-description').value;
+            
+            if (icon && title && description) {
+                features.push({
+                    id: index + 1,
+                    icon,
+                    title,
+                    description
+                });
+            }
+        });
+        
+        // Save to localStorage
+        const success = await saveToServer('features', features);
+        if (success) {
+            loadFeatures();
+            showToast('بخش امکانات با موفقیت بهروزرسانی شد', 'success');
+            updateLastUpdate();
+        } else {
+            showToast('خطا در ذخیرهسازی دادهها', 'error');
+        }
+    });
+
+    // Gallery form
+    document.getElementById('add-gallery-item-btn').addEventListener('click', async () => {
+        const title = document.getElementById('gallery-image-title').value;
+        const description = document.getElementById('gallery-image-desc').value;
+        const imageInput = document.getElementById('gallery-image-input');
+        
+        if (!title || !description || !imageInput.files[0]) {
+            showToast('لطفاً تمام فیلدها را پر کنید و تصویر آپلود کنید', 'error');
+            return;
+        }
+        
+        try {
+            showToast('در حال آپلود تصویر...', 'success');
+            
+            // آپلود واقعی فایل
+            const file = imageInput.files[0];
+            const uploadResult = await uploadFile(file, 'image');
+            
+            if (uploadResult.success) {
+                const newItem = {
+                    id: galleryItems.length > 0 ? Math.max(...galleryItems.map(item => item.id)) + 1 : 1,
+                    image: uploadResult.fileUrl,
+                    title: title,
+                    description: description,
+                    type: 'image',
+                    storageKey: uploadResult.storageKey // ذخیره کلید برای مدیریت حذف
+                };
+                
+                galleryItems.push(newItem);
                 
                 // Save to localStorage
                 const success = await saveToServer('gallery', galleryItems);
                 if (success) {
                     loadGalleryItems();
                     loadGalleryAdmin();
+                    document.getElementById('gallery-form').reset();
+                    document.getElementById('gallery-image-preview').style.display = 'none';
+                    document.getElementById('gallery-image-upload').querySelector('p').textContent = 'برای آپلود تصویر کلیک کنید';
+                    showToast('تصویر جدید به گالری اضافه شد', 'success');
                     updateAdminStats();
-                    showToast('تصویر با موفقیت حذف شد', 'success');
+                    updateLastUpdate();
                 } else {
-                    showToast('خطا در حذف تصویر', 'error');
+                    showToast('خطا در ذخیرهسازی دادهها', 'error');
                 }
+            } else {
+                showToast(uploadResult.error || 'خطا در آپلود تصویر', 'error');
             }
+        } catch (error) {
+            console.error('Error adding gallery item:', error);
+            showToast(error.error || 'خطا در افزودن تصویر به گالری', 'error');
         }
+    });
 
-        // Delete product
-        async function deleteProduct(id) {
-            if (confirm('آیا از حذف این محصول اطمینان دارید؟')) {
-                products = products.filter(product => product.id !== id);
+    // Products form
+    document.getElementById('add-product-btn').addEventListener('click', async () => {
+        const name = document.getElementById('product-name').value;
+        const category = document.getElementById('product-category').value;
+        const price = document.getElementById('product-price').value;
+        const description = document.getElementById('product-description').value;
+        const imageInput = document.getElementById('product-image-input');
+        
+        if (!name || !category || !price || !description || !imageInput.files[0]) {
+            showToast('لطفاً تمام فیلدها را پر کنید و تصویر آپلود کنید', 'error');
+            return;
+        }
+        
+        try {
+            showToast('در حال آپلود محصول...', 'success');
+            
+            // آپلود واقعی تصویر
+            const imageFile = imageInput.files[0];
+            const imageUploadResult = await uploadFile(imageFile, 'image');
+            
+            if (imageUploadResult.success) {
+                let videoUrl = '';
+                let videoStorageKey = '';
+                const videoFileInput = document.getElementById('product-video-input');
+                const videoFile = videoFileInput.files[0];
+                
+                if (videoFile) {
+                    const videoUploadResult = await uploadFile(videoFile, 'video');
+                    if (videoUploadResult.success) {
+                        videoUrl = videoUploadResult.fileUrl;
+                        videoStorageKey = videoUploadResult.storageKey;
+                    }
+                }
+                
+                const newProduct = {
+                    id: products.length > 0 ? Math.max(...products.map(product => product.id)) + 1 : 1,
+                    name: name,
+                    category: category,
+                    price: parseInt(price),
+                    description: description,
+                    image: imageUploadResult.fileUrl,
+                    video: videoUrl,
+                    imageStorageKey: imageUploadResult.storageKey,
+                    videoStorageKey: videoStorageKey
+                };
+                
+                products.push(newProduct);
                 
                 // Save to localStorage
                 const success = await saveToServer('products', products);
                 if (success) {
                     loadProducts();
                     loadProductsAdmin();
+                    document.getElementById('product-form').reset();
+                    document.getElementById('product-image-preview').style.display = 'none';
+                    document.getElementById('product-video-preview').style.display = 'none';
+                    document.getElementById('product-image-upload').querySelector('p').textContent = 'برای آپلود تصویر کلیک کنید';
+                    document.getElementById('product-video-upload').querySelector('p').textContent = 'برای آپلود ویدیو کلیک کنید';
+                    showToast('محصول جدید با موفقیت اضافه شد', 'success');
                     updateAdminStats();
-                    showToast('محصول با موفقیت حذف شد', 'success');
+                    updateLastUpdate();
                 } else {
-                    showToast('خطا در حذف محصول', 'error');
+                    showToast('خطا در ذخیرهسازی دادهها', 'error');
                 }
+            } else {
+                showToast(imageUploadResult.error || 'خطا در آپلود تصویر', 'error');
             }
+        } catch (error) {
+            console.error('Error adding product:', error);
+            showToast(error.error || 'خطا در افزودن محصول', 'error');
         }
+    });
 
-        // Delete video
-        async function deleteVideo(id) {
-            if (confirm('آیا از حذف این ویدیو اطمینان دارید؟')) {
-                videos = videos.filter(video => video.id !== id);
+    // Videos form
+    document.getElementById('add-video-btn').addEventListener('click', async () => {
+        const title = document.getElementById('video-title').value;
+        const category = document.getElementById('video-category').value;
+        const description = document.getElementById('video-description').value;
+        const duration = document.getElementById('video-duration').value;
+        const videoInput = document.getElementById('video-file-input');
+        
+        if (!title || !category || !description || !duration || !videoInput.files[0]) {
+            showToast('لطفاً تمام فیلدها را پر کنید و ویدیو آپلود کنید', 'error');
+            return;
+        }
+        
+        try {
+            showToast('در حال آپلود ویدیو...', 'success');
+            
+            // آپلود واقعی ویدیو
+            const videoFile = videoInput.files[0];
+            const videoUploadResult = await uploadFile(videoFile, 'video');
+            
+            if (videoUploadResult.success) {
+                let thumbnailUrl = 'https://i.imgur.com/3Q7J5Qj.png'; // تصویر پیشفرض
+                let thumbnailStorageKey = '';
+                const thumbnailFileInput = document.getElementById('video-thumbnail-input');
+                const thumbnailFile = thumbnailFileInput.files[0];
+                
+                if (thumbnailFile) {
+                    const thumbnailUploadResult = await uploadFile(thumbnailFile, 'image');
+                    if (thumbnailUploadResult.success) {
+                        thumbnailUrl = thumbnailUploadResult.fileUrl;
+                        thumbnailStorageKey = thumbnailUploadResult.storageKey;
+                    }
+                }
+                
+                const newVideo = {
+                    id: videos.length > 0 ? Math.max(...videos.map(video => video.id)) + 1 : 1,
+                    title: title,
+                    description: description,
+                    videoUrl: videoUploadResult.fileUrl,
+                    thumbnail: thumbnailUrl,
+                    duration: duration,
+                    category: category,
+                    videoStorageKey: videoUploadResult.storageKey,
+                    thumbnailStorageKey: thumbnailStorageKey
+                };
+                
+                videos.push(newVideo);
                 
                 // Save to localStorage
                 const success = await saveToServer('videos', videos);
                 if (success) {
                     loadVideos();
                     loadVideosAdmin();
+                    document.getElementById('video-form').reset();
+                    document.getElementById('video-file-preview').style.display = 'none';
+                    document.getElementById('video-thumbnail-preview').style.display = 'none';
+                    document.getElementById('video-file-upload').querySelector('p').textContent = 'برای آپلود ویدیو کلیک کنید';
+                    document.getElementById('video-thumbnail-upload').querySelector('p').textContent = 'برای آپلود تصویر بندانگشتی کلیک کنید';
+                    showToast('ویدیو جدید با موفقیت اضافه شد', 'success');
                     updateAdminStats();
-                    showToast('ویدیو با موفقیت حذف شد', 'success');
+                    updateLastUpdate();
                 } else {
-                    showToast('خطا در حذف ویدیو', 'error');
+                    showToast('خطا در ذخیرهسازی دادهها', 'error');
                 }
+            } else {
+                showToast(videoUploadResult.error || 'خطا در آپلود ویدیو', 'error');
             }
+        } catch (error) {
+            console.error('Error adding video:', error);
+            showToast(error.error || 'خطا در افزودن ویدیو', 'error');
         }
+    });
 
-        // Update admin statistics
-        function updateAdminStats() {
-            document.getElementById('stat-products').textContent = products.length;
-            document.getElementById('stat-gallery').textContent = galleryItems.length;
-            document.getElementById('stat-videos').textContent = videos.length;
-            document.getElementById('stat-sales').textContent = '۴۲';
+    // Ethical form
+    document.getElementById('ethical-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const title = document.getElementById('ethical-title').value;
+        const description = document.getElementById('ethical-description').value;
+        const warning = document.getElementById('ethical-warning').value;
+        const footer = document.getElementById('ethical-footer').value;
+        const allowed = document.getElementById('ethical-allowed').value;
+        const prohibited = document.getElementById('ethical-prohibited').value;
+        
+        document.getElementById('ethical-title').textContent = title;
+        document.getElementById('ethical-description').textContent = description;
+        document.getElementById('ethical-warning').innerHTML = `<h3><i class="fas fa-exclamation-triangle"></i> هشدار مسئولیت اخلاقی</h3><p>${warning}</p>`;
+        document.getElementById('ethical-footer').textContent = footer;
+        
+        // Update ethical list
+        document.getElementById('ethical-list').innerHTML = `
+            <div class="ethical-item allowed">
+                <div class="ethical-icon"><i class="fas fa-check-circle"></i></div>
+                <div>
+                    <h4>موارد مجاز</h4>
+                    <p>${allowed}</p>
+                </div>
+            </div>
+            <div class="ethical-item prohibited">
+                <div class="ethical-icon"><i class="fas fa-times-circle"></i></div>
+                <div>
+                    <h4>موارد غیرمجاز</h4>
+                    <p>${prohibited}</p>
+                </div>
+            </div>
+        `;
+        
+        // Save to localStorage
+        const success = await saveToServer('ethical', {
+            title,
+            description,
+            warning: `<h3><i class="fas fa-exclamation-triangle"></i> هشدار مسئولیت اخلاقی</h3><p>${warning}</p>`,
+            footer,
+            allowed,
+            prohibited
+        });
+        
+        if (success) {
+            showToast('بخش راهنمای اخلاقی با موفقیت بهروزرسانی شد', 'success');
+            updateLastUpdate();
+        } else {
+            showToast('خطا در ذخیرهسازی دادهها', 'error');
         }
+    });
 
-        // Update last update time
-        function updateLastUpdate() {
-            const now = new Date();
-            document.getElementById('last-update').textContent = now.toLocaleString('fa-IR');
+    // Footer form
+    document.getElementById('footer-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const about = document.getElementById('footer-about').value;
+        const address = document.getElementById('footer-address').value;
+        const phone = document.getElementById('footer-phone').value;
+        const email = document.getElementById('footer-email').value;
+        const copyright = document.getElementById('footer-copyright').value;
+        
+        document.getElementById('footer-about-text').textContent = about;
+        document.getElementById('footer-address-text').textContent = address;
+        document.getElementById('footer-phone-text').textContent = phone;
+        document.getElementById('footer-email-text').textContent = email;
+        document.getElementById('footer-copyright-text').textContent = copyright;
+        
+        // Save to localStorage
+        const success = await saveToServer('footer', {
+            about,
+            address,
+            phone,
+            email,
+            copyright
+        });
+        
+        if (success) {
+            showToast('فوتر با موفقیت بهروزرسانی شد', 'success');
+            updateLastUpdate();
+        } else {
+            showToast('خطا در ذخیرهسازی دادهها', 'error');
         }
+    });
 
-        // Load gallery admin
-        function loadGalleryAdmin() {
-            const galleryItemsList = document.getElementById('gallery-items-list');
-            galleryItemsList.innerHTML = '';
-            
-            if (galleryItems.length === 0) {
-                galleryItemsList.innerHTML = '<p style="text-align: center; color: #ccc; padding: 1rem;">هیچ تصویری وجود ندارد</p>';
-                return;
+    // Add feature button
+    document.getElementById('add-feature-btn').addEventListener('click', () => {
+        const featuresList = document.getElementById('features-list');
+        const newFeatureId = features.length > 0 ? Math.max(...features.map(feature => feature.id)) + 1 : 1;
+        
+        const featureElement = document.createElement('div');
+        featureElement.className = 'feature-admin-item';
+        featureElement.innerHTML = `
+            <div class="form-group">
+                <label>آیکون</label>
+                <input type="text" class="form-control feature-icon" value="fas fa-shield-alt" placeholder="کلاس آیکون FontAwesome">
+            </div>
+            <div class="form-group">
+                <label>عنوان</label>
+                <input type="text" class="form-control feature-title" placeholder="عنوان امکان">
+            </div>
+            <div class="form-group">
+                <label>توضیحات</label>
+                <textarea class="form-control feature-description" placeholder="توضیحات امکان"></textarea>
+            </div>
+            <button type="button" class="btn btn-danger remove-feature" data-id="${newFeatureId}"><i class="fas fa-trash"></i> حذف</button>
+            <hr>
+        `;
+        
+        featuresList.appendChild(featureElement);
+        
+        // Add event listener to remove button
+        featureElement.querySelector('.remove-feature').addEventListener('click', function() {
+            const id = parseInt(this.getAttribute('data-id'));
+            featuresList.removeChild(featureElement);
+        });
+    });
+}
+
+// Load gallery items
+function loadGalleryItems() {
+    galleryGrid.innerHTML = '';
+    
+    if (galleryItems.length === 0) {
+        galleryGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--text-light); padding: 2rem;">هیچ تصویری در گالری وجود ندارد</p>';
+        return;
+    }
+    
+    galleryItems.forEach(item => {
+        const galleryItem = document.createElement('div');
+        galleryItem.className = 'gallery-item glass';
+        galleryItem.style.backgroundImage = `url('${item.image}')`;
+        galleryItem.innerHTML = `
+            <div class="gallery-actions">
+                <button class="gallery-action-btn delete-gallery-item" data-id="${item.id}">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+            <div class="gallery-item-overlay">
+                <h3>${item.title}</h3>
+                <p>${item.description}</p>
+            </div>
+        `;
+        galleryGrid.appendChild(galleryItem);
+    });
+    
+    // Add event listeners to delete buttons
+    document.querySelectorAll('.delete-gallery-item').forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const id = parseInt(button.getAttribute('data-id'));
+            deleteGalleryItem(id);
+        });
+    });
+}
+
+// Load products
+function loadProducts() {
+    productsGrid.innerHTML = '';
+    
+    if (products.length === 0) {
+        productsGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--text-light); padding: 2rem;">هیچ محصولی وجود ندارد</p>';
+        return;
+    }
+    
+    products.forEach(product => {
+        const productCard = document.createElement('div');
+        productCard.className = 'product-card glass';
+        productCard.innerHTML = `
+            <div class="product-image" style="background-image: url('${product.image}')">
+                ${product.video ? `<button class="video-play-btn product-video-btn" data-video="${product.video}">
+                    <i class="fas fa-play"></i>
+                </button>` : ''}
+            </div>
+            <div class="product-content">
+                <div class="product-category">${product.category}</div>
+                <h3 class="product-title">${product.name}</h3>
+                <p class="product-description">${product.description}</p>
+                <div class="product-footer">
+                    <div class="product-price"><span class="currency">AFN</span> ${formatPrice(product.price)}</div>
+                    <button class="btn btn-primary add-to-cart" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}"><i class="fas fa-cart-plus"></i> افزودن</button>
+                </div>
+            </div>
+        `;
+        productsGrid.appendChild(productCard);
+    });
+    
+    // Add event listeners to video buttons
+    document.querySelectorAll('.product-video-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const videoUrl = button.getAttribute('data-video');
+            if (videoUrl) {
+                if (videoUrl.includes('youtube.com') || videoUrl.includes('youtu.be')) {
+                    const videoId = extractYouTubeId(videoUrl);
+                    if (videoId) {
+                        videoModalPlayer.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+                    }
+                } else {
+                    videoModalPlayer.src = videoUrl;
+                }
+                videoModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
             }
-            
-            galleryItems.forEach(item => {
-                const itemElement = document.createElement('div');
-                itemElement.style.display = 'flex';
-                itemElement.style.justifyContent = 'space-between';
-                itemElement.style.alignItems = 'center';
-                itemElement.style.padding = '0.5rem 0';
-                itemElement.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
-                
-                itemElement.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <div style="width: 40px; height: 40px; background-image: url('${item.image}'); background-size: cover; background-position: center; border-radius: 5px;"></div>
-                        <span>${item.title}</span>
-                    </div>
-                    <button class="gallery-action-btn delete-gallery-item-list" data-id="${item.id}">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                `;
-                
-                galleryItemsList.appendChild(itemElement);
+        });
+    });
+}
+
+// Load features
+function loadFeatures() {
+    featuresGrid.innerHTML = '';
+    
+    if (features.length === 0) {
+        featuresGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--text-light); padding: 2rem;">هیچ امکانی وجود ندارد</p>';
+        return;
+    }
+    
+    features.forEach(feature => {
+        const featureCard = document.createElement('div');
+        featureCard.className = 'feature-card glass';
+        featureCard.innerHTML = `
+            <div class="feature-icon">
+                <i class="${feature.icon}"></i>
+            </div>
+            <h3>${feature.title}</h3>
+            <p>${feature.description}</p>
+        `;
+        featuresGrid.appendChild(featureCard);
+    });
+}
+
+// Load videos
+function loadVideos() {
+    videosGrid.innerHTML = '';
+    
+    if (videos.length === 0) {
+        videosGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--text-light); padding: 2rem;">هیچ ویدیویی وجود ندارد</p>';
+        return;
+    }
+    
+    videos.forEach(video => {
+        const videoCard = document.createElement('div');
+        videoCard.className = 'video-card glass';
+        videoCard.innerHTML = `
+            <div class="video-thumbnail" style="background-image: url('${video.thumbnail}')">
+                <button class="video-play-btn" data-video="${video.videoUrl}">
+                    <i class="fas fa-play"></i>
+                </button>
+            </div>
+            <div class="video-content">
+                <div class="video-category">${video.category}</div>
+                <h3 class="video-title">${video.title}</h3>
+                <p class="video-description">${video.description}</p>
+                <div class="video-footer">
+                    <div class="video-duration"><i class="fas fa-clock"></i> ${video.duration}</div>
+                </div>
+            </div>
+        `;
+        videosGrid.appendChild(videoCard);
+    });
+}
+
+// Upload file to server (using Base64)
+async function uploadFile(file, fileType) {
+    return new Promise((resolve, reject) => {
+        // بررسی حجم فایل
+        const maxSize = fileType === 'image' ? 10 * 1024 * 1024 : 100 * 1024 * 1024;
+        if (file.size > maxSize) {
+            reject({
+                success: false,
+                error: `حجم فایل باید کمتر از ${fileType === 'image' ? '۱۰' : '۱۰۰'} مگابایت باشد`
             });
+            return;
         }
 
-        // Load products admin
-        function loadProductsAdmin() {
-            const productsList = document.getElementById('products-list');
-            productsList.innerHTML = '';
-            
-            if (products.length === 0) {
-                productsList.innerHTML = '<p style="text-align: center; color: #ccc; padding: 1rem;">هیچ محصولی وجود ندارد</p>';
-                return;
-            }
-            
-            products.forEach(product => {
-                const productElement = document.createElement('div');
-                productElement.style.display = 'flex';
-                productElement.style.justifyContent = 'space-between';
-                productElement.style.alignItems = 'center';
-                productElement.style.padding = '0.5rem 0';
-                productElement.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
-                
-                productElement.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <div style="width: 40px; height: 40px; background-image: url('${product.image}'); background-size: cover; background-position: center; border-radius: 5px;"></div>
-                        <div>
-                            <div style="font-weight: bold;">${product.name}</div>
-                            <div style="font-size: 0.8rem; color: #ccc;">${formatPrice(product.price)} AFN</div>
-                        </div>
-                    </div>
-                    <button class="gallery-action-btn delete-product-list" data-id="${product.id}">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                `;
-                
-                productsList.appendChild(productElement);
+        // بررسی نوع فایل
+        const allowedImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        const allowedVideoTypes = ['video/mp4', 'video/webm', 'video/ogg'];
+        
+        const allowedTypes = fileType === 'image' ? allowedImageTypes : allowedVideoTypes;
+        if (!allowedTypes.includes(file.type)) {
+            reject({
+                success: false,
+                error: `نوع فایل مجاز نیست. انواع مجاز: ${allowedTypes.join(', ')}`
             });
+            return;
         }
 
-        // Load videos admin
-        function loadVideosAdmin() {
-            const videosList = document.getElementById('videos-list');
-            videosList.innerHTML = '';
-            
-            if (videos.length === 0) {
-                videosList.innerHTML = '<p style="text-align: center; color: #ccc; padding: 1rem;">هیچ ویدیویی وجود ندارد</p>';
-                return;
-            }
-            
-            videos.forEach(video => {
-                const videoElement = document.createElement('div');
-                videoElement.style.display = 'flex';
-                videoElement.style.justifyContent = 'space-between';
-                videoElement.style.alignItems = 'center';
-                videoElement.style.padding = '0.5rem 0';
-                videoElement.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
-                
-                videoElement.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <div style="width: 40px; height: 40px; background-image: url('${video.thumbnail}'); background-size: cover; background-position: center; border-radius: 5px;"></div>
-                        <div>
-                            <div style="font-weight: bold;">${video.title}</div>
-                            <div style="font-size: 0.8rem; color: #ccc;">${video.duration} - ${video.category}</div>
-                        </div>
-                    </div>
-                    <button class="gallery-action-btn delete-video-list" data-id="${video.id}">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                `;
-                
-                videosList.appendChild(videoElement);
-            });
-        }
-
-        // Load features admin
-        function loadFeaturesAdmin() {
-            // Features are already loaded in the form
-        }
-
-        // Load ethical admin
-        function loadEthicalAdmin() {
-            // Ethical content is already loaded in the form
-        }
-
-        // Load footer admin
-        function loadFooterAdmin() {
-            // Footer content is already loaded in the form
-        }
-
-        // Load hero admin
-        function loadHeroAdmin() {
-            // Hero content is already loaded in the form
-        }
-
-        // Backup data
-        function backupData() {
-            const data = {
-                hero: {
-                    title: document.getElementById('hero-title').textContent,
-                    description: document.getElementById('hero-description').textContent
-                },
-                features: features,
-                gallery: galleryItems,
-                videos: videos,
-                products: products,
-                ethical: {
-                    title: document.getElementById('ethical-title').textContent,
-                    description: document.getElementById('ethical-description').textContent,
-                    warning: document.getElementById('ethical-warning').innerHTML,
-                    footer: document.getElementById('ethical-footer').textContent
-                },
-                footer: {
-                    about: document.getElementById('footer-about-text').textContent,
-                    address: document.getElementById('footer-address-text').textContent,
-                    phone: document.getElementById('footer-phone-text').textContent,
-                    email: document.getElementById('footer-email-text').textContent,
-                    copyright: document.getElementById('footer-copyright-text').textContent
-                },
-                backupDate: new Date().toISOString()
+        const reader = new FileReader();
+        
+        reader.onload = (e) => {
+            const fileData = {
+                id: Date.now() + '-' + Math.random().toString(36).substr(2, 9),
+                name: file.name,
+                type: file.type,
+                size: file.size,
+                data: e.target.result,
+                uploadDate: new Date().toISOString(),
+                fileType: fileType
             };
             
-            const dataStr = JSON.stringify(data, null, 2);
-            const dataBlob = new Blob([dataStr], {type: 'application/json'});
-            
-            const url = URL.createObjectURL(dataBlob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `kali-tools-pro-backup-${new Date().toISOString().split('T')[0]}.json`;
-            a.click();
-            
-            URL.revokeObjectURL(url);
-            showToast('پشتیبان با موفقیت دریافت شد', 'success');
-        }
+            const storageKey = `kali_tools_file_${fileData.id}`;
+            try {
+                localStorage.setItem(storageKey, JSON.stringify(fileData));
+                
+                resolve({
+                    success: true,
+                    fileUrl: e.target.result,
+                    storageKey: storageKey,
+                    fileName: file.name,
+                    message: 'فایل با موفقیت آپلود شد'
+                });
+            } catch (storageError) {
+                reject({
+                    success: false,
+                    error: 'خطا در ذخیره سازی فایل. فضای ذخیره سازی پر است.'
+                });
+            }
+        };
+        
+        reader.onerror = () => {
+            reject({
+                success: false,
+                error: 'خطا در خواندن فایل'
+            });
+        };
+        
+        reader.readAsDataURL(file);
+    });
+}
 
-        // Restore data
-        function restoreData(file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const data = JSON.parse(e.target.result);
-                    
-                    // Restore data
-                    if (data.hero) {
-                        document.getElementById('hero-title').textContent = data.hero.title;
-                        document.getElementById('hero-description').textContent = data.hero.description;
-                    }
-                    
-                    if (data.features) {
-                        features = data.features;
-                        loadFeatures();
-                    }
-                    
-                    if (data.gallery) {
-                        galleryItems = data.gallery;
-                        loadGalleryItems();
-                    }
-                    
-                    if (data.videos) {
-                        videos = data.videos;
-                        loadVideos();
-                    }
-                    
-                    if (data.products) {
-                        products = data.products;
-                        loadProducts();
-                    }
-                    
-                    if (data.ethical) {
-                        document.getElementById('ethical-title').textContent = data.ethical.title;
-                        document.getElementById('ethical-description').textContent = data.ethical.description;
-                        document.getElementById('ethical-warning').innerHTML = data.ethical.warning;
-                        document.getElementById('ethical-footer').textContent = data.ethical.footer;
-                    }
-                    
-                    if (data.footer) {
-                        document.getElementById('footer-about-text').textContent = data.footer.about;
-                        document.getElementById('footer-address-text').textContent = data.footer.address;
-                        document.getElementById('footer-phone-text').textContent = data.footer.phone;
-                        document.getElementById('footer-email-text').textContent = data.footer.email;
-                        document.getElementById('footer-copyright-text').textContent = data.footer.copyright;
-                    }
-                    
-                    // Save all to localStorage
-                    saveToServer('features', features);
-                    saveToServer('gallery', galleryItems);
-                    saveToServer('videos', videos);
-                    saveToServer('products', products);
-                    
-                    updateAdminStats();
-                    showToast('دادهها با موفقیت بازیابی شدند', 'success');
-                } catch (error) {
-                    console.error('Restore error:', error);
-                    showToast('خطا در بازیابی دادهها. فایل معتبر نیست.', 'error');
-                }
-            };
-            reader.readAsText(file);
+// Save data to server (using localStorage as fallback)
+async function saveToServer(type, data) {
+    try {
+        localStorage.setItem(`kali_tools_${type}`, JSON.stringify(data));
+        return true;
+    } catch (error) {
+        console.error('Save error:', error);
+        return false;
+    }
+}
+
+// Update cart
+function updateCart() {
+    cartItems.innerHTML = '';
+    let total = 0;
+    
+    if (cart.length === 0) {
+        emptyCartMessage.style.display = 'block';
+        cartCount.textContent = '0';
+        cartTotalPrice.textContent = '۰ AFN';
+        return;
+    }
+    
+    emptyCartMessage.style.display = 'none';
+    
+    cart.forEach(item => {
+        total += item.price * item.quantity;
+        
+        const cartItem = document.createElement('div');
+        cartItem.className = 'cart-item';
+        cartItem.innerHTML = `
+            <div class="cart-item-image">
+                <i class="fas fa-box"></i>
+            </div>
+            <div class="cart-item-details">
+                <h4 class="cart-item-title">${item.name}</h4>
+                <div class="cart-item-price">${formatPrice(item.price)} AFN</div>
+                <div class="cart-item-quantity">تعداد: ${item.quantity}</div>
+            </div>
+            <button class="remove-item" data-id="${item.id}">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        cartItems.appendChild(cartItem);
+    });
+    
+    cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+    cartTotalPrice.textContent = `${formatPrice(total)} AFN`;
+    
+    // Add event listeners to remove buttons
+    document.querySelectorAll('.remove-item').forEach(button => {
+        button.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            removeFromCart(id);
+        });
+    });
+}
+
+// Remove from cart
+function removeFromCart(id) {
+    cart = cart.filter(item => item.id !== id);
+    updateCart();
+    showToast('محصول از سبد خرید حذف شد', 'success');
+}
+
+// Format price
+function formatPrice(price) {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+// Show toast notification
+function showToast(message, type = 'success') {
+    toast.textContent = message;
+    toast.className = 'toast';
+    toast.classList.add(type);
+    toast.classList.add('active');
+    
+    setTimeout(() => {
+        toast.classList.remove('active');
+    }, 3000);
+}
+
+// Delete gallery item با مدیریت فایل
+async function deleteGalleryItem(id) {
+    if (confirm('آیا از حذف این تصویر اطمینان دارید؟')) {
+        const item = galleryItems.find(item => item.id === id);
+        if (item && item.storageKey) {
+            deleteFileFromStorage(item.storageKey);
         }
+        
+        galleryItems = galleryItems.filter(item => item.id !== id);
+        
+        const success = await saveToServer('gallery', galleryItems);
+        if (success) {
+            loadGalleryItems();
+            loadGalleryAdmin();
+            updateAdminStats();
+            showToast('تصویر با موفقیت حذف شد', 'success');
+        } else {
+            showToast('خطا در حذف تصویر', 'error');
+        }
+    }
+}
+
+// Delete product با مدیریت فایل
+async function deleteProduct(id) {
+    if (confirm('آیا از حذف این محصول اطمینان دارید؟')) {
+        const product = products.find(product => product.id === id);
+        if (product) {
+            if (product.imageStorageKey) {
+                deleteFileFromStorage(product.imageStorageKey);
+            }
+            if (product.videoStorageKey) {
+                deleteFileFromStorage(product.videoStorageKey);
+            }
+        }
+        
+        products = products.filter(product => product.id !== id);
+        
+        const success = await saveToServer('products', products);
+        if (success) {
+            loadProducts();
+            loadProductsAdmin();
+            updateAdminStats();
+            showToast('محصول با موفقیت حذف شد', 'success');
+        } else {
+            showToast('خطا در حذف محصول', 'error');
+        }
+    }
+}
+
+// Delete video با مدیریت فایل
+async function deleteVideo(id) {
+    if (confirm('آیا از حذف این ویدیو اطمینان دارید؟')) {
+        const video = videos.find(video => video.id === id);
+        if (video) {
+            if (video.videoStorageKey) {
+                deleteFileFromStorage(video.videoStorageKey);
+            }
+            if (video.thumbnailStorageKey) {
+                deleteFileFromStorage(video.thumbnailStorageKey);
+            }
+        }
+        
+        videos = videos.filter(video => video.id !== id);
+        
+        const success = await saveToServer('videos', videos);
+        if (success) {
+            loadVideos();
+            loadVideosAdmin();
+            updateAdminStats();
+            showToast('ویدیو با موفقیت حذف شد', 'success');
+        } else {
+            showToast('خطا در حذف ویدیو', 'error');
+        }
+    }
+}
+
+// Update admin statistics
+function updateAdminStats() {
+    document.getElementById('stat-products').textContent = products.length;
+    document.getElementById('stat-gallery').textContent = galleryItems.length;
+    document.getElementById('stat-videos').textContent = videos.length;
+    document.getElementById('stat-sales').textContent = '۴۲';
+}
+
+// Update last update time
+function updateLastUpdate() {
+    const now = new Date();
+    document.getElementById('last-update').textContent = now.toLocaleString('fa-IR');
+}
+
+// Load gallery admin
+function loadGalleryAdmin() {
+    const galleryItemsList = document.getElementById('gallery-items-list');
+    galleryItemsList.innerHTML = '';
+    
+    if (galleryItems.length === 0) {
+        galleryItemsList.innerHTML = '<p style="text-align: center; color: #ccc; padding: 1rem;">هیچ تصویری وجود ندارد</p>';
+        return;
+    }
+    
+    galleryItems.forEach(item => {
+        const itemElement = document.createElement('div');
+        itemElement.style.display = 'flex';
+        itemElement.style.justifyContent = 'space-between';
+        itemElement.style.alignItems = 'center';
+        itemElement.style.padding = '0.5rem 0';
+        itemElement.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
+        
+        itemElement.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 40px; height: 40px; background-image: url('${item.image}'); background-size: cover; background-position: center; border-radius: 5px;"></div>
+                <span>${item.title}</span>
+            </div>
+            <button class="gallery-action-btn delete-gallery-item-list" data-id="${item.id}">
+                <i class="fas fa-trash"></i>
+            </button>
+        `;
+        
+        galleryItemsList.appendChild(itemElement);
+    });
+}
+
+// Load products admin
+function loadProductsAdmin() {
+    const productsList = document.getElementById('products-list');
+    productsList.innerHTML = '';
+    
+    if (products.length === 0) {
+        productsList.innerHTML = '<p style="text-align: center; color: #ccc; padding: 1rem;">هیچ محصولی وجود ندارد</p>';
+        return;
+    }
+    
+    products.forEach(product => {
+        const productElement = document.createElement('div');
+        productElement.style.display = 'flex';
+        productElement.style.justifyContent = 'space-between';
+        productElement.style.alignItems = 'center';
+        productElement.style.padding = '0.5rem 0';
+        productElement.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
+        
+        productElement.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 40px; height: 40px; background-image: url('${product.image}'); background-size: cover; background-position: center; border-radius: 5px;"></div>
+                <div>
+                    <div style="font-weight: bold;">${product.name}</div>
+                    <div style="font-size: 0.8rem; color: #ccc;">${formatPrice(product.price)} AFN</div>
+                </div>
+            </div>
+            <button class="gallery-action-btn delete-product-list" data-id="${product.id}">
+                <i class="fas fa-trash"></i>
+            </button>
+        `;
+        
+        productsList.appendChild(productElement);
+    });
+}
+
+// Load videos admin
+function loadVideosAdmin() {
+    const videosList = document.getElementById('videos-list');
+    videosList.innerHTML = '';
+    
+    if (videos.length === 0) {
+        videosList.innerHTML = '<p style="text-align: center; color: #ccc; padding: 1rem;">هیچ ویدیویی وجود ندارد</p>';
+        return;
+    }
+    
+    videos.forEach(video => {
+        const videoElement = document.createElement('div');
+        videoElement.style.display = 'flex';
+        videoElement.style.justifyContent = 'space-between';
+        videoElement.style.alignItems = 'center';
+        videoElement.style.padding = '0.5rem 0';
+        videoElement.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
+        
+        videoElement.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 40px; height: 40px; background-image: url('${video.thumbnail}'); background-size: cover; background-position: center; border-radius: 5px;"></div>
+                <div>
+                    <div style="font-weight: bold;">${video.title}</div>
+                    <div style="font-size: 0.8rem; color: #ccc;">${video.duration} - ${video.category}</div>
+                </div>
+            </div>
+            <button class="gallery-action-btn delete-video-list" data-id="${video.id}">
+                <i class="fas fa-trash"></i>
+            </button>
+        `;
+        
+        videosList.appendChild(videoElement);
+    });
+}
+
+// Load features admin
+function loadFeaturesAdmin() {
+    // Features are already loaded in the form
+}
+
+// Load ethical admin
+function loadEthicalAdmin() {
+    // Ethical content is already loaded in the form
+}
+
+// Load footer admin
+function loadFooterAdmin() {
+    // Footer content is already loaded in the form
+}
+
+// Load hero admin
+function loadHeroAdmin() {
+    // Hero content is already loaded in the form
+}
+
+// Backup data
+function backupData() {
+    const data = {
+        hero: {
+            title: document.getElementById('hero-title').textContent,
+            description: document.getElementById('hero-description').textContent
+        },
+        features: features,
+        gallery: galleryItems,
+        videos: videos,
+        products: products,
+        ethical: {
+            title: document.getElementById('ethical-title').textContent,
+            description: document.getElementById('ethical-description').textContent,
+            warning: document.getElementById('ethical-warning').innerHTML,
+            footer: document.getElementById('ethical-footer').textContent
+        },
+        footer: {
+            about: document.getElementById('footer-about-text').textContent,
+            address: document.getElementById('footer-address-text').textContent,
+            phone: document.getElementById('footer-phone-text').textContent,
+            email: document.getElementById('footer-email-text').textContent,
+            copyright: document.getElementById('footer-copyright-text').textContent
+        },
+        backupDate: new Date().toISOString()
+    };
+    
+    const dataStr = JSON.stringify(data, null, 2);
+    const dataBlob = new Blob([dataStr], {type: 'application/json'});
+    
+    const url = URL.createObjectURL(dataBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `kali-tools-pro-backup-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    
+    URL.revokeObjectURL(url);
+    showToast('پشتیبان با موفقیت دریافت شد', 'success');
+}
+
+// Restore data
+function restoreData(file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+            
+            // Restore data
+            if (data.hero) {
+                document.getElementById('hero-title').textContent = data.hero.title;
+                document.getElementById('hero-description').textContent = data.hero.description;
+            }
+            
+            if (data.features) {
+                features = data.features;
+                loadFeatures();
+            }
+            
+            if (data.gallery) {
+                galleryItems = data.gallery;
+                loadGalleryItems();
+            }
+            
+            if (data.videos) {
+                videos = data.videos;
+                loadVideos();
+            }
+            
+            if (data.products) {
+                products = data.products;
+                loadProducts();
+            }
+            
+            if (data.ethical) {
+                document.getElementById('ethical-title').textContent = data.ethical.title;
+                document.getElementById('ethical-description').textContent = data.ethical.description;
+                document.getElementById('ethical-warning').innerHTML = data.ethical.warning;
+                document.getElementById('ethical-footer').textContent = data.ethical.footer;
+            }
+            
+            if (data.footer) {
+                document.getElementById('footer-about-text').textContent = data.footer.about;
+                document.getElementById('footer-address-text').textContent = data.footer.address;
+                document.getElementById('footer-phone-text').textContent = data.footer.phone;
+                document.getElementById('footer-email-text').textContent = data.footer.email;
+                document.getElementById('footer-copyright-text').textContent = data.footer.copyright;
+            }
+            
+            // Save all to localStorage
+            saveToServer('features', features);
+            saveToServer('gallery', galleryItems);
+            saveToServer('videos', videos);
+            saveToServer('products', products);
+            
+            updateAdminStats();
+            showToast('دادهها با موفقیت بازیابی شدند', 'success');
+        } catch (error) {
+            console.error('Restore error:', error);
+            showToast('خطا در بازیابی دادهها. فایل معتبر نیست.', 'error');
+        }
+    };
+    reader.readAsText(file);
+}
+
     </script>
 </body>
 </html>
