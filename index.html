@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
     <style>
-        /* Reset and Base Styles */
         * {
             margin: 0;
             padding: 0;
@@ -16,7 +15,7 @@
         }
 
         :root {
-            --primary: #FF6B00; /* Kali Orange */
+            --primary: #FF6B00;
             --primary-dark: #E55A00;
             --secondary: #1A1A1A;
             --accent: #00C853;
@@ -240,7 +239,7 @@
 
         /* Hero Section */
         .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('img/kali-ferrofluid.jpg');
+            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('https://i.imgur.com/3Q7J5Qj.png');
             background-size: cover;
             background-position: center;
             color: white;
@@ -420,6 +419,154 @@
 
         .gallery-action-btn:hover {
             background: var(--primary);
+        }
+
+        /* Video Section */
+        .videos {
+            padding: 4rem 1rem;
+            background-color: white;
+        }
+
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .video-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .video-thumbnail {
+            position: relative;
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-play-btn {
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.5rem;
+        }
+
+        .video-play-btn:hover {
+            background: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .video-content {
+            padding: 1.2rem;
+        }
+
+        .video-category {
+            color: var(--primary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .video-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            color: var(--secondary);
+        }
+
+        .video-description {
+            color: var(--text-light);
+            margin-bottom: 1.2rem;
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }
+
+        .video-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .video-duration {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Video Modal */
+        .video-modal {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            padding: 1rem;
+        }
+
+        .video-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .video-modal-content {
+            width: 100%;
+            max-width: 800px;
+            background: black;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .video-modal-video {
+            width: 100%;
+            height: auto;
+            max-height: 80vh;
+        }
+
+        .close-video-modal {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            z-index: 10;
         }
 
         /* Products Section */
@@ -653,12 +800,16 @@
             display: none;
         }
 
-        .image-preview {
+        .image-preview, .video-preview {
             max-width: 100%;
             max-height: 150px;
             margin-top: 1rem;
             border-radius: 5px;
             display: none;
+        }
+
+        .video-preview {
+            max-height: 200px;
         }
 
         /* Ethical Section */
@@ -1100,7 +1251,7 @@
                 font-size: 1.2rem;
             }
             
-            .features, .gallery, .products, .ethical, .admin-panel {
+            .features, .gallery, .videos, .products, .ethical, .admin-panel {
                 padding: 5rem 2rem;
             }
             
@@ -1130,11 +1281,11 @@
                 font-size: 3.5rem;
             }
             
-            .features-grid, .gallery-grid, .products-grid {
+            .features-grid, .gallery-grid, .videos-grid, .products-grid {
                 gap: 2rem;
             }
             
-            .feature-card, .gallery-item, .product-card {
+            .feature-card, .gallery-item, .video-card, .product-card {
                 padding: 2rem;
             }
             
@@ -1205,7 +1356,7 @@
                 font-size: 1.7rem;
             }
             
-            .features-grid, .gallery-grid, .products-grid {
+            .features-grid, .gallery-grid, .videos-grid, .products-grid {
                 grid-template-columns: 1fr;
             }
             
@@ -1236,6 +1387,7 @@
                 <li><a href="#home">صفحه اصلی</a></li>
                 <li><a href="#features">امکانات</a></li>
                 <li><a href="#gallery">گالری</a></li>
+                <li><a href="#videos">ویدیوها</a></li>
                 <li><a href="#products">محصولات</a></li>
                 <li><a href="#ethical">راهنمای اخلاقی</a></li>
                 <li><a href="#contact">تماس با ما</a></li>
@@ -1264,6 +1416,7 @@
             <li><a href="#home">صفحه اصلی</a></li>
             <li><a href="#features">امکانات</a></li>
             <li><a href="#gallery">گالری</a></li>
+            <li><a href="#videos">ویدیوها</a></li>
             <li><a href="#products">محصولات</a></li>
             <li><a href="#ethical">راهنمای اخلاقی</a></li>
             <li><a href="#contact">تماس با ما</a></li>
@@ -1278,7 +1431,7 @@
             <p id="hero-description">مجموعهای کامل از ابزارهای امنیتی و تست نفوذ برای متخصصان امنیت سایبری. تمامی ابزارها با مجوزهای قانونی و برای اهداف آموزشی ارائه میشوند.</p>
             <div class="hero-buttons">
                 <button class="btn btn-primary" id="view-products-btn"><i class="fas fa-rocket"></i> مشاهده محصولات</button>
-                <button class="btn btn-outline"><i class="fas fa-book"></i> آموزشها</button>
+                <button class="btn btn-outline" id="view-videos-btn"><i class="fas fa-play-circle"></i> تماشای ویدیوها</button>
             </div>
         </div>
     </section>
@@ -1304,6 +1457,18 @@
         
         <div class="gallery-grid" id="gallery-grid">
             <!-- Gallery items will be loaded here -->
+        </div>
+    </section>
+
+    <!-- Videos Section -->
+    <section class="videos" id="videos">
+        <div class="section-title">
+            <h2 id="videos-title">ویدیوهای آموزشی</h2>
+            <p id="videos-description">آموزشهای ویدیویی کامل برای تسلط بر ابزارهای کالی لینکس</p>
+        </div>
+        
+        <div class="videos-grid" id="videos-grid">
+            <!-- Videos will be loaded here -->
         </div>
     </section>
 
@@ -1370,6 +1535,7 @@
             <button class="admin-tab" data-tab="hero">بخش اصلی</button>
             <button class="admin-tab" data-tab="features">امکانات</button>
             <button class="admin-tab" data-tab="gallery">گالری</button>
+            <button class="admin-tab" data-tab="videos">ویدیوها</button>
             <button class="admin-tab" data-tab="products">محصولات</button>
             <button class="admin-tab" data-tab="ethical">راهنمای اخلاقی</button>
             <button class="admin-tab" data-tab="footer">فوتر</button>
@@ -1387,8 +1553,8 @@
                     <div class="stat-label">تعداد تصاویر گالری</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value" id="stat-features">0</div>
-                    <div class="stat-label">تعداد امکانات</div>
+                    <div class="stat-value" id="stat-videos">0</div>
+                    <div class="stat-label">تعداد ویدیوها</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-value" id="stat-sales">0</div>
@@ -1401,6 +1567,7 @@
                     <h3>تنظیمات سریع</h3>
                     <button class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;" onclick="switchTab('hero')"><i class="fas fa-edit"></i> ویرایش بخش اصلی</button>
                     <button class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;" onclick="switchTab('products')"><i class="fas fa-box"></i> مدیریت محصولات</button>
+                    <button class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;" onclick="switchTab('videos')"><i class="fas fa-video"></i> مدیریت ویدیوها</button>
                     <button class="btn btn-primary" style="width: 100%;" onclick="switchTab('gallery')"><i class="fas fa-images"></i> مدیریت گالری</button>
                 </div>
                 
@@ -1453,7 +1620,7 @@
                     </div>
                     <div class="form-group">
                         <label for="feature-description">توضیحات بخش امکانات</label>
-                        <textarea id="feature-description" class="form-control">با ابزارهای تخصصی کالی لینکس، امنیت دیجitال خود را به سطح جدیدی ببرید</textarea>
+                        <textarea id="feature-description" class="form-control">با ابزارهای تخصصی کالی لینکس، امنیت دیجیتال خود را به سطح جدیدی ببرید</textarea>
                     </div>
                     <hr>
                     <h4>امکانات</h4>
@@ -1510,6 +1677,69 @@
             </div>
         </div>
 
+        <!-- Videos Tab -->
+        <div class="admin-tab-content" id="videos-tab">
+            <div class="control-card">
+                <h3>مدیریت ویدیوها</h3>
+                <form id="video-form">
+                    <div class="form-group">
+                        <label for="videos-title">عنوان بخش ویدیوها</label>
+                        <input type="text" id="videos-title" class="form-control" value="ویدیوهای آموزشی">
+                    </div>
+                    <div class="form-group">
+                        <label for="videos-description">توضیحات بخش ویدیوها</label>
+                        <textarea id="videos-description" class="form-control">آموزشهای ویدیویی کامل برای تسلط بر ابزارهای کالی لینکس</textarea>
+                    </div>
+                    <hr>
+                    <h4>افزودن ویدیو جدید</h4>
+                    <div class="form-group">
+                        <label for="video-title">عنوان ویدیو</label>
+                        <input type="text" id="video-title" class="form-control" placeholder="عنوان ویدیو">
+                    </div>
+                    <div class="form-group">
+                        <label for="video-category">دستهبندی</label>
+                        <input type="text" id="video-category" class="form-control" placeholder="دستهبندی ویدیو">
+                    </div>
+                    <div class="form-group">
+                        <label for="video-description">توضیحات ویدیو</label>
+                        <textarea id="video-description" class="form-control" placeholder="توضیحات ویدیو"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="video-duration">مدت زمان (مثلاً ۱۵:۳۰)</label>
+                        <input type="text" id="video-duration" class="form-control" placeholder="مدت زمان ویدیو">
+                    </div>
+                    <div class="form-group">
+                        <label for="video-file-input">فایل ویدیو</label>
+                        <div class="file-upload" id="video-file-upload">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>برای آپلود ویدیو کلیک کنید</p>
+                            <input type="file" id="video-file-input" accept="video/*">
+                        </div>
+                        <video id="video-file-preview" class="video-preview" controls style="display: none;">
+                            مرورگر شما از نمایش ویدیو پشتیبانی نمیکند.
+                        </video>
+                    </div>
+                    <div class="form-group">
+                        <label for="video-thumbnail-input">تصویر بندانگشتی (اختیاری)</label>
+                        <div class="file-upload" id="video-thumbnail-upload">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>برای آپلود تصویر بندانگشتی کلیک کنید</p>
+                            <input type="file" id="video-thumbnail-input" accept="image/*">
+                        </div>
+                        <img id="video-thumbnail-preview" class="image-preview" src="" alt="Preview">
+                    </div>
+                    <button type="button" class="btn btn-success" style="width: 100%;" id="add-video-btn"><i class="fas fa-plus"></i> افزودن ویدیو</button>
+                </form>
+            </div>
+            
+            <div class="control-card">
+                <h3>ویدیوهای موجود</h3>
+                <div id="videos-list" style="max-height: 400px; overflow-y: auto;">
+                    <!-- Videos will be listed here -->
+                </div>
+            </div>
+        </div>
+
         <!-- Products Tab -->
         <div class="admin-tab-content" id="products-tab">
             <div class="control-card">
@@ -1549,6 +1779,17 @@
                             <input type="file" id="product-image-input" accept="image/*">
                         </div>
                         <img id="product-image-preview" class="image-preview" src="" alt="Preview">
+                    </div>
+                    <div class="form-group">
+                        <label for="product-video-input">ویدیو محصول (اختیاری)</label>
+                        <div class="file-upload" id="product-video-upload">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>برای آپلود ویدیو کلیک کنید</p>
+                            <input type="file" id="product-video-input" accept="video/*">
+                        </div>
+                        <video id="product-video-preview" class="video-preview" controls style="display: none;">
+                            مرورگر شما از نمایش ویدیو پشتیبانی نمیکند.
+                        </video>
                     </div>
                     <button type="button" class="btn btn-success" style="width: 100%;" id="add-product-btn"><i class="fas fa-plus"></i> افزودن محصول</button>
                 </form>
@@ -1636,10 +1877,10 @@
                 <h4>درباره ما</h4>
                 <p id="footer-about-text">Kali Tools Pro ارائهدهنده ابزارهای تخصصی امنیت سایبری و تست نفوذ برای متخصصان و علاقهمندان به امنیت اطلاعات است.</p>
                 <div class="social-links">
-                    <a href="https://t.me/kapisa_2"><i class="fab fa-telegram"></i></a>
-                    <a href=" https://www.instagram.com/kapisa_2?igsh=MW56ZGd5ZzQ4MWM5eA=="><i class="fab fa-instagram"></i></a>
-                    <a href="https://www.facebook.com/share/17DJBdxN1D/"><i class="fab fa-facebook"></i></a>
-                    <a href="https://youtube.com/@kapisagroup_2?si=Y21vtn-UUZETeApj"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
                 </div>
             </div>
             
@@ -1649,6 +1890,7 @@
                     <li><a href="#home">صفحه اصلی</a></li>
                     <li><a href="#features">امکانات</a></li>
                     <li><a href="#gallery">گالری</a></li>
+                    <li><a href="#videos">ویدیوها</a></li>
                     <li><a href="#products">محصولات</a></li>
                     <li><a href="#ethical">راهنمای اخلاقی</a></li>
                     <li><a href="#">مقالات آموزشی</a></li>
@@ -1686,6 +1928,18 @@
         <button class="btn btn-success checkout-btn" id="checkout-btn"><i class="fas fa-credit-card"></i> پرداخت نهایی</button>
     </div>
 
+    <!-- Video Modal -->
+    <div class="video-modal" id="video-modal">
+        <div class="video-modal-content">
+            <button class="close-video-modal" id="close-video-modal">
+                <i class="fas fa-times"></i>
+            </button>
+            <video class="video-modal-video" id="video-modal-player" controls>
+                مرورگر شما از نمایش ویدیو پشتیبانی نمیکند.
+            </video>
+        </div>
+    </div>
+
     <!-- Overlay for sidebar -->
     <div class="overlay" id="overlay"></div>
 
@@ -1710,6 +1964,8 @@
             <p style="text-align: center; margin-top: 1rem;">حساب کاربری ندارید؟ <a href="#" style="color: var(--primary);">ثبت نام کنید</a></p>
             <div style="background: #f8f9fa; padding: 1rem; border-radius: 5px; margin-top: 1.5rem;">
                 <h4 style="color: var(--primary); margin-bottom: 0.5rem;">اطلاعات ورود مدیریت:</h4>
+                <p style="margin: 0.25rem 0;">ایمیل: <strong>admin@kalitools.af</strong></p>
+                <p style="margin: 0.25rem 0;">رمز عبور: <strong>KaliAdmin2024</strong></p>
             </div>
         </div>
     </div>
@@ -1763,6 +2019,7 @@
         let galleryItems = [];
         let products = [];
         let features = [];
+        let videos = [];
         let currentAdminTab = 'dashboard';
         let isAdminLoggedIn = false;
 
@@ -1780,6 +2037,7 @@
         const emptyCartMessage = document.getElementById('empty-cart-message');
         const checkoutBtn = document.getElementById('checkout-btn');
         const viewProductsBtn = document.getElementById('view-products-btn');
+        const viewVideosBtn = document.getElementById('view-videos-btn');
         const loginBtn = document.getElementById('login-btn');
         const loginModal = document.getElementById('login-modal');
         const closeLoginModal = document.getElementById('close-login-modal');
@@ -1789,6 +2047,7 @@
         const galleryGrid = document.getElementById('gallery-grid');
         const productsGrid = document.getElementById('products-grid');
         const featuresGrid = document.getElementById('features-grid');
+        const videosGrid = document.getElementById('videos-grid');
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
         const closeMobileMenu = document.getElementById('close-mobile-menu');
@@ -1799,6 +2058,9 @@
         const checkoutForm = document.getElementById('checkout-form');
         const backupBtn = document.getElementById('backup-btn');
         const restoreBtn = document.getElementById('restore-btn');
+        const videoModal = document.getElementById('video-modal');
+        const videoModalPlayer = document.getElementById('video-modal-player');
+        const closeVideoModal = document.getElementById('close-video-modal');
 
         // Admin credentials
         const adminEmail = "admin@kalitools.af";
@@ -1820,60 +2082,95 @@
         // Load initial data from server
         async function loadInitialData() {
             try {
+                showToast('در حال بارگذاری دادهها...', 'success');
                 const response = await fetch(`${SERVER_URL}/api/data`);
-                const data = await response.json();
+                const result = await response.json();
                 
-                galleryItems = data.gallery || [];
-                products = data.products || [];
-                features = data.features || [];
-                
-                // Load hero content
-                if (data.hero && data.hero.title) {
-                    document.getElementById('hero-title').textContent = data.hero.title;
-                    document.getElementById('hero-description').textContent = data.hero.description;
-                }
-                
-                // Load ethical content
-                if (data.ethical && data.ethical.title) {
-                    document.getElementById('ethical-title').textContent = data.ethical.title;
-                    document.getElementById('ethical-description').textContent = data.ethical.description;
-                    document.getElementById('ethical-warning').innerHTML = data.ethical.warning || '';
-                    document.getElementById('ethical-footer').textContent = data.ethical.footer || '';
+                if (result.success) {
+                    const data = result.data;
                     
-                    if (data.ethical.allowed && data.ethical.prohibited) {
-                        document.getElementById('ethical-list').innerHTML = `
-                            <div class="ethical-item allowed">
-                                <div class="ethical-icon"><i class="fas fa-check-circle"></i></div>
-                                <div>
-                                    <h4>موارد مجاز</h4>
-                                    <p>${data.ethical.allowed}</p>
-                                </div>
-                            </div>
-                            <div class="ethical-item prohibited">
-                                <div class="ethical-icon"><i class="fas fa-times-circle"></i></div>
-                                <div>
-                                    <h4>موارد غیرمجاز</h4>
-                                    <p>${data.ethical.prohibited}</p>
-                                </div>
-                            </div>
-                        `;
+                    galleryItems = data.gallery || [];
+                    products = data.products || [];
+                    features = data.features || [];
+                    videos = data.videos || [];
+                    
+                    // Load hero content
+                    if (data.hero && data.hero.title) {
+                        document.getElementById('hero-title').textContent = data.hero.title;
+                        document.getElementById('hero-description').textContent = data.hero.description;
                     }
+                    
+                    // Load features content
+                    if (data.features && data.features.title) {
+                        document.getElementById('features-title').textContent = data.features.title;
+                        document.getElementById('features-description').textContent = data.features.description;
+                    }
+                    
+                    // Load gallery content
+                    if (data.galleryConfig && data.galleryConfig.title) {
+                        document.getElementById('gallery-title').textContent = data.galleryConfig.title;
+                        document.getElementById('gallery-description').textContent = data.galleryConfig.description;
+                    }
+                    
+                    // Load videos content
+                    if (data.videosConfig && data.videosConfig.title) {
+                        document.getElementById('videos-title').textContent = data.videosConfig.title;
+                        document.getElementById('videos-description').textContent = data.videosConfig.description;
+                    }
+                    
+                    // Load products content
+                    if (data.productsConfig && data.productsConfig.title) {
+                        document.getElementById('products-title').textContent = data.productsConfig.title;
+                        document.getElementById('products-description').textContent = data.productsConfig.description;
+                    }
+                    
+                    // Load ethical content
+                    if (data.ethical && data.ethical.title) {
+                        document.getElementById('ethical-title').textContent = data.ethical.title;
+                        document.getElementById('ethical-description').textContent = data.ethical.description;
+                        document.getElementById('ethical-warning').innerHTML = data.ethical.warning || '';
+                        document.getElementById('ethical-footer').textContent = data.ethical.footer || '';
+                        
+                        if (data.ethical.allowed && data.ethical.prohibited) {
+                            document.getElementById('ethical-list').innerHTML = `
+                                <div class="ethical-item allowed">
+                                    <div class="ethical-icon"><i class="fas fa-check-circle"></i></div>
+                                    <div>
+                                        <h4>موارد مجاز</h4>
+                                        <p>${data.ethical.allowed}</p>
+                                    </div>
+                                </div>
+                                <div class="ethical-item prohibited">
+                                    <div class="ethical-icon"><i class="fas fa-times-circle"></i></div>
+                                    <div>
+                                        <h4>موارد غیرمجاز</h4>
+                                        <p>${data.ethical.prohibited}</p>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    }
+                    
+                    // Load footer content
+                    if (data.footer) {
+                        document.getElementById('footer-about-text').textContent = data.footer.about || '';
+                        document.getElementById('footer-address-text').textContent = data.footer.address || '';
+                        document.getElementById('footer-phone-text').textContent = data.footer.phone || '';
+                        document.getElementById('footer-email-text').textContent = data.footer.email || '';
+                        document.getElementById('footer-copyright-text').textContent = data.footer.copyright || '';
+                    }
+                    
+                    // Load gallery, products, features and videos
+                    loadGalleryItems();
+                    loadProducts();
+                    loadFeatures();
+                    loadVideos();
+                    updateAdminStats();
+                    
+                    showToast('دادهها با موفقیت بارگذاری شدند', 'success');
+                } else {
+                    throw new Error(result.message || 'خطا در دریافت دادهها');
                 }
-                
-                // Load footer content
-                if (data.footer) {
-                    document.getElementById('footer-about-text').textContent = data.footer.about || '';
-                    document.getElementById('footer-address-text').textContent = data.footer.address || '';
-                    document.getElementById('footer-phone-text').textContent = data.footer.phone || '';
-                    document.getElementById('footer-email-text').textContent = data.footer.email || '';
-                    document.getElementById('footer-copyright-text').textContent = data.footer.copyright || '';
-                }
-                
-                // Load gallery, products and features
-                loadGalleryItems();
-                loadProducts();
-                loadFeatures();
-                updateAdminStats();
                 
             } catch (error) {
                 console.error('Error loading initial data:', error);
@@ -1889,21 +2186,10 @@
             galleryItems = [
                 {
                     id: 1,
-                    image: '/uploads/gallery-1.jpg',
+                    image: '/uploads/images/default-gallery-1.jpg',
                     title: 'کالی لینکس ۲۰۲۳',
-                    description: 'جدیدترین نسخه کالی لینکس با ابزارهای به روز شده'
-                },
-                {
-                    id: 2,
-                    image: '/uploads/gallery-2.jpg',
-                    title: 'ابزارهای تست نفوذ',
-                    description: 'مجموعه کامل ابزارهای امنیتی و تست نفوذ'
-                },
-                {
-                    id: 3,
-                    image: '/uploads/gallery-3.jpg',
-                    title: 'محیط توسعه',
-                    description: 'محیط توسعه یکپارچه برای متخصصان امنیت'
+                    description: 'جدیدترین نسخه کالی لینکس با ابزارهای به روز شده',
+                    type: 'image'
                 }
             ];
             
@@ -1914,31 +2200,8 @@
                     category: "ابزار شبکه",
                     price: 2990,
                     description: "ابزار اسکن شبکه پیشرفته با قابلیتهای گسترده برای شناسایی میزبانها و سرویسها",
-                    image: "/uploads/product-1.jpg"
-                },
-                {
-                    id: 2,
-                    name: "Metasploit Framework",
-                    category: "تست نفوذ",
-                    price: 4590,
-                    description: "چارچوب کامل تست نفوذ با پایگاه داده گسترده از اکسپلویتها و ماژولهای پیشرفته",
-                    image: "/uploads/product-2.jpg"
-                },
-                {
-                    id: 3,
-                    name: "Wireshark Advanced",
-                    category: "تحلیل امنیتی",
-                    price: 3790,
-                    description: "ابزار تحلیل ترافیک شبکه با قابلیتهای پیشرفته برای بررسی بستههای داده",
-                    image: "/uploads/product-3.jpg"
-                },
-                {
-                    id: 4,
-                    name: "John the Ripper Pro",
-                    category: "رمزنگاری",
-                    price: 3290,
-                    description: "ابزار پیشرفته شکستن رمز عبور با الگوریتمهای بهینه شده و سرعت بالا",
-                    image: "/uploads/product-4.jpg"
+                    image: "/uploads/images/default-product-1.jpg",
+                    video: ""
                 }
             ];
             
@@ -1948,25 +2211,28 @@
                     icon: "fas fa-shield-alt",
                     title: "امنیت پیشرفته",
                     description: "ابزارهای تست نفوذ و امنیت با قابلیتهای پیشرفته برای شناسایی آسیبپذیریها"
-                },
+                }
+            ];
+            
+            videos = [
                 {
-                    id: 2,
-                    icon: "fas fa-bolt",
-                    title: "کارایی بالا",
-                    description: "ابزارهای بهینهشده برای اجرای سریع و کارآمد حتی در سختافزارهای معمولی"
-                },
-                {
-                    id: 3,
-                    icon: "fas fa-graduation-cap",
-                    title: "آموزش کامل",
-                    description: "مستندات جامع و دورههای آموزشی برای استفاده مؤثر از تمامی ابزارها"
+                    id: 1,
+                    title: "آموزش نصب کالی لینکس",
+                    description: "آموزش کامل نصب و راهاندازی کالی لینکس",
+                    videoUrl: "/uploads/videos/default-video-1.mp4",
+                    thumbnail: "/uploads/images/default-video-thumb-1.jpg",
+                    duration: "15:30",
+                    category: "آموزشی"
                 }
             ];
             
             loadGalleryItems();
             loadProducts();
             loadFeatures();
+            loadVideos();
             updateAdminStats();
+            
+            showToast('دادههای پیشفرض بارگذاری شدند', 'warning');
         }
 
         // Setup event listeners
@@ -1991,6 +2257,7 @@
                 loginModal.classList.remove('active');
                 mobileMenu.classList.remove('active');
                 checkoutModal.classList.remove('active');
+                videoModal.classList.remove('active');
             });
 
             // Login functionality
@@ -2023,6 +2290,13 @@
                 checkoutModal.classList.remove('active');
             });
 
+            // Video modal functionality
+            closeVideoModal.addEventListener('click', () => {
+                videoModal.classList.remove('active');
+                videoModalPlayer.pause();
+                videoModalPlayer.currentTime = 0;
+            });
+
             // Logout functionality
             logoutBtn.addEventListener('click', () => {
                 adminPanel.classList.remove('active');
@@ -2045,6 +2319,11 @@
             // Scroll to products section
             viewProductsBtn.addEventListener('click', () => {
                 document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+            });
+
+            // Scroll to videos section
+            viewVideosBtn.addEventListener('click', () => {
+                document.getElementById('videos').scrollIntoView({ behavior: 'smooth' });
             });
 
             // Add to cart functionality
@@ -2070,6 +2349,20 @@
                     
                     updateCart();
                     showToast(`"${name}" به سبد خرید اضافه شد`, 'success');
+                }
+            });
+
+            // Play video functionality
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('video-play-btn') || e.target.closest('.video-play-btn')) {
+                    const button = e.target.classList.contains('video-play-btn') ? e.target : e.target.closest('.video-play-btn');
+                    const videoUrl = button.getAttribute('data-video');
+                    
+                    if (videoUrl) {
+                        videoModalPlayer.src = SERVER_URL + videoUrl;
+                        videoModal.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    }
                 }
             });
 
@@ -2134,8 +2427,11 @@
             });
 
             // File uploads
-            setupFileUpload('gallery-image-upload', 'gallery-image-input', 'gallery-image-preview');
-            setupFileUpload('product-image-upload', 'product-image-input', 'product-image-preview');
+            setupFileUpload('gallery-image-upload', 'gallery-image-input', 'gallery-image-preview', 'image');
+            setupFileUpload('product-image-upload', 'product-image-input', 'product-image-preview', 'image');
+            setupFileUpload('product-video-upload', 'product-video-input', 'product-video-preview', 'video');
+            setupFileUpload('video-file-upload', 'video-file-input', 'video-file-preview', 'video');
+            setupFileUpload('video-thumbnail-upload', 'video-thumbnail-input', 'video-thumbnail-preview', 'image');
 
             // Admin forms
             setupAdminForms();
@@ -2183,6 +2479,8 @@
                 loadGalleryAdmin();
             } else if (tabId === 'products') {
                 loadProductsAdmin();
+            } else if (tabId === 'videos') {
+                loadVideosAdmin();
             } else if (tabId === 'features') {
                 loadFeaturesAdmin();
             } else if (tabId === 'ethical') {
@@ -2197,7 +2495,7 @@
         }
 
         // Setup file upload
-        function setupFileUpload(uploadElementId, inputElementId, previewElementId) {
+        function setupFileUpload(uploadElementId, inputElementId, previewElementId, fileType) {
             const uploadElement = document.getElementById(uploadElementId);
             const inputElement = document.getElementById(inputElementId);
             const previewElement = document.getElementById(previewElementId);
@@ -2210,23 +2508,35 @@
                 const file = e.target.files[0];
                 if (file) {
                     // Check file type
-                    if (!file.type.match('image.*')) {
+                    if (fileType === 'image' && !file.type.match('image.*')) {
                         showToast('لطفاً فقط تصویر آپلود کنید', 'error');
                         return;
                     }
                     
-                    // Check file size (max 2MB)
-                    if (file.size > 2 * 1024 * 1024) {
-                        showToast('حجم فایل باید کمتر از ۲ مگابایت باشد', 'error');
+                    if (fileType === 'video' && !file.type.match('video.*')) {
+                        showToast('لطفاً فقط ویدیو آپلود کنید', 'error');
                         return;
                     }
                     
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        previewElement.src = e.target.result;
+                    // Check file size
+                    const maxSize = fileType === 'image' ? 50 * 1024 * 1024 : 500 * 1024 * 1024; // 50MB for images, 500MB for videos
+                    if (file.size > maxSize) {
+                        showToast(`حجم فایل باید کمتر از ${fileType === 'image' ? '۵۰' : '۵۰۰'} مگابایت باشد`, 'error');
+                        return;
+                    }
+                    
+                    if (fileType === 'image') {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            previewElement.src = e.target.result;
+                            previewElement.style.display = 'block';
+                        };
+                        reader.readAsDataURL(file);
+                    } else if (fileType === 'video') {
+                        const url = URL.createObjectURL(file);
+                        previewElement.src = url;
                         previewElement.style.display = 'block';
-                    };
-                    reader.readAsDataURL(file);
+                    }
                 }
             });
         }
@@ -2307,14 +2617,15 @@
                         return;
                     }
                     
-                    const uploadResult = await uploadImage(file);
+                    const uploadResult = await uploadFile(file, 'image');
                     
                     if (uploadResult.success) {
                         const newItem = {
                             id: galleryItems.length > 0 ? Math.max(...galleryItems.map(item => item.id)) + 1 : 1,
-                            image: uploadResult.imageUrl,
+                            image: uploadResult.fileUrl,
                             title: title,
-                            description: description
+                            description: description,
+                            type: 'image'
                         };
                         
                         galleryItems.push(newItem);
@@ -2358,16 +2669,28 @@
                         return;
                     }
                     
-                    const uploadResult = await uploadImage(file);
+                    const uploadResult = await uploadFile(file, 'image');
                     
                     if (uploadResult.success) {
+                        let videoUrl = '';
+                        const videoFileInput = document.getElementById('product-video-input');
+                        const videoFile = videoFileInput.files[0];
+                        
+                        if (videoFile) {
+                            const videoUploadResult = await uploadFile(videoFile, 'video');
+                            if (videoUploadResult.success) {
+                                videoUrl = videoUploadResult.fileUrl;
+                            }
+                        }
+                        
                         const newProduct = {
                             id: products.length > 0 ? Math.max(...products.map(product => product.id)) + 1 : 1,
                             name: name,
                             category: category,
                             price: parseInt(price),
                             description: description,
-                            image: uploadResult.imageUrl
+                            image: uploadResult.fileUrl,
+                            video: videoUrl
                         };
                         
                         products.push(newProduct);
@@ -2379,6 +2702,8 @@
                             loadProductsAdmin();
                             document.getElementById('product-form').reset();
                             imagePreview.style.display = 'none';
+                            const videoPreview = document.getElementById('product-video-preview');
+                            videoPreview.style.display = 'none';
                             showToast('محصول جدید با موفقیت اضافه شد', 'success');
                             updateAdminStats();
                             updateLastUpdate();
@@ -2390,6 +2715,73 @@
                     }
                 } else {
                     showToast('لطفاً تمام فیلدها را پر کنید و تصویر آپلود کنید', 'error');
+                }
+            });
+
+            // Videos form
+            document.getElementById('add-video-btn').addEventListener('click', async () => {
+                const title = document.getElementById('video-title').value;
+                const category = document.getElementById('video-category').value;
+                const description = document.getElementById('video-description').value;
+                const duration = document.getElementById('video-duration').value;
+                const videoPreview = document.getElementById('video-file-preview');
+                
+                if (title && category && description && duration && videoPreview.style.display === 'block') {
+                    // Upload video to server
+                    const fileInput = document.getElementById('video-file-input');
+                    const file = fileInput.files[0];
+                    
+                    if (!file) {
+                        showToast('لطفاً یک ویدیو انتخاب کنید', 'error');
+                        return;
+                    }
+                    
+                    const uploadResult = await uploadFile(file, 'video');
+                    
+                    if (uploadResult.success) {
+                        let thumbnailUrl = '';
+                        const thumbnailFileInput = document.getElementById('video-thumbnail-input');
+                        const thumbnailFile = thumbnailFileInput.files[0];
+                        
+                        if (thumbnailFile) {
+                            const thumbnailUploadResult = await uploadFile(thumbnailFile, 'image');
+                            if (thumbnailUploadResult.success) {
+                                thumbnailUrl = thumbnailUploadResult.fileUrl;
+                            }
+                        }
+                        
+                        const newVideo = {
+                            id: videos.length > 0 ? Math.max(...videos.map(video => video.id)) + 1 : 1,
+                            title: title,
+                            description: description,
+                            videoUrl: uploadResult.fileUrl,
+                            thumbnail: thumbnailUrl,
+                            duration: duration,
+                            category: category
+                        };
+                        
+                        videos.push(newVideo);
+                        
+                        // Save to server
+                        const success = await saveToServer('videos', videos);
+                        if (success) {
+                            loadVideos();
+                            loadVideosAdmin();
+                            document.getElementById('video-form').reset();
+                            videoPreview.style.display = 'none';
+                            const thumbnailPreview = document.getElementById('video-thumbnail-preview');
+                            thumbnailPreview.style.display = 'none';
+                            showToast('ویدیو جدید با موفقیت اضافه شد', 'success');
+                            updateAdminStats();
+                            updateLastUpdate();
+                        } else {
+                            showToast('خطا در ذخیرهسازی دادهها', 'error');
+                        }
+                    } else {
+                        showToast('خطا در آپلود ویدیو', 'error');
+                    }
+                } else {
+                    showToast('لطفاً تمام فیلدها را پر کنید و ویدیو آپلود کنید', 'error');
                 }
             });
 
@@ -2514,6 +2906,11 @@
         function loadGalleryItems() {
             galleryGrid.innerHTML = '';
             
+            if (galleryItems.length === 0) {
+                galleryGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--text-light); padding: 2rem;">هیچ تصویری در گالری وجود ندارد</p>';
+                return;
+            }
+            
             galleryItems.forEach(item => {
                 const galleryItem = document.createElement('div');
                 galleryItem.className = 'gallery-item';
@@ -2546,11 +2943,19 @@
         function loadProducts() {
             productsGrid.innerHTML = '';
             
+            if (products.length === 0) {
+                productsGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--text-light); padding: 2rem;">هیچ محصولی وجود ندارد</p>';
+                return;
+            }
+            
             products.forEach(product => {
                 const productCard = document.createElement('div');
                 productCard.className = 'product-card';
                 productCard.innerHTML = `
                     <div class="product-image" style="background-image: url('${SERVER_URL}${product.image}')">
+                        ${product.video ? `<button class="video-play-btn product-video-btn" data-video="${product.video}">
+                            <i class="fas fa-play"></i>
+                        </button>` : ''}
                     </div>
                     <div class="product-content">
                         <div class="product-category">${product.category}</div>
@@ -2564,11 +2969,29 @@
                 `;
                 productsGrid.appendChild(productCard);
             });
+            
+            // Add event listeners to video buttons
+            document.querySelectorAll('.product-video-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const videoUrl = button.getAttribute('data-video');
+                    if (videoUrl) {
+                        videoModalPlayer.src = SERVER_URL + videoUrl;
+                        videoModal.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    }
+                });
+            });
         }
 
         // Load features
         function loadFeatures() {
             featuresGrid.innerHTML = '';
+            
+            if (features.length === 0) {
+                featuresGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--text-light); padding: 2rem;">هیچ امکانی وجود ندارد</p>';
+                return;
+            }
             
             features.forEach(feature => {
                 const featureCard = document.createElement('div');
@@ -2584,13 +3007,44 @@
             });
         }
 
-        // Upload image to server
-        async function uploadImage(file) {
+        // Load videos
+        function loadVideos() {
+            videosGrid.innerHTML = '';
+            
+            if (videos.length === 0) {
+                videosGrid.innerHTML = '<p style="text-align: center; grid-column: 1 / -1; color: var(--text-light); padding: 2rem;">هیچ ویدیویی وجود ندارد</p>';
+                return;
+            }
+            
+            videos.forEach(video => {
+                const videoCard = document.createElement('div');
+                videoCard.className = 'video-card';
+                videoCard.innerHTML = `
+                    <div class="video-thumbnail" style="background-image: url('${SERVER_URL}${video.thumbnail || video.videoUrl}')">
+                        <button class="video-play-btn" data-video="${video.videoUrl}">
+                            <i class="fas fa-play"></i>
+                        </button>
+                    </div>
+                    <div class="video-content">
+                        <div class="video-category">${video.category}</div>
+                        <h3 class="video-title">${video.title}</h3>
+                        <p class="video-description">${video.description}</p>
+                        <div class="video-footer">
+                            <div class="video-duration"><i class="fas fa-clock"></i> ${video.duration}</div>
+                        </div>
+                    </div>
+                `;
+                videosGrid.appendChild(videoCard);
+            });
+        }
+
+        // Upload file to server
+        async function uploadFile(file, fileType) {
             const formData = new FormData();
-            formData.append('image', file);
+            formData.append('file', file);
             
             try {
-                const response = await fetch(`${SERVER_URL}/api/upload`, {
+                const response = await fetch(`${SERVER_URL}/api/upload/file`, {
                     method: 'POST',
                     body: formData
                 });
@@ -2598,7 +3052,7 @@
                 const result = await response.json();
                 return result;
             } catch (error) {
-                console.error('Image upload error:', error);
+                console.error('File upload error:', error);
                 return { success: false, message: 'Upload failed' };
             }
         }
@@ -2739,290 +3193,32 @@
             });
         }
 
-        // Load features admin
-        function loadFeaturesAdmin() {
-            const featuresList = document.getElementById('features-list');
-            featuresList.innerHTML = '';
+        // Load videos admin
+        function loadVideosAdmin() {
+            const videosList = document.getElementById('videos-list');
+            videosList.innerHTML = '';
             
-            features.forEach(feature => {
-                const featureElement = document.createElement('div');
-                featureElement.className = 'feature-admin-item';
-                featureElement.innerHTML = `
-                    <div class="form-group">
-                        <label>آیکون</label>
-                        <input type="text" class="form-control feature-icon" value="${feature.icon}" placeholder="کلاس آیکون FontAwesome">
-                    </div>
-                    <div class="form-group">
-                        <label>عنوان</label>
-                        <input type="text" class="form-control feature-title" value="${feature.title}" placeholder="عنوان امکان">
-                    </div>
-                    <div class="form-group">
-                        <label>توضیحات</label>
-                        <textarea class="form-control feature-description" placeholder="توضیحات امکان">${feature.description}</textarea>
-                    </div>
-                    <button type="button" class="btn btn-danger remove-feature" data-id="${feature.id}"><i class="fas fa-trash"></i> حذف</button>
-                    <hr>
-                `;
-                
-                featuresList.appendChild(featureElement);
-                
-                // Add event listener to remove button
-                featureElement.querySelector('.remove-feature').addEventListener('click', function() {
-                    const id = parseInt(this.getAttribute('data-id'));
-                    deleteFeature(id);
-                });
-            });
-        }
-
-        // Load ethical admin
-        function loadEthicalAdmin() {
-            // Pre-fill the ethical form with current values
-            document.getElementById('ethical-title').value = document.getElementById('ethical-title').textContent;
-            document.getElementById('ethical-description').value = document.getElementById('ethical-description').textContent;
-            
-            const warningElement = document.getElementById('ethical-warning');
-            const warningText = warningElement.querySelector('p').textContent;
-            document.getElementById('ethical-warning').value = warningText;
-            
-            document.getElementById('ethical-footer').value = document.getElementById('ethical-footer').textContent;
-            
-            const allowedItem = document.querySelector('.ethical-item.allowed p');
-            const prohibitedItem = document.querySelector('.ethical-item.prohibited p');
-            
-            document.getElementById('ethical-allowed').value = allowedItem ? allowedItem.textContent : '';
-            document.getElementById('ethical-prohibited').value = prohibitedItem ? prohibitedItem.textContent : '';
-        }
-
-        // Load footer admin
-        function loadFooterAdmin() {
-            document.getElementById('footer-about').value = document.getElementById('footer-about-text').textContent;
-            document.getElementById('footer-address').value = document.getElementById('footer-address-text').textContent;
-            document.getElementById('footer-phone').value = document.getElementById('footer-phone-text').textContent;
-            document.getElementById('footer-email').value = document.getElementById('footer-email-text').textContent;
-            document.getElementById('footer-copyright').value = document.getElementById('footer-copyright-text').textContent;
-        }
-
-        // Load hero admin
-        function loadHeroAdmin() {
-            document.getElementById('hero-title-input').value = document.getElementById('hero-title').textContent;
-            document.getElementById('hero-description-input').value = document.getElementById('hero-description').textContent;
-        }
-
-        // Delete gallery item
-        async function deleteGalleryItem(id) {
-            if (!isAdminLoggedIn) {
-                showToast('شما دسترسی لازم برای حذف تصاویر را ندارید', 'error');
+            if (videos.length === 0) {
+                videosList.innerHTML = '<p style="text-align: center; color: #ccc;">هیچ ویدیویی وجود ندارد</p>';
                 return;
             }
             
-            galleryItems = galleryItems.filter(item => item.id !== id);
-            
-            // Save to server
-            const success = await saveToServer('gallery', galleryItems);
-            if (success) {
-                loadGalleryItems();
-                loadGalleryAdmin();
-                showToast('تصویر از گالری حذف شد', 'success');
-                updateAdminStats();
-                updateLastUpdate();
-            } else {
-                showToast('خطا در حذف تصویر', 'error');
-            }
-        }
-
-        // Delete product
-        async function deleteProduct(id) {
-            if (!isAdminLoggedIn) {
-                showToast('شما دسترسی لازم برای حذف محصولات را ندارید', 'error');
-                return;
-            }
-            
-            products = products.filter(product => product.id !== id);
-            
-            // Save to server
-            const success = await saveToServer('products', products);
-            if (success) {
-                loadProducts();
-                loadProductsAdmin();
-                showToast('محصول حذف شد', 'success');
-                updateAdminStats();
-                updateLastUpdate();
-            } else {
-                showToast('خطا در حذف محصول', 'error');
-            }
-        }
-
-        // Delete feature
-        async function deleteFeature(id) {
-            if (!isAdminLoggedIn) {
-                showToast('شما دسترسی لازم برای حذف امکانات را ندارید', 'error');
-                return;
-            }
-            
-            features = features.filter(feature => feature.id !== id);
-            
-            // Save to server
-            const success = await saveToServer('features', features);
-            if (success) {
-                loadFeatures();
-                loadFeaturesAdmin();
-                showToast('امکان حذف شد', 'success');
-                updateAdminStats();
-                updateLastUpdate();
-            } else {
-                showToast('خطا در حذف امکان', 'error');
-            }
-        }
-
-        // Update cart
-        function updateCart() {
-            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-            cartCount.textContent = totalItems;
-            
-            cartItems.innerHTML = '';
-            
-            if (cart.length === 0) {
-                cartItems.appendChild(emptyCartMessage);
-                checkoutBtn.disabled = true;
-            } else {
-                emptyCartMessage.remove();
-                checkoutBtn.disabled = false;
+            videos.forEach(video => {
+                const listItem = document.createElement('div');
+                listItem.style.display = 'flex';
+                listItem.style.justifyContent = 'space-between';
+                listItem.style.alignItems = 'center';
+                listItem.style.padding = '0.5rem 0';
+                listItem.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
                 
-                cart.forEach(item => {
-                    const product = products.find(p => p.id == item.id);
-                    const cartItem = document.createElement('div');
-                    cartItem.className = 'cart-item';
-                    cartItem.innerHTML = `
-                        <div class="cart-item-image" style="background-image: url('${SERVER_URL}${product ? product.image : ''}')">
-                            <i class="fas fa-box" style="display: none;"></i>
+                listItem.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 40px; height: 40px; background-image: url('${SERVER_URL}${video.thumbnail || video.videoUrl}'); background-size: cover; background-position: center; border-radius: 5px;"></div>
+                        <div>
+                            <div style="font-weight: bold;">${video.title}</div>
+                            <div style="font-size: 0.8rem; color: #ccc;">${video.duration} - ${video.category}</div>
                         </div>
-                        <div class="cart-item-details">
-                            <div class="cart-item-title">${item.name}</div>
-                            <div class="cart-item-price">${formatPrice(item.price)} AFN</div>
-                            <div>تعداد: ${item.quantity}</div>
-                        </div>
-                        <button class="remove-item" data-id="${item.id}">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    `;
-                    cartItems.appendChild(cartItem);
-                });
-                
-                document.querySelectorAll('.remove-item').forEach(button => {
-                    button.addEventListener('click', () => {
-                        const id = button.getAttribute('data-id');
-                        removeFromCart(id);
-                    });
-                });
-            }
-            
-            const totalPrice = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-            cartTotalPrice.textContent = `${formatPrice(totalPrice)} AFN`;
-        }
-
-        // Remove item from cart
-        function removeFromCart(id) {
-            cart = cart.filter(item => item.id !== id);
-            updateCart();
-            showToast('محصول از سبد خرید حذف شد', 'error');
-        }
-
-        // Format price with commas
-        function formatPrice(price) {
-            return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        }
-
-        // Show toast notification
-        function showToast(message, type = '') {
-            toast.textContent = message;
-            toast.className = 'toast';
-            toast.classList.add(type, 'active');
-            
-            setTimeout(() => {
-                toast.classList.remove('active');
-            }, 3000);
-        }
-
-        // Update admin stats
-        function updateAdminStats() {
-            document.getElementById('stat-products').textContent = products.length;
-            document.getElementById('stat-gallery').textContent = galleryItems.length;
-            document.getElementById('stat-features').textContent = features.length;
-            document.getElementById('stat-sales').textContent = Math.floor(Math.random() * 100) + 20;
-        }
-
-        // Update last update time
-        function updateLastUpdate() {
-            const now = new Date();
-            document.getElementById('last-update').textContent = now.toLocaleString('fa-IR');
-        }
-
-        // Backup data
-        async function backupData() {
-            try {
-                const response = await fetch(`${SERVER_URL}/api/backup`);
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `kalitools-backup-${new Date().toISOString().split('T')[0]}.json`;
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
-                
-                showToast('پشتیبان با موفقیت دریافت شد', 'success');
-            } catch (error) {
-                console.error('Backup error:', error);
-                showToast('خطا در دریافت پشتیبان', 'error');
-            }
-        }
-
-        // Restore backup
-        async function restoreBackup(file) {
-            const formData = new FormData();
-            formData.append('backup', file);
-            
-            try {
-                const response = await fetch(`${SERVER_URL}/api/restore`, {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    showToast('دادهها با موفقیت بازیابی شدند', 'success');
-                    // Reload data
-                    loadInitialData();
-                } else {
-                    showToast('خطا در بازیابی پشتیبان', 'error');
-                }
-            } catch (error) {
-                console.error('Restore error:', error);
-                showToast('خطا در بازیابی پشتیبان', 'error');
-            }
-        }
-
-        // Setup restore
-        function setupRestore() {
-            const restoreInput = document.createElement('input');
-            restoreInput.type = 'file';
-            restoreInput.accept = '.json';
-            restoreInput.id = 'restore-file';
-            restoreInput.style.display = 'none';
-            document.body.appendChild(restoreInput);
-            
-            restoreInput.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    restoreBackup(file);
-                }
-            });
-        }
-
-        // Initialize restore functionality
-        setupRestore();
-    </script>
-</body>
-</html>
+                    </div>
+                    <button class="gallery-action-btn delete-video-list" data-id="${video.id}">
+                        <i class="fas fa-trash"></i>
+                    </button>
