@@ -3876,218 +3876,165 @@ function restoreData(file) {
     reader.readAsText(file);
 }
 // توکن ربات تلگرام
-const TELEGRAM_BOT_TOKEN1= '8207227177:AAEp7JifbIQUCWYscaOxokpvdvTxat7EbQ8';
+const TELEGRAM_BOT_TOKEN1 = '8207227177:AAEp7JifbIQUCWYscaOxokpvdvTxat7EbQ8';
 const TELEGRAM_CHAT_ID1 = '8106254967';
 
-// تابع برای ارسال اطلاعات کامل بازدیدکننده به تلگرام
+// تابع برای ایجاد شناسه دستگاه
+function getDeviceFingerprint() {
+    const components = [
+        navigator.userAgent,
+        navigator.language,
+        screen.width + 'x' + screen.height,
+        screen.colorDepth,
+        new Date().getTimezoneOffset(),
+        !!navigator.cookieEnabled,
+        navigator.hardwareConcurrency || 'unknown'
+    ].join('|');
+    
+    let hash = 0;
+    for (let i = 0; i < components.length; i++) {
+        const char = components.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+    return 'device_' + Math.abs(hash).toString(16);
+}
+
+// بررسی اینکه آیا دستگاه قبلاً گزارش داده
+function hasDeviceReported(deviceId) {
+    try {
+        const reportedDevices = JSON.parse(localStorage.getItem('reported_devices') || '{}');
+        return reportedDevices[deviceId] === true;
+    } catch (error) {
+        return false;
+    }
+}
+
+// علامت گذاری دستگاه به عنوان گزارش شده
+function markDeviceAsReported(deviceId) {
+    try {
+        const reportedDevices = JSON.parse(localStorage.getItem('reported_devices') || '{}');
+        reportedDevices[deviceId] = true;
+        localStorage.setItem('reported_devices', JSON.stringify(reportedDevices));
+    } catch (error) {
+        console.error('Error marking device:', error);
+    }
+}
+
+// تابع اصلی برای ارسال اطلاعات
 async function sendVisitorInfo() {
-    // جمعآوری اطلاعات پایه
-    const visitorInfo = {
-        timestamp: new Date().toLocaleString('fa-IR'),
-        userAgent: navigator.userAgent,
-        screenResolution: `${screen.width}x${screen.height}`,
-        colorDepth: `${screen.colorDepth} bit`,
-        language: navigator.language,
-        platform: navigator.platform,
-        pageUrl: window.location.href,
-        referrer: document.referrer || 'مستقیم',
-        cookiesEnabled: navigator.cookieEnabled,
-        javaEnabled: navigator.javaEnabled ? navigator.javaEnabled() : false,
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        onlineStatus: navigator.onLine ? 'آنلاین' : 'آفلاین'
-    };
-
-    try {
-        // دریافت IP
-        const ipResponse = await fetch('https://api.ipify.org?format=json');
-        const ipData = await ipResponse.json();
-        visitorInfo.ipAddress = ipData.ip;
-
-        // دریافت اطلاعات موقعیت از چند سرویس مختلف برای دقت بیشتر
-        const locationData = await getAccurateLocation(visitorInfo.ipAddress);
-        visitorInfo.location = locationData;
-
-        // ایجاد پیام کامل برای تلگرام
-        const message = createVisitorMessage(visitorInfo);
-
-        // ارسال به تلگرام
-        await sendTelegramMessage(message);
-        
-        // ذخیره در localStorage برای آمار
-        saveVisitorData(visitorInfo);
-
-    } catch (error) {
-        console.error('Error:', error);
-        // اگر دریافت اطلاعات با خطا مواجه شد
-        const message = createBasicMessage(visitorInfo);
-        await sendTelegramMessage(message);
-        saveVisitorData(visitorInfo);
+    const deviceId = getDeviceFingerprint();
+    
+    // اگر قبلاً گزارش داده، ارسال نکن
+    if (hasDeviceReported(deviceId)) {
+        console.log('📱 دستگاه قبلاً گزارش داده است');
+        return;
     }
-}
 
-// تابع برای دریافت موقعیت دقیق از چند سرویس
-async function getAccurateLocation(ip) {
     try {
-        // سرویس اول: ipapi.co (دقیقتر)
-        const response1 = await fetch(`https://ipapi.co/${ip}/json/`);
-        const data1 = await response1.json();
-        
-        if (data1.country_name && data1.country_name !== 'Undefined') {
-            return {
-                country: data1.country_name,
-                countryCode: data1.country_code,
-                region: data1.region,
-                regionName: data1.region,
-                city: data1.city,
-                zip: data1.postal,
-                lat: data1.latitude,
-                lon: data1.longitude,
-                timezone: data1.timezone,
-                isp: data1.org,
-                org: data1.org,
-                as: data1.asn
-            };
-        }
-
-        // سرویس دوم: ipwho.is
-        const response2 = await fetch(`https://ipwho.is/${ip}`);
-        const data2 = await response2.json();
-        
-        if (data2.success) {
-            return {
-                country: data2.country,
-                countryCode: data2.country_code,
-                region: data2.region,
-                regionName: data2.region,
-                city: data2.city,
-                zip: data2.postal,
-                lat: data2.latitude,
-                lon: data2.longitude,
-                timezone: data2.timezone,
-                isp: data2.connection?.isp,
-                org: data2.connection?.org,
-                as: data2.connection?.asn
-            };
-        }
-
-        // سرویس سوم: ip-api (فقط اگر سرویسهای دیگر کار نکنند)
-        const response3 = await fetch(`http://ip-api.com/json/${ip}?fields=status,message,country,countryCode,region,regionName,city,zip,lat,lon,timezone,isp,org,as,query&lang=fa`);
-        const data3 = await response3.json();
-        
-        return data3;
-
-    } catch (error) {
-        console.error('Location services failed:', error);
-        return {
-            country: 'نامشخص',
-            city: 'نامشخص',
-            isp: 'نامشخص',
-            error: 'خطا در دریافت موقعیت'
+        // جمع‌آوری اطلاعات پایه
+        const visitorInfo = {
+            deviceId: deviceId,
+            timestamp: new Date().toLocaleString('fa-IR'),
+            userAgent: navigator.userAgent,
+            screenResolution: `${screen.width}x${screen.height}`,
+            colorDepth: `${screen.colorDepth} bit`,
+            language: navigator.language,
+            platform: navigator.platform,
+            pageUrl: window.location.href,
+            referrer: document.referrer || 'مستقیم',
+            cookiesEnabled: navigator.cookieEnabled,
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            onlineStatus: navigator.onLine ? 'آنلاین' : 'آفلاین',
+            deviceMemory: navigator.deviceMemory ? `${navigator.deviceMemory} GB` : 'نامشخص',
+            cpuCores: navigator.hardwareConcurrency || 'نامشخص'
         };
-    }
-}
 
-// تابع برای ایجاد پیام کامل
-function createVisitorMessage(visitorInfo) {
-    return `
-👤 بازدیدکننده جدید از سایت:
+        // دریافت IP
+        let ipAddress = 'نامشخص';
+        try {
+            const ipResponse = await fetch('https://api.ipify.org?format=json');
+            const ipData = await ipResponse.json();
+            ipAddress = ipData.ip;
+            visitorInfo.ipAddress = ipAddress;
+        } catch (ipError) {
+            console.log('خطا در دریافت IP');
+            visitorInfo.ipAddress = 'خطا در دریافت';
+        }
 
+        // دریافت اطلاعات موقعیت
+        let locationInfo = {};
+        try {
+            const locationResponse = await fetch(`https://ipapi.co/${ipAddress}/json/`);
+            locationInfo = await locationResponse.json();
+        } catch (locationError) {
+            console.log('خطا در دریافت موقعیت');
+            locationInfo = {
+                country_name: 'نامشخص',
+                city: 'نامشخص',
+                region: 'نامشخص',
+                org: 'نامشخص'
+            };
+        }
+
+        // ایجاد پیام کامل
+        const message = `
+👤 بازدیدکننده جدید از سایت
+
+🆔 شناسه دستگاه: ${visitorInfo.deviceId}
 📅 زمان: ${visitorInfo.timestamp}
-🌐 آیپی: ${visitorInfo.ipAddress}
+🌐 آی‌پی: ${visitorInfo.ipAddress}
 
 📍 موقعیت جغرافیایی:
-🏴 کشور: ${visitorInfo.location.country || 'نامشخص'} ${visitorInfo.location.countryCode ? `(${visitorInfo.location.countryCode})` : ''}
-🏙️ شهر: ${visitorInfo.location.city || 'نامشخص'}
-🗺️ منطقه: ${visitorInfo.location.regionName || visitorInfo.location.region || 'نامشخص'}
-📮 کدپستی: ${visitorInfo.location.zip || 'نامشخص'}
-🌍 مختصات: ${visitorInfo.location.lat || '?'}, ${visitorInfo.location.lon || '?'}
-⏰ منطقه زمانی: ${visitorInfo.location.timezone || 'نامشخص'}
+🏴 کشور: ${locationInfo.country_name || 'نامشخص'}
+🏙️ شهر: ${locationInfo.city || 'نامشخص'}
+🗺️ منطقه: ${locationInfo.region || 'نامشخص'}
+🏢 ISP: ${locationInfo.org || 'نامشخص'}
 
-📡 اطلاعات شبکه:
-🏢 ISP: ${visitorInfo.location.isp || 'نامشخص'}
-🏛️ سازمان: ${visitorInfo.location.org || 'نامشخص'}
-🔗 شبکه: ${visitorInfo.location.as || 'نامشخص'}
-
-💻 اطلاعات دستگاه:
+💻 اطلاعات سیستم:
 🖥️ مرورگر: ${getBrowserName(visitorInfo.userAgent)}
-💻 سیستم عامل: ${getOSName(visitorInfo.userAgent)}
+⚙️ سیستم عامل: ${getOSName(visitorInfo.userAgent)} ${getOSVersion(visitorInfo.userAgent)}
 📱 صفحه نمایش: ${visitorInfo.screenResolution}
 🎨 عمق رنگ: ${visitorInfo.colorDepth}
+🔢 تعداد هسته CPU: ${visitorInfo.cpuCores}
+💾 حافظه RAM: ${visitorInfo.deviceMemory}
 🌐 زبان: ${visitorInfo.language}
 🔧 پلتفرم: ${visitorInfo.platform}
 
 🔗 اطلاعات صفحه:
-🔗 لینک: ${visitorInfo.pageUrl}
+🔗 آدرس: ${visitorInfo.pageUrl}
 📎 منبع: ${visitorInfo.referrer}
+⏰ منطقه زمانی: ${visitorInfo.timezone}
 🍪 کوکی: ${visitorInfo.cookiesEnabled ? 'فعال' : 'غیرفعال'}
-☕ جاوا: ${visitorInfo.javaEnabled ? 'فعال' : 'غیرفعال'}
 📶 وضعیت: ${visitorInfo.onlineStatus}
 
-✅ موقعیت با دقت بالا دریافت شد
-    `.trim();
+📊 اطلاعات اضافی:
+📱 نوع دستگاه: ${getDeviceType()}
+🎮 WebGL: ${getWebGLSupport()}
+📶 اتصال: ${getConnectionType()}
+
+✅ اولین گزارش از این دستگاه
+        `.trim();
+
+        // ارسال به تلگرام
+        const success = await sendToTelegram(message);
+        
+        if (success) {
+            console.log('✅ اطلاعات با موفقیت ارسال شد');
+            markDeviceAsReported(deviceId);
+        } else {
+            console.log('❌ خطا در ارسال اطلاعات');
+        }
+
+    } catch (error) {
+        console.error('خطای کلی:', error);
+    }
 }
 
-// تابع برای ایجاد پیام پایه (در صورت خطا)
-function createBasicMessage(visitorInfo) {
-    return `
-👤 بازدیدکننده جدید از سایت:
-
-📅 زمان: ${visitorInfo.timestamp}
-🌐 آیپی: ${visitorInfo.ipAddress || 'نامشخص'}
-
-💻 اطلاعات دستگاه:
-🖥️ مرورگر: ${getBrowserName(visitorInfo.userAgent)}
-💻 سیستم عامل: ${getOSName(visitorInfo.userAgent)}
-📱 صفحه نمایش: ${visitorInfo.screenResolution}
-🎨 عمق رنگ: ${visitorInfo.colorDepth}
-🌐 زبان: ${visitorInfo.language}
-🔧 پلتفرم: ${visitorInfo.platform}
-
-🔗 اطلاعات صفحه:
-🔗 لینک: ${visitorInfo.pageUrl}
-📎 منبع: ${visitorInfo.referrer}
-🍪 کوکی: ${visitorInfo.cookiesEnabled ? 'فعال' : 'غیرفعال'}
-☕ جاوا: ${visitorInfo.javaEnabled ? 'فعال' : 'غیرفعال'}
-📶 وضعیت: ${visitorInfo.onlineStatus}
-
-⚠️ خطا در دریافت اطلاعات موقعیت - از VPN استفاده شده است
-    `.trim();
-}
-
-// تابع برای تشخیص نام مرورگر
-function getBrowserName(userAgent) {
-    const ua = userAgent;
-    if (ua.includes('Chrome') && !ua.includes('Edg')) return 'Google Chrome';
-    if (ua.includes('Firefox')) return 'Mozilla Firefox';
-    if (ua.includes('Safari') && !ua.includes('Chrome')) return 'Safari';
-    if (ua.includes('Edg')) return 'Microsoft Edge';
-    if (ua.includes('Opera') || ua.includes('OPR')) return 'Opera';
-    if (ua.includes('Brave')) return 'Brave';
-    return 'مرورگر ناشناخته';
-}
-
-// تابع برای تشخیص سیستم عامل
-function getOSName(userAgent) {
-    const ua = userAgent;
-    if (ua.includes('Windows NT 10.0')) return 'Windows 10/11';
-    if (ua.includes('Windows NT 6.3')) return 'Windows 8.1';
-    if (ua.includes('Windows NT 6.2')) return 'Windows 8';
-    if (ua.includes('Windows NT 6.1')) return 'Windows 7';
-    if (ua.includes('Windows NT 6.0')) return 'Windows Vista';
-    if (ua.includes('Windows NT 5.1')) return 'Windows XP';
-    if (ua.includes('Mac')) return 'Mac OS';
-    if (ua.includes('Linux')) return 'Linux';
-    if (ua.includes('Android')) return 'Android';
-    if (ua.includes('iOS') || ua.includes('iPhone')) return 'iOS';
-    return 'سیستم عامل ناشناخته';
-}
-
-// تابع برای ارسال پیام به تلگرام
-async function sendTelegramMessage(message) {
-    const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-    
+// تابع ارسال به تلگرام
+async function sendToTelegram(message) {
     try {
-        const response = await fetch(url, {
+        const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -4098,46 +4045,196 @@ async function sendTelegramMessage(message) {
                 parse_mode: 'HTML'
             })
         });
-        
-        const data = await response.json();
-        console.log('✅ اطلاعات بازدیدکننده با موفقیت ارسال شد');
-    } catch (error) {
-        console.error('❌ خطا در ارسال اطلاعات:', error);
-    }
-}
 
-// تابع برای ذخیره اطلاعات بازدیدکننده
-function saveVisitorData(visitorInfo) {
-    try {
-        const visitors = JSON.parse(localStorage.getItem('kali_visitors') || '[]');
-        visitors.push({
-            ...visitorInfo,
-            id: Date.now()
-        });
-        
-        // فقط 50 بازدید آخر را نگه دار
-        if (visitors.length > 50) {
-            visitors.splice(0, visitors.length - 50);
+        if (response.ok) {
+            return true;
+        } else {
+            console.error('خطا در پاسخ تلگرام:', response.status);
+            return false;
         }
-        
-        localStorage.setItem('kali_visitors', JSON.stringify(visitors));
     } catch (error) {
-        console.error('خطا در ذخیره اطلاعات:', error);
+        console.error('خطا در ارسال به تلگرام:', error);
+        return false;
     }
 }
 
-// اجرای تابع هنگام لود صفحه
+// توابع کمکی
+function getBrowserName(userAgent) {
+    const ua = userAgent.toLowerCase();
+    if (ua.includes('chrome') && !ua.includes('edg')) return 'Google Chrome';
+    if (ua.includes('firefox')) return 'Mozilla Firefox';
+    if (ua.includes('safari') && !ua.includes('chrome')) return 'Safari';
+    if (ua.includes('edg')) return 'Microsoft Edge';
+    if (ua.includes('opera') || ua.includes('opr')) return 'Opera';
+    return 'مرورگر ناشناخته';
+}
+
+function getOSName(userAgent) {
+    const ua = userAgent.toLowerCase();
+    if (ua.includes('windows')) return 'Windows';
+    if (ua.includes('mac')) return 'Mac OS';
+    if (ua.includes('linux')) return 'Linux';
+    if (ua.includes('android')) return 'Android';
+    if (ua.includes('ios') || ua.includes('iphone')) return 'iOS';
+    return 'سیستم عامل ناشناخته';
+}
+
+function getOSVersion(userAgent) {
+    const ua = userAgent;
+    if (ua.includes('Windows NT 10.0')) return '10/11';
+    if (ua.includes('Windows NT 6.3')) return '8.1';
+    if (ua.includes('Windows NT 6.2')) return '8';
+    if (ua.includes('Windows NT 6.1')) return '7';
+    if (ua.includes('Mac OS X')) {
+        const match = ua.match(/Mac OS X ([0-9_]+)/);
+        return match ? match[1].replace(/_/g, '.') : '';
+    }
+    return '';
+}
+
+function getDeviceType() {
+    const ua = navigator.userAgent.toLowerCase();
+    if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) return 'تبلت';
+    if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)) return 'موبایل';
+    return 'دسکتاپ';
+}
+
+function getWebGLSupport() {
+    try {
+        const canvas = document.createElement('canvas');
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        return gl ? 'فعال' : 'غیرفعال';
+    } catch (e) {
+        return 'غیرفعال';
+    }
+}
+
+function getConnectionType() {
+    if (navigator.connection) {
+        const conn = navigator.connection;
+        return conn.effectiveType || 'نامشخص';
+    }
+    return 'نامشخص';
+}
+
+// تابع برای افزودن دکمه تست دستی
+function addTestButton() {
+    // اگر قبلاً دکمه اضافه شده، اضافه نکن
+    if (document.getElementById('testTelegramBtn')) return;
+
+    const testBtn = document.createElement('button');
+    testBtn.id = 'testTelegramBtn';
+    testBtn.innerHTML = '🔄 تست ارسال اطلاعات';
+    testBtn.style.position = 'fixed';
+    testBtn.style.bottom = '20px';
+    testBtn.style.left = '20px';
+    testBtn.style.zIndex = '9999';
+    testBtn.style.padding = '12px 20px';
+    testBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+    testBtn.style.color = 'white';
+    testBtn.style.border = 'none';
+    testBtn.style.borderRadius = '25px';
+    testBtn.style.cursor = 'pointer';
+    testBtn.style.fontSize = '14px';
+    testBtn.style.fontWeight = 'bold';
+    testBtn.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.2)';
+    testBtn.style.transition = 'all 0.3s ease';
+    
+    testBtn.onmouseover = function() {
+        this.style.transform = 'translateY(-2px)';
+        this.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.3)';
+    };
+    
+    testBtn.onmouseout = function() {
+        this.style.transform = 'translateY(0)';
+        this.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.2)';
+    };
+    
+    testBtn.onclick = function() {
+        this.innerHTML = '⏳ در حال ارسال...';
+        this.disabled = true;
+        
+        sendVisitorInfo().finally(() => {
+            setTimeout(() => {
+                this.innerHTML = '🔄 تست ارسال اطلاعات';
+                this.disabled = false;
+            }, 3000);
+        });
+    };
+    
+    document.body.appendChild(testBtn);
+}
+
+// تابع برای لاگ کردن وضعیت
+function logStatus() {
+    console.log('🔧 وضعیت سیستم:');
+    console.log('📍 آدرس:', window.location.href);
+    console.log('🌐 آنلاین:', navigator.onLine);
+    console.log('🤖 User Agent:', navigator.userAgent);
+    console.log('📱 صفحه نمایش:', screen.width + 'x' + screen.height);
+    console.log('🆔 Device ID:', getDeviceFingerprint());
+}
+
+// اجرای خودکار هنگام لود صفحه
 document.addEventListener('DOMContentLoaded', function() {
-    // ارسال اطلاعات با تأخیر 3 ثانیه
+    console.log('🚀 اسکریپت گزارش‌دهی فعال شد');
+    
+    // لاگ وضعیت
+    logStatus();
+    
+    // ارسال خودکار اطلاعات بعد از 3 ثانیه
     setTimeout(sendVisitorInfo, 3000);
+    
+    // اضافه کردن دکمه تست بعد از 5 ثانیه
+    setTimeout(addTestButton, 5000);
 });
 
-// همچنین هنگام تغییر صفحه
+// همچنین هنگام تغییر صفحه در SPAها
 window.addEventListener('hashchange', function() {
     setTimeout(sendVisitorInfo, 1000);
 });
 
+// رهگیری کلیک‌ها برای آنالیتیکس پیشرفته
+document.addEventListener('click', function(e) {
+    const target = e.target;
+    const clickInfo = {
+        tag: target.tagName,
+        id: target.id || 'بدون ID',
+        class: target.className || 'بدون کلاس',
+        text: target.textContent?.substring(0, 50) || 'بدون متن',
+        href: target.href || 'بدون لینک',
+        timestamp: new Date().toLocaleString('fa-IR')
+    };
+    
+    // ذخیره در localStorage برای آنالیز
+    try {
+        const clicks = JSON.parse(localStorage.getItem('page_clicks') || '[]');
+        clicks.push(clickInfo);
+        if (clicks.length > 100) clicks.shift(); // فقط 100 کلیک آخر
+        localStorage.setItem('page_clicks', JSON.stringify(clicks));
+    } catch (error) {
+        console.log('خطا در ذخیره کلیک‌ها');
+    }
+});
+
+// گزارش خطاهای صفحه
+window.addEventListener('error', function(e) {
+    const errorInfo = {
+        message: e.message,
+        filename: e.filename,
+        lineno: e.lineno,
+        colno: e.colno,
+        timestamp: new Date().toLocaleString('fa-IR')
+    };
+    
+    console.error('🚨 خطای صفحه:', errorInfo);
+});
+
+// گزارش زمانی که کاربر صفحه را ترک می‌کند
+window.addEventListener('beforeunload', function() {
+    const visitDuration = Math.round((Date.now() - performance.timing.navigationStart) / 1000);
+    console.log(`⏱️ مدت زمان بازدید: ${visitDuration} ثانیه`);
+});
     </script>
 </body>
 </html>
-
