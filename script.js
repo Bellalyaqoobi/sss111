@@ -1,13 +1,19 @@
-// سیستم مدیریت چندین فروشگاه - کد کامل
+ // سیستم مدیریت چندین فروشگاه - نسخه ابری با Supabase
         (function() {
             'use strict';
+            
+            // تنظیمات Supabase - این مقادیر را از پنل Supabase خود دریافت کنید
+            const SUPABASE_CONFIG = {
+                url: 'https://atichswkxinwqewtpvkr.supabase.co',
+                anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0aWNoc3dreGlud3Fld3RwdmtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE1ODA2NjAsImV4cCI6MjA3NzE1NjY2MH0.UmJ7mQt4bmwIpvlrnp7J1TigQ8JqB09w_0OgcIVCtFA'
+            };
             
             // تنظیمات سیستم
             const SYSTEM_CONFIG = {
                 adminPhone: '0796304080',
                 telegramBotToken: '8207227177:AAEp7JifbIQUCWYscaOxokpvdvTxat7EbQ8',
                 telegramChatId: '8106254967',
-                version: '1.0.0'
+                version: '2.0.0'
             };
             
             // مدیریت وضعیت سیستم
@@ -17,47 +23,65 @@
                 users: [],
                 pendingApprovals: [],
                 adminCredentials: { email: 'admin@example.com', password: 'admin123' },
+                supabase: null,
                 
-                init() {
-                    this.loadFromStorage();
-                    this.setupEventListeners();
-                    this.showAppropriatePage();
-                },
-                
-                loadFromStorage() {
+                async init() {
                     try {
-                        // استفاده از localStorage برای ماندگاری داده ها
-                        const savedUsers = localStorage.getItem('store_users');
-                        const savedPending = localStorage.getItem('pending_approvals');
-                        const savedCurrent = localStorage.getItem('current_user');
+                        // ایجاد کلاینت Supabase
+                        this.supabase = supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
                         
-                        this.users = savedUsers ? JSON.parse(savedUsers) : [];
-                        this.pendingApprovals = savedPending ? JSON.parse(savedPending) : [];
-                        this.currentUser = savedCurrent ? JSON.parse(savedCurrent) : null;
-                        
-                        // ایجاد کاربر پیشفرض اگر هیچ کاربری وجود ندارد
-                        if (this.users.length === 0 && this.pendingApprovals.length === 0) {
-                            this.createDefaultUser();
+                        // تست اتصال به Supabase
+                        const { data, error } = await this.supabase.from('stores').select('*').limit(1);
+                        if (error) {
+                            console.warn('اتصال به Supabase ناموفق، استفاده از localStorage');
+                            this.loadFromLocalStorage();
+                        } else {
+                            await this.loadFromCloud();
                         }
+                        
+                        this.setupEventListeners();
+                        this.showAppropriatePage();
                     } catch (error) {
-                        console.error('خطا در بارگذاری داده ها:', error);
-                        this.users = [];
-                        this.pendingApprovals = [];
-                        this.createDefaultUser();
+                        console.error('خطا در مقداردهی اولیه سیستم:', error);
+                        this.loadFromLocalStorage();
+                        this.setupEventListeners();
+                        this.showAppropriatePage();
                     }
                 },
                 
-                createDefaultUser() {
+                async loadFromCloud() {
+                    try {
+                        // بارگذاری کاربران از Supabase
+                        const { data: users, error } = await this.supabase
+                            .from('stores')
+                            .select('*');
+                        
+                        if (error) throw error;
+                        
+                        // تفکیک کاربران تأیید شده و در انتظار تأیید
+                        this.users = users.filter(user => user.approved) || [];
+                        this.pendingApprovals = users.filter(user => !user.approved) || [];
+                        
+                        // ایجاد کاربر پیشفرض اگر هیچ کاربری وجود ندارد
+                        if (this.users.length === 0 && this.pendingApprovals.length === 0) {
+                            await this.createDefaultUser();
+                        }
+                    } catch (error) {
+                        console.error('خطا در بارگذاری داده ها از ابر:', error);
+                        // استفاده از دادههای محلی به عنوان پشتیبان
+                        this.loadFromLocalStorage();
+                    }
+                },
+                
+                async createDefaultUser() {
                     const defaultUser = {
-                        id: 1,
-                        storeName: "فروشگاه نمونه",
-                        ownerName: "مدیر نمونه",
+                        store_name: "فروشگاه نمونه",
+                        owner_name: "مدیر نمونه",
                         email: "store@example.com",
                         password: "123456",
                         approved: true,
-                        telegramBotToken: "",
-                        telegramChatId: "",
-                        createdAt: new Date().toISOString(),
+                        telegram_bot_token: "",
+                        telegram_chat_id: "",
                         products: [
                             { id: 1, name: "گوشی موبایل سامسونگ", category: "1", price: 8500000, parent: null, description: "گوشی موبایل سری سامسونگ", isSold: false },
                             { id: 2, name: "مدل Galaxy S21", category: "1", price: 10200000, parent: 1, description: "گوشی پرچمدار سری گلکسی", isSold: false },
@@ -67,25 +91,80 @@
                             { id: 1, name: "الکترونیک", parent: null, productCount: 3 },
                             { id: 2, name: "موبایل و تبلت", parent: 1, productCount: 3 }
                         ],
-                        soldItems: []
+                        sold_items: []
                     };
                     
-                    this.users.push(defaultUser);
-                    this.saveToStorage();
+                    const { data, error } = await this.supabase
+                        .from('stores')
+                        .insert([defaultUser])
+                        .select();
+                    
+                    if (!error && data && data.length > 0) {
+                        this.users.push(data[0]);
+                    } else {
+                        // اگر Supabase در دسترس نیست، از localStorage استفاده کن
+                        this.users.push(defaultUser);
+                        this.saveToLocalStorage();
+                    }
                 },
                 
-                saveToStorage() {
+                loadFromLocalStorage() {
+                    try {
+                        const savedUsers = localStorage.getItem('store_users');
+                        const savedPending = localStorage.getItem('pending_approvals');
+                        const savedCurrent = localStorage.getItem('current_user');
+                        
+                        this.users = savedUsers ? JSON.parse(savedUsers) : [];
+                        this.pendingApprovals = savedPending ? JSON.parse(savedPending) : [];
+                        this.currentUser = savedCurrent ? JSON.parse(savedCurrent) : null;
+                    } catch (error) {
+                        console.error('خطا در بارگذاری از localStorage:', error);
+                        this.users = [];
+                        this.pendingApprovals = [];
+                    }
+                },
+                
+                async saveToCloud() {
+                    if (!this.currentUser) return;
+                    
+                    try {
+                        // اگر کاربر جدید است و ID ندارد
+                        if (!this.currentUser.id) {
+                            const { data, error } = await this.supabase
+                                .from('stores')
+                                .insert([this.currentUser])
+                                .select();
+                            
+                            if (error) throw error;
+                            
+                            if (data && data.length > 0) {
+                                this.currentUser.id = data[0].id;
+                            }
+                        } else {
+                            // به‌روزرسانی کاربر موجود
+                            const { error } = await this.supabase
+                                .from('stores')
+                                .update(this.currentUser)
+                                .eq('id', this.currentUser.id);
+                            
+                            if (error) throw error;
+                        }
+                    } catch (error) {
+                        console.error('خطا در ذخیره داده ها در ابر:', error);
+                        // ذخیره در localStorage به عنوان پشتیبان
+                        this.saveToLocalStorage();
+                    }
+                },
+                
+                saveToLocalStorage() {
                     try {
                         localStorage.setItem('store_users', JSON.stringify(this.users));
                         localStorage.setItem('pending_approvals', JSON.stringify(this.pendingApprovals));
                         if (this.currentUser) {
                             localStorage.setItem('current_user', JSON.stringify(this.currentUser));
-                        } else {
-                            localStorage.removeItem('current_user');
                         }
                     } catch (error) {
-                        console.error('خطا در ذخیره داده ها:', error);
-                        this.showNotification('خطا در ذخیره داده ها', 'error');
+                        console.error('خطا در ذخیره در localStorage:', error);
                     }
                 },
                 
@@ -176,37 +255,40 @@
                     const registerPage = document.getElementById('registerPage');
                     const userDashboard = document.getElementById('userDashboard');
                     const adminDashboard = document.getElementById('adminDashboard');
+                    const userInfo = document.getElementById('userInfo');
                     
                     // مخفی کردن تمام صفحات
-                    loginPage.style.display = 'none';
-                    registerPage.style.display = 'none';
-                    userDashboard.style.display = 'none';
-                    adminDashboard.style.display = 'none';
+                    loginPage.classList.add('hidden');
+                    registerPage.classList.add('hidden');
+                    userDashboard.classList.add('hidden');
+                    adminDashboard.classList.add('hidden');
+                    userInfo.style.display = 'none';
                     
                     if (this.currentUser) {
+                        userInfo.style.display = 'flex';
                         if (this.isAdmin) {
-                            adminDashboard.style.display = 'block';
+                            adminDashboard.classList.remove('hidden');
                             this.renderAdminDashboard();
                         } else {
-                            userDashboard.style.display = 'block';
+                            userDashboard.classList.remove('hidden');
                             this.renderUserDashboard();
                         }
                     } else {
-                        loginPage.style.display = 'flex';
+                        loginPage.classList.remove('hidden');
                     }
                 },
                 
                 showLoginPage() {
-                    document.getElementById('loginPage').style.display = 'flex';
-                    document.getElementById('registerPage').style.display = 'none';
+                    document.getElementById('loginPage').classList.remove('hidden');
+                    document.getElementById('registerPage').classList.add('hidden');
                 },
                 
                 showRegisterPage() {
-                    document.getElementById('loginPage').style.display = 'none';
-                    document.getElementById('registerPage').style.display = 'flex';
+                    document.getElementById('loginPage').classList.add('hidden');
+                    document.getElementById('registerPage').classList.remove('hidden');
                 },
                 
-                handleUserLogin(e) {
+                async handleUserLogin(e) {
                     e.preventDefault();
                     const email = document.getElementById('userEmail').value;
                     const password = document.getElementById('userPassword').value;
@@ -220,7 +302,7 @@
                         if (user) {
                             this.currentUser = user;
                             this.isAdmin = false;
-                            this.saveToStorage();
+                            await this.saveToCloud();
                             this.showAppropriatePage();
                             this.showNotification('حساب شما در انتظار تأیید مدیر است', 'warning');
                             return;
@@ -230,7 +312,7 @@
                     if (user) {
                         this.currentUser = user;
                         this.isAdmin = false;
-                        this.saveToStorage();
+                        await this.saveToCloud();
                         this.showAppropriatePage();
                         this.showNotification('ورود موفقیتآمیز', 'success');
                     } else {
@@ -238,15 +320,15 @@
                     }
                 },
                 
-                handleAdminLogin(e) {
+                async handleAdminLogin(e) {
                     e.preventDefault();
                     const email = document.getElementById('adminEmail').value;
                     const password = document.getElementById('adminPassword').value;
                     
                     if (email === this.adminCredentials.email && password === this.adminCredentials.password) {
-                        this.currentUser = { storeName: 'مدیر سیستم', ownerName: 'مدیر', email: email };
+                        this.currentUser = { store_name: 'مدیر سیستم', owner_name: 'مدیر', email: email };
                         this.isAdmin = true;
-                        this.saveToStorage();
+                        await this.saveToCloud();
                         this.showAppropriatePage();
                         this.showNotification('ورود مدیر موفقیتآمیز', 'success');
                     } else {
@@ -254,7 +336,7 @@
                     }
                 },
                 
-                handleRegister(e) {
+                async handleRegister(e) {
                     e.preventDefault();
                     const storeName = document.getElementById('storeName').value;
                     const ownerName = document.getElementById('ownerName').value;
@@ -276,38 +358,53 @@
                     
                     // ایجاد کاربر جدید
                     const newUser = {
-                        id: Date.now(),
-                        storeName,
-                        ownerName,
-                        email,
-                        password,
+                        store_name: storeName,
+                        owner_name: ownerName,
+                        email: email,
+                        password: password,
                         approved: false,
-                        telegramBotToken: "",
-                        telegramChatId: "",
-                        createdAt: new Date().toISOString(),
+                        telegram_bot_token: "",
+                        telegram_chat_id: "",
                         products: [],
                         categories: [],
-                        soldItems: []
+                        sold_items: []
                     };
                     
-                    this.pendingApprovals.push(newUser);
-                    this.saveToStorage();
-                    
-                    this.showNotification('ثبت نام موفقیتآمیز. منتظر تأیید مدیر باشید', 'success');
-                    this.showLoginPage();
-                    
-                    // ارسال پیام به مدیر
-                    this.sendToAdminTelegram(
-                        `🏪 درخواست ثبت نام جدید\n\n` +
-                        `فروشگاه: ${storeName}\n` +
-                        `صاحب: ${ownerName}\n` +
-                        `ایمیل: ${email}\n` +
-                        `تاریخ: ${new Date().toLocaleDateString('fa-IR')}\n\n` +
-                        `لطفا به پنل مدیریت مراجعه کنید.`
-                    );
+                    try {
+                        const { data, error } = await this.supabase
+                            .from('stores')
+                            .insert([newUser])
+                            .select();
+                        
+                        if (error) throw error;
+                        
+                        if (data && data.length > 0) {
+                            this.pendingApprovals.push(data[0]);
+                            this.showNotification('ثبت نام موفقیتآمیز. منتظر تأیید مدیر باشید', 'success');
+                            this.showLoginPage();
+                            
+                            // ارسال پیام به مدیر
+                            this.sendToAdminTelegram(
+                                `🏪 درخواست ثبت نام جدید\n\n` +
+                                `فروشگاه: ${storeName}\n` +
+                                `صاحب: ${ownerName}\n` +
+                                `ایمیل: ${email}\n` +
+                                `تاریخ: ${new Date().toLocaleDateString('fa-IR')}\n\n` +
+                                `لطفا به پنل مدیریت مراجعه کنید.`
+                            );
+                        }
+                    } catch (error) {
+                        console.error('خطا در ثبت نام:', error);
+                        // ذخیره محلی در صورت خطا
+                        newUser.id = Date.now();
+                        this.pendingApprovals.push(newUser);
+                        this.saveToLocalStorage();
+                        this.showNotification('ثبت نام موفقیتآمیز. منتظر تأیید مدیر باشید', 'success');
+                        this.showLoginPage();
+                    }
                 },
                 
-                handleCreateStore(e) {
+                async handleCreateStore(e) {
                     e.preventDefault();
                     const storeName = document.getElementById('newStoreName').value;
                     const ownerName = document.getElementById('newOwnerName').value;
@@ -322,41 +419,59 @@
                     
                     // ایجاد کاربر جدید
                     const newUser = {
-                        id: Date.now(),
-                        storeName,
-                        ownerName,
-                        email,
-                        password,
+                        store_name: storeName,
+                        owner_name: ownerName,
+                        email: email,
+                        password: password,
                         approved: true,
-                        telegramBotToken: "",
-                        telegramChatId: "",
-                        createdAt: new Date().toISOString(),
+                        telegram_bot_token: "",
+                        telegram_chat_id: "",
                         products: [],
                         categories: [],
-                        soldItems: []
+                        sold_items: []
                     };
                     
-                    this.users.push(newUser);
-                    this.saveToStorage();
-                    this.closeAllModals();
-                    this.renderAdminDashboard();
-                    
-                    this.showNotification(`حساب فروشگاه ${storeName} با موفقیت ایجاد شد`, 'success');
-                    
-                    // ارسال پیام به مدیر
-                    this.sendToAdminTelegram(
-                        `✅ حساب جدید ایجاد شد\n\n` +
-                        `فروشگاه: ${storeName}\n` +
-                        `صاحب: ${ownerName}\n` +
-                        `ایمیل: ${email}\n` +
-                        `تاریخ: ${new Date().toLocaleDateString('fa-IR')}`
-                    );
+                    try {
+                        const { data, error } = await this.supabase
+                            .from('stores')
+                            .insert([newUser])
+                            .select();
+                        
+                        if (error) throw error;
+                        
+                        if (data && data.length > 0) {
+                            this.users.push(data[0]);
+                            await this.saveToCloud();
+                            this.closeAllModals();
+                            this.renderAdminDashboard();
+                            
+                            this.showNotification(`حساب فروشگاه ${storeName} با موفقیت ایجاد شد`, 'success');
+                            
+                            // ارسال پیام به مدیر
+                            this.sendToAdminTelegram(
+                                `✅ حساب جدید ایجاد شد\n\n` +
+                                `فروشگاه: ${storeName}\n` +
+                                `صاحب: ${ownerName}\n` +
+                                `ایمیل: ${email}\n` +
+                                `تاریخ: ${new Date().toLocaleDateString('fa-IR')}`
+                            );
+                        }
+                    } catch (error) {
+                        console.error('خطا در ایجاد فروشگاه:', error);
+                        // ذخیره محلی در صورت خطا
+                        newUser.id = Date.now();
+                        this.users.push(newUser);
+                        this.saveToLocalStorage();
+                        this.closeAllModals();
+                        this.renderAdminDashboard();
+                        this.showNotification(`حساب فروشگاه ${storeName} با موفقیت ایجاد شد`, 'success');
+                    }
                 },
                 
-                logout() {
+                async logout() {
                     this.currentUser = null;
                     this.isAdmin = false;
-                    this.saveToStorage();
+                    await this.saveToCloud();
                     this.showAppropriatePage();
                     this.showNotification('خروج موفقیتآمیز', 'info');
                 },
@@ -365,8 +480,9 @@
                     if (!this.currentUser) return;
                     
                     // بهروزرسانی اطلاعات کاربر
-                    document.getElementById('userName').textContent = this.currentUser.storeName;
-                    document.getElementById('userAvatar').textContent = this.currentUser.storeName.charAt(0);
+                    document.getElementById('userStoreName').textContent = this.currentUser.store_name;
+                    document.getElementById('userName').textContent = this.currentUser.store_name;
+                    document.getElementById('userAvatar').textContent = this.currentUser.store_name.charAt(0);
                     
                     // نمایش وضعیت تأیید کاربر
                     const userStatusElement = document.getElementById('userStatus');
@@ -391,8 +507,8 @@
                         
                         // بارگذاری تنظیمات تلگرام کاربر
                         if (document.getElementById('userTelegramToken')) {
-                            document.getElementById('userTelegramToken').value = this.currentUser.telegramBotToken || '';
-                            document.getElementById('userTelegramChatId').value = this.currentUser.telegramChatId || '';
+                            document.getElementById('userTelegramToken').value = this.currentUser.telegram_bot_token || '';
+                            document.getElementById('userTelegramChatId').value = this.currentUser.telegram_chat_id || '';
                         }
                     } else {
                         userStatusElement.innerHTML = '<span class="user-status status-pending">در انتظار تأیید</span>';
@@ -404,15 +520,18 @@
                 updateUserStats() {
                     if (!this.currentUser) return;
                     
-                    document.getElementById('totalProducts').textContent = this.currentUser.products.length;
-                    document.getElementById('totalCategories').textContent = this.currentUser.categories.length;
-                    document.getElementById('totalParents').textContent = this.currentUser.products.filter(p => p.parent === null).length;
+                    document.getElementById('totalProducts').textContent = this.currentUser.products ? this.currentUser.products.length : 0;
+                    document.getElementById('totalCategories').textContent = this.currentUser.categories ? this.currentUser.categories.length : 0;
+                    
+                    // تعداد محصولات اصلی
+                    const parentProducts = this.currentUser.products ? this.currentUser.products.filter(p => p.parent === null) : [];
+                    document.getElementById('totalParents').textContent = parentProducts.length;
                     
                     // تعداد فروش امروز
                     const today = new Date().toDateString();
-                    const todaySales = this.currentUser.soldItems.filter(item => 
+                    const todaySales = this.currentUser.sold_items ? this.currentUser.sold_items.filter(item => 
                         new Date(item.soldAt).toDateString() === today
-                    ).length;
+                    ).length : 0;
                     document.getElementById('totalSold').textContent = todaySales;
                 },
                 
@@ -420,7 +539,21 @@
                     if (!this.currentUser) return;
                     
                     const tbody = document.getElementById('productsTableBody');
+                    if (!tbody) return;
+                    
                     tbody.innerHTML = '';
+                    
+                    // بررسی وجود محصولات
+                    if (!this.currentUser.products || this.currentUser.products.length === 0) {
+                        tbody.innerHTML = `
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: var(--secondary);">
+                                    هیچ محصولی ثبت نشده است
+                                </td>
+                            </tr>
+                        `;
+                        return;
+                    }
                     
                     const parentProducts = this.currentUser.products.filter(p => p.parent === null);
                     
@@ -468,7 +601,7 @@
                         button.addEventListener('click', function() {
                             const parentId = this.getAttribute('data-id');
                             const childRows = document.querySelectorAll(`tr[data-parent="${parentId}"]`);
-                            const isHidden = childRows[0].classList.contains('hidden');
+                            const isHidden = childRows.length > 0 && childRows[0].classList.contains('hidden');
                             
                             childRows.forEach(row => {
                                 if (isHidden) {
@@ -481,24 +614,27 @@
                             this.textContent = isHidden ? '-' : '+';
                         });
                     });
-                    
-                    // اگر محصولی وجود ندارد
-                    if (parentProducts.length === 0) {
-                        tbody.innerHTML = `
-                            <tr>
-                                <td colspan="6" style="text-align: center; color: var(--secondary);">
-                                    هیچ محصولی ثبت نشده است
-                                </td>
-                            </tr>
-                        `;
-                    }
                 },
                 
                 renderUserCategories() {
                     if (!this.currentUser) return;
                     
                     const tbody = document.getElementById('categoriesTableBody');
+                    if (!tbody) return;
+                    
                     tbody.innerHTML = '';
+                    
+                    // بررسی وجود دسته‌بندی‌ها
+                    if (!this.currentUser.categories || this.currentUser.categories.length === 0) {
+                        tbody.innerHTML = `
+                            <tr>
+                                <td colspan="4" style="text-align: center; color: var(--secondary);">
+                                    هیچ دسته بندی ثبت نشده است
+                                </td>
+                            </tr>
+                        `;
+                        return;
+                    }
                     
                     const parentCategories = this.currentUser.categories.filter(c => c.parent === null);
                     
@@ -511,7 +647,7 @@
                                 ${category.name}
                             </td>
                             <td>-</td>
-                            <td>${category.productCount}</td>
+                            <td>${category.productCount || 0}</td>
                             <td class="actions">
                                 <button class="btn-success" onclick="SystemState.editCategory(${category.id})">ویرایش</button>
                                 <button class="btn-danger" onclick="SystemState.deleteUserCategory(${category.id})">حذف</button>
@@ -527,7 +663,7 @@
                             childRow.innerHTML = `
                                 <td>→ ${child.name}</td>
                                 <td>${category.name}</td>
-                                <td>${child.productCount}</td>
+                                <td>${child.productCount || 0}</td>
                                 <td class="actions">
                                     <button class="btn-success" onclick="SystemState.editCategory(${child.id})">ویرایش</button>
                                     <button class="btn-danger" onclick="SystemState.deleteUserCategory(${child.id})">حذف</button>
@@ -542,7 +678,7 @@
                         button.addEventListener('click', function() {
                             const parentId = this.getAttribute('data-id');
                             const childRows = document.querySelectorAll(`tr[data-parent="${parentId}"]`);
-                            const isHidden = childRows[0].classList.contains('hidden');
+                            const isHidden = childRows.length > 0 && childRows[0].classList.contains('hidden');
                             
                             childRows.forEach(row => {
                                 if (isHidden) {
@@ -555,30 +691,21 @@
                             this.textContent = isHidden ? '-' : '+';
                         });
                     });
-                    
-                    // اگر دسته بندی وجود ندارد
-                    if (parentCategories.length === 0) {
-                        tbody.innerHTML = `
-                            <tr>
-                                <td colspan="4" style="text-align: center; color: var(--secondary);">
-                                    هیچ دسته بندی ثبت نشده است
-                                </td>
-                            </tr>
-                        `;
-                    }
                 },
                 
                 renderUserSoldItems() {
                     if (!this.currentUser) return;
                     
                     const soldItemsList = document.getElementById('soldItemsList');
+                    if (!soldItemsList) return;
+                    
                     soldItemsList.innerHTML = '';
                     
                     // نمایش فقط فروشهای امروز
                     const today = new Date().toDateString();
-                    const todaySales = this.currentUser.soldItems.filter(item => 
+                    const todaySales = this.currentUser.sold_items ? this.currentUser.sold_items.filter(item => 
                         new Date(item.soldAt).toDateString() === today
-                    );
+                    ) : [];
                     
                     if (todaySales.length === 0) {
                         soldItemsList.innerHTML = '<p style="text-align: center; color: var(--secondary);">هیچ فروشی برای امروز ثبت نشده است</p>';
@@ -606,7 +733,7 @@
                 },
                 
                 populateUserCategoryDropdowns() {
-                    if (!this.currentUser) return;
+                    if (!this.currentUser || !this.currentUser.categories) return;
                     
                     const categorySelects = [
                         document.getElementById('productCategory'),
@@ -639,7 +766,7 @@
                 },
                 
                 populateUserParentDropdowns() {
-                    if (!this.currentUser) return;
+                    if (!this.currentUser || !this.currentUser.products) return;
                     
                     const parentSelects = [
                         document.getElementById('productParent'),
@@ -674,9 +801,11 @@
                     if (!this.currentUser) return;
                     
                     const checklist = document.getElementById('productsChecklist');
+                    if (!checklist) return;
+                    
                     checklist.innerHTML = '';
                     
-                    const availableProducts = this.currentUser.products.filter(p => !p.isSold);
+                    const availableProducts = this.currentUser.products ? this.currentUser.products.filter(p => !p.isSold) : [];
                     
                     if (availableProducts.length === 0) {
                         checklist.innerHTML = '<p style="text-align: center; color: var(--secondary);">هیچ محصولی برای فروش موجود نیست</p>';
@@ -698,12 +827,12 @@
                 },
                 
                 getUserCategoryName(categoryId) {
-                    if (!this.currentUser) return 'نامشخص';
+                    if (!this.currentUser || !this.currentUser.categories) return 'نامشخص';
                     const category = this.currentUser.categories.find(c => c.id == categoryId);
                     return category ? category.name : 'نامشخص';
                 },
                 
-                handleAddProduct(e) {
+                async handleAddProduct(e) {
                     e.preventDefault();
                     if (!this.currentUser) return;
                     
@@ -712,6 +841,11 @@
                     const price = parseInt(document.getElementById('productPrice').value);
                     const parent = document.getElementById('productParent').value || null;
                     const description = document.getElementById('productDescription').value;
+                    
+                    if (!name || !category || !price) {
+                        this.showNotification('لطفا تمام فیلدهای ضروری را پر کنید', 'error');
+                        return;
+                    }
                     
                     const newProduct = {
                         id: Date.now(),
@@ -723,36 +857,49 @@
                         isSold: false
                     };
                     
+                    if (!this.currentUser.products) {
+                        this.currentUser.products = [];
+                    }
                     this.currentUser.products.push(newProduct);
                     
                     // بهروزرسانی تعداد محصولات در دسته بندی
-                    const categoryObj = this.currentUser.categories.find(c => c.id == category);
-                    if (categoryObj) {
-                        categoryObj.productCount++;
+                    if (this.currentUser.categories) {
+                        const categoryObj = this.currentUser.categories.find(c => c.id == category);
+                        if (categoryObj) {
+                            categoryObj.productCount = (categoryObj.productCount || 0) + 1;
+                        }
                     }
                     
-                    this.saveToStorage();
-                    this.renderUserDashboard();
-                    document.getElementById('productForm').reset();
-                    
-                    this.showNotification('محصول با موفقیت اضافه شد', 'success');
-                    
-                    // ارسال پیام به تلگرام
-                    this.sendToUserTelegram(
-                        `➕ محصول جدید اضافه شد\n\n` +
-                        `نام: ${name}\n` +
-                        `قیمت: ${price.toLocaleString('fa-IR')} افغانی\n` +
-                        `دسته بندی: ${this.getUserCategoryName(category)}\n` +
-                        `تاریخ: ${new Date().toLocaleDateString('fa-IR')}`
-                    );
+                    try {
+                        await this.saveToCloud();
+                        this.renderUserDashboard();
+                        document.getElementById('productForm').reset();
+                        this.showNotification('محصول با موفقیت اضافه شد', 'success');
+                        
+                        // ارسال پیام به تلگرام
+                        this.sendToUserTelegram(
+                            `➕ محصول جدید اضافه شد\n\n` +
+                            `نام: ${name}\n` +
+                            `قیمت: ${price.toLocaleString('fa-IR')} افغانی\n` +
+                            `دسته بندی: ${this.getUserCategoryName(category)}\n` +
+                            `تاریخ: ${new Date().toLocaleDateString('fa-IR')}`
+                        );
+                    } catch (error) {
+                        this.showNotification('خطا در ذخیره محصول', 'error');
+                    }
                 },
                 
-                handleAddCategory(e) {
+                async handleAddCategory(e) {
                     e.preventDefault();
                     if (!this.currentUser) return;
                     
                     const name = document.getElementById('categoryName').value;
                     const parent = document.getElementById('categoryParent').value || null;
+                    
+                    if (!name) {
+                        this.showNotification('لطفا نام دسته بندی را وارد کنید', 'error');
+                        return;
+                    }
                     
                     const newCategory = {
                         id: Date.now(),
@@ -761,23 +908,30 @@
                         productCount: 0
                     };
                     
+                    if (!this.currentUser.categories) {
+                        this.currentUser.categories = [];
+                    }
                     this.currentUser.categories.push(newCategory);
-                    this.saveToStorage();
-                    this.renderUserDashboard();
-                    document.getElementById('categoryForm').reset();
                     
-                    this.showNotification('دسته بندی با موفقیت اضافه شد', 'success');
-                    
-                    // ارسال پیام به تلگرام
-                    this.sendToUserTelegram(
-                        `📁 دسته بندی جدید اضافه شد\n\n` +
-                        `نام: ${name}\n` +
-                        `تاریخ: ${new Date().toLocaleDateString('fa-IR')}`
-                    );
+                    try {
+                        await this.saveToCloud();
+                        this.renderUserDashboard();
+                        document.getElementById('categoryForm').reset();
+                        this.showNotification('دسته بندی با موفقیت اضافه شد', 'success');
+                        
+                        // ارسال پیام به تلگرام
+                        this.sendToUserTelegram(
+                            `📁 دسته بندی جدید اضافه شد\n\n` +
+                            `نام: ${name}\n` +
+                            `تاریخ: ${new Date().toLocaleDateString('fa-IR')}`
+                        );
+                    } catch (error) {
+                        this.showNotification('خطا در ذخیره دسته بندی', 'error');
+                    }
                 },
                 
                 openEditProductModal(productId) {
-                    if (!this.currentUser) return;
+                    if (!this.currentUser || !this.currentUser.products) return;
                     
                     const product = this.currentUser.products.find(p => p.id === productId);
                     if (!product) return;
@@ -796,9 +950,9 @@
                     document.getElementById('editProductModal').style.display = 'flex';
                 },
                 
-                handleEditProduct(e) {
+                async handleEditProduct(e) {
                     e.preventDefault();
-                    if (!this.currentUser) return;
+                    if (!this.currentUser || !this.currentUser.products) return;
                     
                     const productId = parseInt(document.getElementById('editProductId').value);
                     const name = document.getElementById('editProductName').value;
@@ -806,6 +960,11 @@
                     const price = parseInt(document.getElementById('editProductPrice').value);
                     const parent = document.getElementById('editProductParent').value || null;
                     const description = document.getElementById('editProductDescription').value;
+                    
+                    if (!name || !category || !price) {
+                        this.showNotification('لطفا تمام فیلدهای ضروری را پر کنید', 'error');
+                        return;
+                    }
                     
                     const productIndex = this.currentUser.products.findIndex(p => p.id === productId);
                     if (productIndex === -1) return;
@@ -827,33 +986,36 @@
                     if (oldCategory !== category) {
                         const oldCategoryObj = this.currentUser.categories.find(c => c.id == oldCategory);
                         if (oldCategoryObj) {
-                            oldCategoryObj.productCount--;
+                            oldCategoryObj.productCount = Math.max(0, (oldCategoryObj.productCount || 0) - 1);
                         }
                         
                         const newCategoryObj = this.currentUser.categories.find(c => c.id == category);
                         if (newCategoryObj) {
-                            newCategoryObj.productCount++;
+                            newCategoryObj.productCount = (newCategoryObj.productCount || 0) + 1;
                         }
                     }
                     
-                    this.saveToStorage();
-                    this.renderUserDashboard();
-                    this.closeAllModals();
-                    
-                    this.showNotification('محصول با موفقیت ویرایش شد', 'success');
-                    
-                    // ارسال پیام به تلگرام
-                    this.sendToUserTelegram(
-                        `✏️ محصول ویرایش شد\n\n` +
-                        `نام: ${name}\n` +
-                        `قیمت جدید: ${price.toLocaleString('fa-IR')} افغانی\n` +
-                        `دسته بندی: ${this.getUserCategoryName(category)}\n` +
-                        `تاریخ: ${new Date().toLocaleDateString('fa-IR')}`
-                    );
+                    try {
+                        await this.saveToCloud();
+                        this.renderUserDashboard();
+                        this.closeAllModals();
+                        this.showNotification('محصول با موفقیت ویرایش شد', 'success');
+                        
+                        // ارسال پیام به تلگرام
+                        this.sendToUserTelegram(
+                            `✏️ محصول ویرایش شد\n\n` +
+                            `نام: ${name}\n` +
+                            `قیمت جدید: ${price.toLocaleString('fa-IR')} افغانی\n` +
+                            `دسته بندی: ${this.getUserCategoryName(category)}\n` +
+                            `تاریخ: ${new Date().toLocaleDateString('fa-IR')}`
+                        );
+                    } catch (error) {
+                        this.showNotification('خطا در ویرایش محصول', 'error');
+                    }
                 },
                 
-                deleteUserProduct(productId) {
-                    if (!this.currentUser) return;
+                async deleteUserProduct(productId) {
+                    if (!this.currentUser || !this.currentUser.products) return;
                     
                     if (!confirm('آیا از حذف این محصول اطمینان دارید؟')) return;
                     
@@ -863,9 +1025,11 @@
                     const product = this.currentUser.products[productIndex];
                     
                     // بهروزرسانی آمار دسته بندی
-                    const categoryObj = this.currentUser.categories.find(c => c.id == product.category);
-                    if (categoryObj) {
-                        categoryObj.productCount--;
+                    if (this.currentUser.categories) {
+                        const categoryObj = this.currentUser.categories.find(c => c.id == product.category);
+                        if (categoryObj) {
+                            categoryObj.productCount = Math.max(0, (categoryObj.productCount || 0) - 1);
+                        }
                     }
                     
                     // حذف محصول
@@ -874,21 +1038,24 @@
                     // حذف محصولات فرزند اگر وجود دارند
                     this.currentUser.products = this.currentUser.products.filter(p => p.parent !== productId);
                     
-                    this.saveToStorage();
-                    this.renderUserDashboard();
-                    
-                    this.showNotification('محصول با موفقیت حذف شد', 'success');
-                    
-                    // ارسال پیام به تلگرام
-                    this.sendToUserTelegram(
-                        `🗑️ محصول حذف شد\n\n` +
-                        `نام: ${product.name}\n` +
-                        `تاریخ: ${new Date().toLocaleDateString('fa-IR')}`
-                    );
+                    try {
+                        await this.saveToCloud();
+                        this.renderUserDashboard();
+                        this.showNotification('محصول با موفقیت حذف شد', 'success');
+                        
+                        // ارسال پیام به تلگرام
+                        this.sendToUserTelegram(
+                            `🗑️ محصول حذف شد\n\n` +
+                            `نام: ${product.name}\n` +
+                            `تاریخ: ${new Date().toLocaleDateString('fa-IR')}`
+                        );
+                    } catch (error) {
+                        this.showNotification('خطا در حذف محصول', 'error');
+                    }
                 },
                 
-                deleteUserCategory(categoryId) {
-                    if (!this.currentUser) return;
+                async deleteUserCategory(categoryId) {
+                    if (!this.currentUser || !this.currentUser.categories) return;
                     
                     if (!confirm('آیا از حذف این دسته بندی اطمینان دارید؟ محصولات مرتبط نیز حذف خواهند شد.')) return;
                     
@@ -904,16 +1071,21 @@
                     this.currentUser.categories = this.currentUser.categories.filter(c => c.parent !== categoryId);
                     
                     // حذف محصولات مرتبط
-                    this.currentUser.products = this.currentUser.products.filter(p => p.category != categoryId);
+                    if (this.currentUser.products) {
+                        this.currentUser.products = this.currentUser.products.filter(p => p.category != categoryId);
+                    }
                     
-                    this.saveToStorage();
-                    this.renderUserDashboard();
-                    
-                    this.showNotification('دسته بندی با موفقیت حذف شد', 'success');
+                    try {
+                        await this.saveToCloud();
+                        this.renderUserDashboard();
+                        this.showNotification('دسته بندی با موفقیت حذف شد', 'success');
+                    } catch (error) {
+                        this.showNotification('خطا در حذف دسته بندی', 'error');
+                    }
                 },
                 
-                markProductsAsSold() {
-                    if (!this.currentUser) return;
+                async markProductsAsSold() {
+                    if (!this.currentUser || !this.currentUser.products) return;
                     
                     const checkboxes = document.querySelectorAll('#productsChecklist input[type="checkbox"]:checked');
                     if (checkboxes.length === 0) {
@@ -933,7 +1105,11 @@
                             product.isSold = true;
                             
                             // اضافه کردن به لیست فروشها
-                            this.currentUser.soldItems.push({
+                            if (!this.currentUser.sold_items) {
+                                this.currentUser.sold_items = [];
+                            }
+                            
+                            this.currentUser.sold_items.push({
                                 productId: product.id,
                                 productName: product.name,
                                 category: product.category,
@@ -946,61 +1122,70 @@
                         }
                     });
                     
-                    this.saveToStorage();
-                    this.renderUserDashboard();
-                    
-                    this.showNotification(
-                        `${soldProducts.length} محصول با موفقیت به عنوان فروخته شده ثبت شد`,
-                        'success'
-                    );
-                    
-                    // ارسال پیام به تلگرام
-                    if (soldProducts.length === 1) {
-                        this.sendToUserTelegram(
-                            `💰 فروش جدید ثبت شد\n\n` +
-                            `محصول: ${soldProducts[0].name}\n` +
-                            `قیمت: ${soldProducts[0].price.toLocaleString('fa-IR')} افغانی\n` +
-                            `دسته بندی: ${this.getUserCategoryName(soldProducts[0].category)}\n` +
-                            `تاریخ: ${new Date().toLocaleDateString('fa-IR')}`
+                    try {
+                        await this.saveToCloud();
+                        this.renderUserDashboard();
+                        
+                        this.showNotification(
+                            `${soldProducts.length} محصول با موفقیت به عنوان فروخته شده ثبت شد`,
+                            'success'
                         );
-                    } else {
-                        this.sendToUserTelegram(
-                            `💰 فروش چندگانه ثبت شد\n\n` +
-                            `تعداد محصولات: ${soldProducts.length}\n` +
-                            `جمع مبلغ: ${totalAmount.toLocaleString('fa-IR')} افغانی\n` +
-                            `تاریخ: ${new Date().toLocaleDateString('fa-IR')}`
-                        );
+                        
+                        // ارسال پیام به تلگرام
+                        if (soldProducts.length === 1) {
+                            this.sendToUserTelegram(
+                                `💰 فروش جدید ثبت شد\n\n` +
+                                `محصول: ${soldProducts[0].name}\n` +
+                                `قیمت: ${soldProducts[0].price.toLocaleString('fa-IR')} افغانی\n` +
+                                `دسته بندی: ${this.getUserCategoryName(soldProducts[0].category)}\n` +
+                                `تاریخ: ${new Date().toLocaleDateString('fa-IR')}`
+                            );
+                        } else {
+                            this.sendToUserTelegram(
+                                `💰 فروش چندگانه ثبت شد\n\n` +
+                                `تعداد محصولات: ${soldProducts.length}\n` +
+                                `جمع مبلغ: ${totalAmount.toLocaleString('fa-IR')} افغانی\n` +
+                                `تاریخ: ${new Date().toLocaleDateString('fa-IR')}`
+                            );
+                        }
+                    } catch (error) {
+                        this.showNotification('خطا در ثبت فروش', 'error');
                     }
                 },
                 
-                returnProduct(soldItemIndex) {
-                    if (!this.currentUser) return;
+                async returnProduct(soldItemIndex) {
+                    if (!this.currentUser || !this.currentUser.sold_items) return;
                     
                     if (!confirm('آیا از بازگرداندن این محصول اطمینان دارید؟')) return;
                     
-                    const soldItem = this.currentUser.soldItems[soldItemIndex];
+                    const soldItem = this.currentUser.sold_items[soldItemIndex];
                     
                     // بازگرداندن وضعیت محصول
-                    const productIndex = this.currentUser.products.findIndex(p => p.id === soldItem.productId);
-                    if (productIndex !== -1) {
-                        this.currentUser.products[productIndex].isSold = false;
+                    if (this.currentUser.products) {
+                        const productIndex = this.currentUser.products.findIndex(p => p.id === soldItem.productId);
+                        if (productIndex !== -1) {
+                            this.currentUser.products[productIndex].isSold = false;
+                        }
                     }
                     
                     // حذف از لیست فروشها
-                    this.currentUser.soldItems.splice(soldItemIndex, 1);
+                    this.currentUser.sold_items.splice(soldItemIndex, 1);
                     
-                    this.saveToStorage();
-                    this.renderUserDashboard();
-                    
-                    this.showNotification('محصول با موفقیت بازگردانده شد', 'success');
-                    
-                    // ارسال پیام به تلگرام
-                    this.sendToUserTelegram(
-                        `↩️ محصول بازگردانده شد\n\n` +
-                        `محصول: ${soldItem.productName}\n` +
-                        `قیمت: ${soldItem.price.toLocaleString('fa-IR')} افغانی\n` +
-                        `تاریخ: ${new Date().toLocaleDateString('fa-IR')}`
-                    );
+                    try {
+                        await this.saveToCloud();
+                        this.renderUserDashboard();
+                        this.showNotification('محصول با موفقیت بازگردانده شد', 'success');
+                        
+                        // ارسال پیام به تلگرام
+                        this.sendToUserTelegram(
+                            `↩️ محصول بازگردانده شد\n\n` +
+                            `محصول: ${soldItem.productName}\n` +
+                            `قیمت: ${soldItem.price.toLocaleString('fa-IR')} افغانی\n` +
+                            `تاریخ: ${new Date().toLocaleDateString('fa-IR')}`
+                        );
+                    } catch (error) {
+                        this.showNotification('خطا در بازگرداندن محصول', 'error');
+                    }
                 },
                 
                 backupData() {
@@ -1018,7 +1203,7 @@
                     const url = URL.createObjectURL(dataBlob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = `backup-${this.currentUser.storeName}-${new Date().toISOString().split('T')[0]}.json`;
+                    a.download = `backup-${this.currentUser.store_name}-${new Date().toISOString().split('T')[0]}.json`;
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
@@ -1031,26 +1216,27 @@
                     document.getElementById('restoreFile').click();
                 },
                 
-                restoreData(e) {
+                async restoreData(e) {
                     if (!this.currentUser) return;
                     
                     const file = e.target.files[0];
                     if (!file) return;
                     
                     const reader = new FileReader();
-                    reader.onload = (event) => {
+                    reader.onload = async (event) => {
                         try {
                             const data = JSON.parse(event.target.result);
                             
                             if (data.user && data.system === 'Store Management System') {
                                 // جایگزینی داده های کاربر
-                                const userIndex = this.users.findIndex(u => u.id === this.currentUser.id);
-                                if (userIndex !== -1) {
-                                    this.users[userIndex] = data.user;
-                                    this.currentUser = data.user;
-                                    this.saveToStorage();
+                                this.currentUser = data.user;
+                                
+                                try {
+                                    await this.saveToCloud();
                                     this.renderUserDashboard();
                                     this.showNotification('دادهها با موفقیت بازیابی شدند', 'success');
+                                } catch (error) {
+                                    this.showNotification('خطا در ذخیره دادههای بازیابی شده', 'error');
                                 }
                             } else {
                                 this.showNotification('فایل پشتیبان معتبر نیست', 'error');
@@ -1066,22 +1252,20 @@
                     e.target.value = '';
                 },
                 
-                clearData() {
+                async clearData() {
                     if (!this.currentUser) return;
                     
                     if (!confirm('آیا از پاک کردن تمام داده های خود اطمینان دارید؟ این عمل غیرقابل برگشت است.')) return;
                     
                     // حفظ اطلاعات پایه کاربر
                     const userBase = {
-                        id: this.currentUser.id,
-                        storeName: this.currentUser.storeName,
-                        ownerName: this.currentUser.ownerName,
+                        store_name: this.currentUser.store_name,
+                        owner_name: this.currentUser.owner_name,
                         email: this.currentUser.email,
                         password: this.currentUser.password,
                         approved: this.currentUser.approved,
-                        telegramBotToken: this.currentUser.telegramBotToken,
-                        telegramChatId: this.currentUser.telegramChatId,
-                        createdAt: this.currentUser.createdAt
+                        telegram_bot_token: this.currentUser.telegram_bot_token,
+                        telegram_chat_id: this.currentUser.telegram_chat_id
                     };
                     
                     // ریست کردن داده ها
@@ -1089,26 +1273,23 @@
                         ...userBase,
                         products: [],
                         categories: [],
-                        soldItems: []
+                        sold_items: []
                     };
                     
-                    // بهروزرسانی در لیست کاربران
-                    const userIndex = this.users.findIndex(u => u.id === this.currentUser.id);
-                    if (userIndex !== -1) {
-                        this.users[userIndex] = this.currentUser;
+                    try {
+                        await this.saveToCloud();
+                        this.renderUserDashboard();
+                        this.showNotification('تمامی داده ها پاک شدند', 'success');
+                        
+                        // ارسال پیام به تلگرام
+                        this.sendToUserTelegram(
+                            `🔄 داده ها بازنشانی شدند\n\n` +
+                            `تمامی محصولات، دسته بندی ها و تاریخچه فروش پاک شدند.\n` +
+                            `تاریخ: ${new Date().toLocaleDateString('fa-IR')}`
+                        );
+                    } catch (error) {
+                        this.showNotification('خطا در پاک کردن دادهها', 'error');
                     }
-                    
-                    this.saveToStorage();
-                    this.renderUserDashboard();
-                    
-                    this.showNotification('تمامی داده ها پاک شدند', 'success');
-                    
-                    // ارسال پیام به تلگرام
-                    this.sendToUserTelegram(
-                        `🔄 داده ها بازنشانی شدند\n\n` +
-                        `تمامی محصولات، دسته بندی ها و تاریخچه فروش پاک شدند.\n` +
-                        `تاریخ: ${new Date().toLocaleDateString('fa-IR')}`
-                    );
                 },
                 
                 printProducts() {
@@ -1118,39 +1299,41 @@
                     printArea.innerHTML = '';
                     
                     let content = `
-                        <div class="print-header">
+                        <div class="print-header" style="text-align: center; margin-bottom: 30px;">
                             <h2>گزارش محصولات</h2>
-                            <p>فروشگاه: ${this.currentUser.storeName}</p>
+                            <p>فروشگاه: ${this.currentUser.store_name}</p>
                             <p>تاریخ: ${new Date().toLocaleDateString('fa-IR')}</p>
                         </div>
-                        <table class="print-table">
+                        <table class="print-table" style="width: 100%; border-collapse: collapse;">
                             <thead>
-                                <tr>
-                                    <th>نام محصول</th>
-                                    <th>دسته بندی</th>
-                                    <th>قیمت (افغانی)</th>
-                                    <th>وضعیت</th>
+                                <tr style="background-color: #f8f9fa;">
+                                    <th style="border: 1px solid #ddd; padding: 12px; text-align: right;">نام محصول</th>
+                                    <th style="border: 1px solid #ddd; padding: 12px; text-align: right;">دسته بندی</th>
+                                    <th style="border: 1px solid #ddd; padding: 12px; text-align: right;">قیمت (افغانی)</th>
+                                    <th style="border: 1px solid #ddd; padding: 12px; text-align: right;">وضعیت</th>
                                 </tr>
                             </thead>
                             <tbody>
                     `;
                     
-                    this.currentUser.products.forEach(product => {
-                        content += `
-                            <tr>
-                                <td>${product.name}</td>
-                                <td>${this.getUserCategoryName(product.category)}</td>
-                                <td>${product.price.toLocaleString('fa-IR')}</td>
-                                <td>${product.isSold ? 'فروخته شده' : 'موجود'}</td>
-                            </tr>
-                        `;
-                    });
+                    if (this.currentUser.products) {
+                        this.currentUser.products.forEach(product => {
+                            content += `
+                                <tr>
+                                    <td style="border: 1px solid #ddd; padding: 12px;">${product.name}</td>
+                                    <td style="border: 1px solid #ddd; padding: 12px;">${this.getUserCategoryName(product.category)}</td>
+                                    <td style="border: 1px solid #ddd; padding: 12px;">${product.price.toLocaleString('fa-IR')}</td>
+                                    <td style="border: 1px solid #ddd; padding: 12px;">${product.isSold ? 'فروخته شده' : 'موجود'}</td>
+                                </tr>
+                            `;
+                        });
+                    }
                     
                     content += `
                             </tbody>
                         </table>
-                        <div class="print-footer">
-                            <p>تعداد کل محصولات: ${this.currentUser.products.length}</p>
+                        <div class="print-footer" style="text-align: center; margin-top: 30px;">
+                            <p>تعداد کل محصولات: ${this.currentUser.products ? this.currentUser.products.length : 0}</p>
                             <p>سیستم مدیریت فروشگاه - نسخه ${SYSTEM_CONFIG.version}</p>
                         </div>
                     `;
@@ -1168,41 +1351,43 @@
                     printArea.innerHTML = '';
                     
                     let content = `
-                        <div class="print-header">
+                        <div class="print-header" style="text-align: center; margin-bottom: 30px;">
                             <h2>گزارش دسته بندی ها</h2>
-                            <p>فروشگاه: ${this.currentUser.storeName}</p>
+                            <p>فروشگاه: ${this.currentUser.store_name}</p>
                             <p>تاریخ: ${new Date().toLocaleDateString('fa-IR')}</p>
                         </div>
-                        <table class="print-table">
+                        <table class="print-table" style="width: 100%; border-collapse: collapse;">
                             <thead>
-                                <tr>
-                                    <th>نام دسته بندی</th>
-                                    <th>دسته بندی والد</th>
-                                    <th>تعداد محصولات</th>
+                                <tr style="background-color: #f8f9fa;">
+                                    <th style="border: 1px solid #ddd; padding: 12px; text-align: right;">نام دسته بندی</th>
+                                    <th style="border: 1px solid #ddd; padding: 12px; text-align: right;">دسته بندی والد</th>
+                                    <th style="border: 1px solid #ddd; padding: 12px; text-align: right;">تعداد محصولات</th>
                                 </tr>
                             </thead>
                             <tbody>
                     `;
                     
-                    this.currentUser.categories.forEach(category => {
-                        const parentName = category.parent ? 
-                            this.currentUser.categories.find(c => c.id === category.parent)?.name || 'نامشخص' : 
-                            '-';
-                            
-                        content += `
-                            <tr>
-                                <td>${category.name}</td>
-                                <td>${parentName}</td>
-                                <td>${category.productCount}</td>
-                            </tr>
-                        `;
-                    });
+                    if (this.currentUser.categories) {
+                        this.currentUser.categories.forEach(category => {
+                            const parentName = category.parent ? 
+                                this.currentUser.categories.find(c => c.id === category.parent)?.name || 'نامشخص' : 
+                                '-';
+                                
+                            content += `
+                                <tr>
+                                    <td style="border: 1px solid #ddd; padding: 12px;">${category.name}</td>
+                                    <td style="border: 1px solid #ddd; padding: 12px;">${parentName}</td>
+                                    <td style="border: 1px solid #ddd; padding: 12px;">${category.productCount}</td>
+                                </tr>
+                            `;
+                        });
+                    }
                     
                     content += `
                             </tbody>
                         </table>
-                        <div class="print-footer">
-                            <p>تعداد کل دسته بندی ها: ${this.currentUser.categories.length}</p>
+                        <div class="print-footer" style="text-align: center; margin-top: 30px;">
+                            <p>تعداد کل دسته بندی ها: ${this.currentUser.categories ? this.currentUser.categories.length : 0}</p>
                             <p>سیستم مدیریت فروشگاه - نسخه ${SYSTEM_CONFIG.version}</p>
                         </div>
                     `;
@@ -1221,26 +1406,26 @@
                     
                     // فقط فروشهای امروز
                     const today = new Date().toDateString();
-                    const todaySales = this.currentUser.soldItems.filter(item => 
+                    const todaySales = this.currentUser.sold_items ? this.currentUser.sold_items.filter(item => 
                         new Date(item.soldAt).toDateString() === today
-                    );
+                    ) : [];
                     
                     let totalSales = 0;
                     todaySales.forEach(item => totalSales += item.price);
                     
                     let content = `
-                        <div class="print-header">
+                        <div class="print-header" style="text-align: center; margin-bottom: 30px;">
                             <h2>گزارش فروش امروز</h2>
-                            <p>فروشگاه: ${this.currentUser.storeName}</p>
+                            <p>فروشگاه: ${this.currentUser.store_name}</p>
                             <p>تاریخ: ${new Date().toLocaleDateString('fa-IR')}</p>
                         </div>
-                        <table class="print-table">
+                        <table class="print-table" style="width: 100%; border-collapse: collapse;">
                             <thead>
-                                <tr>
-                                    <th>نام محصول</th>
-                                    <th>دسته بندی</th>
-                                    <th>قیمت (افغانی)</th>
-                                    <th>زمان فروش</th>
+                                <tr style="background-color: #f8f9fa;">
+                                    <th style="border: 1px solid #ddd; padding: 12px; text-align: right;">نام محصول</th>
+                                    <th style="border: 1px solid #ddd; padding: 12px; text-align: right;">دسته بندی</th>
+                                    <th style="border: 1px solid #ddd; padding: 12px; text-align: right;">قیمت (افغانی)</th>
+                                    <th style="border: 1px solid #ddd; padding: 12px; text-align: right;">زمان فروش</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1249,10 +1434,10 @@
                     todaySales.forEach(item => {
                         content += `
                             <tr>
-                                <td>${item.productName}</td>
-                                <td>${this.getUserCategoryName(item.category)}</td>
-                                <td>${item.price.toLocaleString('fa-IR')}</td>
-                                <td>${new Date(item.soldAt).toLocaleTimeString('fa-IR')}</td>
+                                <td style="border: 1px solid #ddd; padding: 12px;">${item.productName}</td>
+                                <td style="border: 1px solid #ddd; padding: 12px;">${this.getUserCategoryName(item.category)}</td>
+                                <td style="border: 1px solid #ddd; padding: 12px;">${item.price.toLocaleString('fa-IR')}</td>
+                                <td style="border: 1px solid #ddd; padding: 12px;">${new Date(item.soldAt).toLocaleTimeString('fa-IR')}</td>
                             </tr>
                         `;
                     });
@@ -1260,7 +1445,7 @@
                     content += `
                             </tbody>
                         </table>
-                        <div class="print-footer">
+                        <div class="print-footer" style="text-align: center; margin-top: 30px;">
                             <p>تعداد فروش: ${todaySales.length} | جمع کل: ${totalSales.toLocaleString('fa-IR')} افغانی</p>
                             <p>سیستم مدیریت فروشگاه - نسخه ${SYSTEM_CONFIG.version}</p>
                         </div>
@@ -1278,22 +1463,22 @@
                     const printArea = document.getElementById('printArea');
                     printArea.innerHTML = '';
                     
-                    const availableProducts = this.currentUser.products.filter(p => !p.isSold);
+                    const availableProducts = this.currentUser.products ? this.currentUser.products.filter(p => !p.isSold) : [];
                     let totalValue = 0;
                     availableProducts.forEach(product => totalValue += product.price);
                     
                     let content = `
-                        <div class="print-header">
+                        <div class="print-header" style="text-align: center; margin-bottom: 30px;">
                             <h2>گزارش موجودی انبار</h2>
-                            <p>فروشگاه: ${this.currentUser.storeName}</p>
+                            <p>فروشگاه: ${this.currentUser.store_name}</p>
                             <p>تاریخ: ${new Date().toLocaleDateString('fa-IR')}</p>
                         </div>
-                        <table class="print-table">
+                        <table class="print-table" style="width: 100%; border-collapse: collapse;">
                             <thead>
-                                <tr>
-                                    <th>نام محصول</th>
-                                    <th>دسته بندی</th>
-                                    <th>قیمت (افغانی)</th>
+                                <tr style="background-color: #f8f9fa;">
+                                    <th style="border: 1px solid #ddd; padding: 12px; text-align: right;">نام محصول</th>
+                                    <th style="border: 1px solid #ddd; padding: 12px; text-align: right;">دسته بندی</th>
+                                    <th style="border: 1px solid #ddd; padding: 12px; text-align: right;">قیمت (افغانی)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1302,9 +1487,9 @@
                     availableProducts.forEach(product => {
                         content += `
                             <tr>
-                                <td>${product.name}</td>
-                                <td>${this.getUserCategoryName(product.category)}</td>
-                                <td>${product.price.toLocaleString('fa-IR')}</td>
+                                <td style="border: 1px solid #ddd; padding: 12px;">${product.name}</td>
+                                <td style="border: 1px solid #ddd; padding: 12px;">${this.getUserCategoryName(product.category)}</td>
+                                <td style="border: 1px solid #ddd; padding: 12px;">${product.price.toLocaleString('fa-IR')}</td>
                             </tr>
                         `;
                     });
@@ -1312,7 +1497,7 @@
                     content += `
                             </tbody>
                         </table>
-                        <div class="print-footer">
+                        <div class="print-footer" style="text-align: center; margin-top: 30px;">
                             <p>تعداد محصولات موجود: ${availableProducts.length} | ارزش کل: ${totalValue.toLocaleString('fa-IR')} افغانی</p>
                             <p>سیستم مدیریت فروشگاه - نسخه ${SYSTEM_CONFIG.version}</p>
                         </div>
@@ -1324,46 +1509,43 @@
                     printArea.style.display = 'none';
                 },
                 
-                saveTelegramSettings() {
+                async saveTelegramSettings() {
                     if (!this.currentUser) return;
                     
                     const token = document.getElementById('userTelegramToken').value;
                     const chatId = document.getElementById('userTelegramChatId').value;
                     
-                    this.currentUser.telegramBotToken = token;
-                    this.currentUser.telegramChatId = chatId;
+                    this.currentUser.telegram_bot_token = token;
+                    this.currentUser.telegram_chat_id = chatId;
                     
-                    // بهروزرسانی در لیست کاربران
-                    const userIndex = this.users.findIndex(u => u.id === this.currentUser.id);
-                    if (userIndex !== -1) {
-                        this.users[userIndex] = this.currentUser;
-                    }
-                    
-                    this.saveToStorage();
-                    
-                    this.showNotification('تنظیمات تلگرام ذخیره شد', 'success');
-                    
-                    // تست ارسال پیام
-                    if (token && chatId) {
-                        this.sendToUserTelegram('✅ تنظیمات تلگرام با موفقیت ذخیره شد. این پیام تستی است.');
+                    try {
+                        await this.saveToCloud();
+                        this.showNotification('تنظیمات تلگرام ذخیره شد', 'success');
+                        
+                        // تست ارسال پیام
+                        if (token && chatId) {
+                            this.sendToUserTelegram('✅ تنظیمات تلگرام با موفقیت ذخیره شد. این پیام تستی است.');
+                        }
+                    } catch (error) {
+                        this.showNotification('خطا در ذخیره تنظیمات تلگرام', 'error');
                     }
                 },
                 
                 async sendToUserTelegram(message) {
-                    if (!this.currentUser || !this.currentUser.telegramBotToken || !this.currentUser.telegramChatId) {
+                    if (!this.currentUser || !this.currentUser.telegram_bot_token || !this.currentUser.telegram_chat_id) {
                         this.updateTelegramStatus('تنظیمات تلگرام کاربر تعریف نشده است', 'error');
                         return false;
                     }
                     
                     try {
-                        const url = `https://api.telegram.org/bot${this.currentUser.telegramBotToken}/sendMessage`;
+                        const url = `https://api.telegram.org/bot${this.currentUser.telegram_bot_token}/sendMessage`;
                         const response = await fetch(url, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
                             },
                             body: JSON.stringify({
-                                chat_id: this.currentUser.telegramChatId,
+                                chat_id: this.currentUser.telegram_chat_id,
                                 text: message,
                                 parse_mode: 'HTML'
                             })
@@ -1432,6 +1614,54 @@
                     });
                 },
                 
+                switchUserTab(tabName) {
+                    // مخفی کردن تمام تبها
+                    document.querySelectorAll('.user-tab').forEach(tab => {
+                        tab.classList.add('hidden');
+                    });
+                    
+                    // غیرفعال کردن تمام تبها
+                    document.querySelectorAll('#userDashboard .tab').forEach(tab => {
+                        tab.classList.remove('active');
+                    });
+                    
+                    // نمایش تب انتخاب شده
+                    const targetTab = document.getElementById(`user${tabName.charAt(0).toUpperCase() + tabName.slice(1)}Tab`);
+                    if (targetTab) {
+                        targetTab.classList.remove('hidden');
+                    }
+                    
+                    // فعال کردن تب انتخاب شده
+                    const activeTab = document.querySelector(`#userDashboard .tab[onclick="SystemState.switchUserTab('${tabName}')"]`);
+                    if (activeTab) {
+                        activeTab.classList.add('active');
+                    }
+                },
+                
+                switchAdminTab(tabName) {
+                    // مخفی کردن تمام تبها
+                    document.querySelectorAll('.admin-tab').forEach(tab => {
+                        tab.classList.add('hidden');
+                    });
+                    
+                    // غیرفعال کردن تمام تبها
+                    document.querySelectorAll('#adminDashboard .tab').forEach(tab => {
+                        tab.classList.remove('active');
+                    });
+                    
+                    // نمایش تب انتخاب شده
+                    const targetTab = document.getElementById(`admin${tabName.charAt(0).toUpperCase() + tabName.slice(1)}Tab`);
+                    if (targetTab) {
+                        targetTab.classList.remove('hidden');
+                    }
+                    
+                    // فعال کردن تب انتخاب شده
+                    const activeTab = document.querySelector(`#adminDashboard .tab[onclick="SystemState.switchAdminTab('${tabName}')"]`);
+                    if (activeTab) {
+                        activeTab.classList.add('active');
+                    }
+                },
+                
                 // مدیریت پنل ادمین
                 renderAdminDashboard() {
                     this.updateAdminStats();
@@ -1442,18 +1672,23 @@
                 
                 updateAdminStats() {
                     document.getElementById('adminTotalStores').textContent = this.users.length;
-                    document.getElementById('adminTotalProducts').textContent = this.users.reduce((total, user) => total + user.products.length, 0);
-                    document.getElementById('adminTotalSales').textContent = this.users.reduce((total, user) => total + user.soldItems.length, 0);
+                    document.getElementById('adminTotalProducts').textContent = this.users.reduce((total, user) => total + (user.products ? user.products.length : 0), 0);
+                    document.getElementById('adminTotalSales').textContent = this.users.reduce((total, user) => total + (user.sold_items ? user.sold_items.length : 0), 0);
                     
                     // محاسبه فروشگاههای جدید (ایجاد شده در 7 روز گذشته)
                     const oneWeekAgo = new Date();
                     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-                    const newStores = this.users.filter(user => new Date(user.createdAt) > oneWeekAgo).length;
+                    const newStores = this.users.filter(user => {
+                        const createdDate = user.created_at ? new Date(user.created_at) : new Date();
+                        return createdDate > oneWeekAgo;
+                    }).length;
                     document.getElementById('adminNewStores').textContent = newStores;
                 },
                 
                 renderStoresList() {
                     const storesList = document.getElementById('storesList');
+                    if (!storesList) return;
+                    
                     storesList.innerHTML = '';
                     
                     if (this.users.length === 0) {
@@ -1466,16 +1701,16 @@
                         storeItem.className = 'store-item';
                         storeItem.innerHTML = `
                             <div class="store-info">
-                                <div class="store-name">${user.storeName}</div>
-                                <div class="store-email">${user.email} - ${user.ownerName}</div>
+                                <div class="store-name">${user.store_name}</div>
+                                <div class="store-email">${user.email} - ${user.owner_name}</div>
                                 <div class="store-details">
-                                    محصولات: ${user.products.length} | دسته بندی ها: ${user.categories.length} | فروش: ${user.soldItems.length}
+                                    محصولات: ${user.products ? user.products.length : 0} | دسته بندی ها: ${user.categories ? user.categories.length : 0} | فروش: ${user.sold_items ? user.sold_items.length : 0}
                                 </div>
                             </div>
                             <div class="store-actions">
-                                <button class="btn-info" onclick="SystemState.viewStoreDetails(${user.id})">مشاهده</button>
-                                <button class="btn-warning" onclick="SystemState.editStore(${user.id})">ویرایش</button>
-                                <button class="btn-danger" onclick="SystemState.deleteStore(${user.id})">حذف</button>
+                                <button class="btn-info" onclick="SystemState.viewStoreDetails('${user.id}')">مشاهده</button>
+                                <button class="btn-warning" onclick="SystemState.editStore('${user.id}')">ویرایش</button>
+                                <button class="btn-danger" onclick="SystemState.deleteStore('${user.id}')">حذف</button>
                             </div>
                         `;
                         storesList.appendChild(storeItem);
@@ -1484,6 +1719,8 @@
                 
                 renderApprovalList() {
                     const approvalList = document.getElementById('approvalList');
+                    if (!approvalList) return;
+                    
                     approvalList.innerHTML = '';
                     
                     if (this.pendingApprovals.length === 0) {
@@ -1496,15 +1733,15 @@
                         approvalItem.className = 'approval-item';
                         approvalItem.innerHTML = `
                             <div class="approval-info">
-                                <div class="store-name">${user.storeName}</div>
-                                <div class="store-email">${user.email} - ${user.ownerName}</div>
+                                <div class="store-name">${user.store_name}</div>
+                                <div class="store-email">${user.email} - ${user.owner_name}</div>
                                 <div class="store-details">
-                                    تاریخ ثبتنام: ${new Date(user.createdAt).toLocaleDateString('fa-IR')}
+                                    تاریخ ثبتنام: ${user.created_at ? new Date(user.created_at).toLocaleDateString('fa-IR') : 'نامشخص'}
                                 </div>
                             </div>
                             <div class="approval-actions">
-                                <button class="btn-success" onclick="SystemState.approveUser(${index})">تأیید</button>
-                                <button class="btn-danger" onclick="SystemState.rejectUser(${index})">رد</button>
+                                <button class="btn-success" onclick="SystemState.approveUser('${user.id}')">تأیید</button>
+                                <button class="btn-danger" onclick="SystemState.rejectUser('${user.id}')">رد</button>
                             </div>
                         `;
                         approvalList.appendChild(approvalItem);
@@ -1513,18 +1750,20 @@
                 
                 renderUserCredentials() {
                     const userCredentialsTable = document.getElementById('userCredentialsTable');
+                    if (!userCredentialsTable) return;
+                    
                     userCredentialsTable.innerHTML = '';
                     
                     // نمایش کاربران تأیید شده
                     this.users.forEach(user => {
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                            <td>${user.storeName}</td>
-                            <td>${user.ownerName}</td>
+                            <td>${user.store_name}</td>
+                            <td>${user.owner_name}</td>
                             <td>${user.email}</td>
                             <td class="password-cell">${user.password}</td>
                             <td><span class="user-status status-approved">تأیید شده</span></td>
-                            <td>${new Date(user.createdAt).toLocaleDateString('fa-IR')}</td>
+                            <td>${user.created_at ? new Date(user.created_at).toLocaleDateString('fa-IR') : 'نامشخص'}</td>
                         `;
                         userCredentialsTable.appendChild(row);
                     });
@@ -1533,12 +1772,12 @@
                     this.pendingApprovals.forEach(user => {
                         const row = document.createElement('tr');
                         row.innerHTML = `
-                            <td>${user.storeName}</td>
-                            <td>${user.ownerName}</td>
+                            <td>${user.store_name}</td>
+                            <td>${user.owner_name}</td>
                             <td>${user.email}</td>
                             <td class="password-cell">${user.password}</td>
                             <td><span class="user-status status-pending">در انتظار تأیید</span></td>
-                            <td>${new Date(user.createdAt).toLocaleDateString('fa-IR')}</td>
+                            <td>${user.created_at ? new Date(user.created_at).toLocaleDateString('fa-IR') : 'نامشخص'}</td>
                         `;
                         userCredentialsTable.appendChild(row);
                     });
@@ -1555,68 +1794,102 @@
                     }
                 },
                 
-                approveUser(index) {
-                    const user = this.pendingApprovals[index];
-                    
-                    // اضافه کردن کاربر به لیست کاربران تأیید شده
-                    user.approved = true;
-                    this.users.push(user);
-                    
-                    // حذف از لیست انتظار
-                    this.pendingApprovals.splice(index, 1);
-                    
-                    this.saveToStorage();
-                    this.renderAdminDashboard();
-                    
-                    // ارسال پیام به مدیر
-                    this.sendToAdminTelegram(
-                        `✅ کاربر تأیید شد\n\n` +
-                        `فروشگاه: ${user.storeName}\n` +
-                        `صاحب: ${user.ownerName}\n` +
-                        `ایمیل: ${user.email}\n` +
-                        `تاریخ: ${new Date().toLocaleDateString('fa-IR')}`
-                    );
-                    
-                    this.showNotification(`فروشگاه ${user.storeName} با موفقیت تأیید شد`, 'success');
-                },
-                
-                rejectUser(index) {
-                    const user = this.pendingApprovals[index];
-                    
-                    if (confirm(`آیا از رد درخواست ${user.storeName} اطمینان دارید؟`)) {
-                        // حذف از لیست انتظار
-                        this.pendingApprovals.splice(index, 1);
+                async approveUser(userId) {
+                    try {
+                        const userIndex = this.pendingApprovals.findIndex(u => u.id == userId);
+                        if (userIndex === -1) return;
                         
-                        this.saveToStorage();
+                        const user = this.pendingApprovals[userIndex];
+                        user.approved = true;
+                        
+                        const { error } = await this.supabase
+                            .from('stores')
+                            .update({ approved: true })
+                            .eq('id', userId);
+                        
+                        if (error) throw error;
+                        
+                        // بهروزرسانی لیستهای محلی
+                        this.pendingApprovals.splice(userIndex, 1);
+                        this.users.push(user);
+                        
                         this.renderAdminDashboard();
                         
-                        this.showNotification(`درخواست ${user.storeName} رد شد`, 'error');
+                        // ارسال پیام به مدیر
+                        this.sendToAdminTelegram(
+                            `✅ کاربر تأیید شد\n\n` +
+                            `فروشگاه: ${user.store_name}\n` +
+                            `صاحب: ${user.owner_name}\n` +
+                            `ایمیل: ${user.email}\n` +
+                            `تاریخ: ${new Date().toLocaleDateString('fa-IR')}`
+                        );
+                        
+                        this.showNotification(`فروشگاه ${user.store_name} با موفقیت تأیید شد`, 'success');
+                    } catch (error) {
+                        console.error('خطا در تأیید کاربر:', error);
+                        this.showNotification('خطا در تأیید کاربر', 'error');
+                    }
+                },
+                
+                async rejectUser(userId) {
+                    try {
+                        const userIndex = this.pendingApprovals.findIndex(u => u.id == userId);
+                        if (userIndex === -1) return;
+                        
+                        const user = this.pendingApprovals[userIndex];
+                        
+                        const { error } = await this.supabase
+                            .from('stores')
+                            .delete()
+                            .eq('id', userId);
+                        
+                        if (error) throw error;
+                        
+                        // بهروزرسانی لیستهای محلی
+                        this.pendingApprovals.splice(userIndex, 1);
+                        
+                        this.renderAdminDashboard();
+                        this.showNotification(`درخواست ${user.store_name} رد شد`, 'error');
+                    } catch (error) {
+                        console.error('خطا در رد کاربر:', error);
+                        this.showNotification('خطا در رد کاربر', 'error');
                     }
                 },
                 
                 viewStoreDetails(userId) {
-                    const user = this.users.find(u => u.id === userId);
+                    const user = this.users.find(u => u.id == userId);
                     if (user) {
-                        alert(`جزئیات فروشگاه:\n\nنام: ${user.storeName}\nصاحب: ${user.ownerName}\nایمیل: ${user.email}\nمحصولات: ${user.products.length}\nدسته بندی ها: ${user.categories.length}\nفروشها: ${user.soldItems.length}`);
+                        alert(`جزئیات فروشگاه:\n\nنام: ${user.store_name}\nصاحب: ${user.owner_name}\nایمیل: ${user.email}\nمحصولات: ${user.products ? user.products.length : 0}\nدسته بندی ها: ${user.categories ? user.categories.length : 0}\nفروشها: ${user.sold_items ? user.sold_items.length : 0}`);
                     }
                 },
                 
                 editStore(userId) {
-                    const user = this.users.find(u => u.id === userId);
+                    const user = this.users.find(u => u.id == userId);
                     if (user) {
                         // در اینجا میتوانید یک مودال برای ویرایش اطلاعات فروشگاه ایجاد کنید
-                        alert(`ویرایش اطلاعات فروشگاه ${user.storeName}\n\nاین قابلیت در نسخههای آینده اضافه خواهد شد.`);
+                        alert(`ویرایش اطلاعات فروشگاه ${user.store_name}\n\nاین قابلیت در نسخههای آینده اضافه خواهد شد.`);
                     }
                 },
                 
-                deleteStore(userId) {
-                    const user = this.users.find(u => u.id === userId);
-                    if (user && confirm(`آیا از حذف فروشگاه ${user.storeName} اطمینان دارید؟ تمام داده های مربوط به این فروشگاه حذف خواهند شد.`)) {
-                        this.users = this.users.filter(u => u.id !== userId);
-                        this.saveToStorage();
-                        this.renderAdminDashboard();
-                        
-                        this.showNotification(`فروشگاه ${user.storeName} حذف شد`, 'success');
+                async deleteStore(userId) {
+                    const user = this.users.find(u => u.id == userId);
+                    if (user && confirm(`آیا از حذف فروشگاه ${user.store_name} اطمینان دارید؟ تمام داده های مربوط به این فروشگاه حذف خواهند شد.`)) {
+                        try {
+                            const { error } = await this.supabase
+                                .from('stores')
+                                .delete()
+                                .eq('id', userId);
+                            
+                            if (error) throw error;
+                            
+                            this.users = this.users.filter(u => u.id !== userId);
+                            this.renderAdminDashboard();
+                            
+                            this.showNotification(`فروشگاه ${user.store_name} حذف شد`, 'success');
+                        } catch (error) {
+                            console.error('خطا در حذف فروشگاه:', error);
+                            this.showNotification('خطا در حذف فروشگاه', 'error');
+                        }
                     }
                 },
                 
@@ -1647,17 +1920,29 @@
                     this.showNotification('پشتیبان از تمام داده ها با موفقیت دانلود شد', 'success');
                 },
                 
-                resetAllData() {
+                async resetAllData() {
                     if (confirm('آیا از بازنشانی تمام داده های سیستم اطمینان دارید؟ این عمل تمام کاربران، محصولات و تاریخچه را پاک میکند و غیرقابل برگشت است.')) {
-                        this.users = [];
-                        this.pendingApprovals = [];
-                        this.currentUser = null;
-                        this.isAdmin = false;
-                        this.createDefaultUser();
-                        this.saveToStorage();
-                        this.showAppropriatePage();
-                        
-                        this.showNotification('تمامی داده های سیستم بازنشانی شدند', 'success');
+                        try {
+                            // حذف تمام دادهها از Supabase
+                            const { error } = await this.supabase
+                                .from('stores')
+                                .delete()
+                                .neq('id', 0); // حذف تمام رکوردها
+                            
+                            if (error) throw error;
+                            
+                            this.users = [];
+                            this.pendingApprovals = [];
+                            this.currentUser = null;
+                            this.isAdmin = false;
+                            await this.createDefaultUser();
+                            this.showAppropriatePage();
+                            
+                            this.showNotification('تمامی داده های سیستم بازنشانی شدند', 'success');
+                        } catch (error) {
+                            console.error('خطا در بازنشانی دادهها:', error);
+                            this.showNotification('خطا در بازنشانی دادهها', 'error');
+                        }
                     }
                 },
                 
@@ -1672,15 +1957,56 @@
                 },
                 
                 showNotification(message, type = 'info') {
+                    // حذف نوتیفیکیشن‌های قبلی
+                    document.querySelectorAll('.notification').forEach(notification => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    });
+                    
                     const notification = document.createElement('div');
                     notification.className = `notification ${type}`;
-                    notification.textContent = message;
+                    notification.innerHTML = `
+                        <i class="ti ti-${type === 'success' ? 'circle-check' : type === 'error' ? 'alert-circle' : type === 'warning' ? 'alert-triangle' : 'info-circle'}"></i>
+                        ${message}
+                    `;
                     
                     document.body.appendChild(notification);
                     
                     setTimeout(() => {
-                        notification.remove();
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
                     }, 5000);
+                },
+                
+                exportProducts() {
+                    if (!this.currentUser || !this.currentUser.products) return;
+                    
+                    const productsData = this.currentUser.products.map(product => ({
+                        نام: product.name,
+                        دستهبندی: this.getUserCategoryName(product.category),
+                        قیمت: product.price,
+                        وضعیت: product.isSold ? 'فروخته شده' : 'موجود',
+                        والد: product.parent ? this.currentUser.products.find(p => p.id === product.parent)?.name || '' : '',
+                        توضیحات: product.description || ''
+                    }));
+                    
+                    const csvContent = "data:text/csv;charset=utf-8,\uFEFF" 
+                        + "نام,دستهبندی,قیمت,وضعیت,محصول والد,توضیحات\n"
+                        + productsData.map(row => 
+                            `"${row.نام}","${row.دستهبندی}",${row.قیمت},"${row.وضعیت}","${row.والد}","${row.توضیحات}"`
+                        ).join('\n');
+                    
+                    const encodedUri = encodeURI(csvContent);
+                    const link = document.createElement("a");
+                    link.setAttribute("href", encodedUri);
+                    link.setAttribute("download", `محصولات_${this.currentUser.store_name}_${new Date().toISOString().split('T')[0]}.csv`);
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    this.showNotification('خروجی CSV با موفقیت دانلود شد', 'success');
                 }
             };
             
