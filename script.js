@@ -1,4 +1,4 @@
- // سیستم مدیریت چندین فروشگاه - نسخه ابری با Supabase
+// سیستم مدیریت چندین فروشگاه - نسخه ابری با Supabase
         (function() {
             'use strict';
             
@@ -22,7 +22,7 @@
                 isAdmin: false,
                 users: [],
                 pendingApprovals: [],
-                adminCredentials: { email: 'wwtn6191@gmail.com', password: 'admin123' },
+                adminCredentials: { email: 'admin@example.com', password: 'admin123' },
                 supabase: null,
                 
                 async init() {
@@ -84,11 +84,19 @@
                         products: [
                             { id: 1, name: "گوشی موبایل سامسونگ", category: "1", price: 8500000, parent: null, description: "گوشی موبایل سری سامسونگ", isSold: false },
                             { id: 2, name: "مدل Galaxy S21", category: "1", price: 10200000, parent: 1, description: "گوشی پرچمدار سری گلکسی", isSold: false },
-                            { id: 3, name: "مدل Galaxy A52", category: "1", price: 6800000, parent: 1, description: "گوشی میانرده سری A", isSold: false }
+                            { id: 3, name: "مدل Galaxy A52", category: "1", price: 6800000, parent: 1, description: "گوشی میانرده سری A", isSold: false },
+                            { id: 4, name: "برنج ایرانی", category: "2", price: 150000, parent: null, description: "برنج مرغوب ایرانی", isSold: false },
+                            { id: 5, name: "روغن نباتی", category: "2", price: 80000, parent: null, description: "روغن نباتی مخصوص پخت و پز", isSold: false },
+                            { id: 6, name: "زعفران", category: "3", price: 250000, parent: null, description: "زعفران اصل", isSold: false }
                         ],
                         categories: [
                             { id: 1, name: "الکترونیک", parent: null, productCount: 3 },
-                            { id: 2, name: "موبایل و تبلت", parent: 1, productCount: 3 }
+                            { id: 2, name: "مواد غذایی", parent: null, productCount: 2 },
+                            { id: 3, name: "ادویه جات", parent: null, productCount: 1 },
+                            { id: 4, name: "لوازم خانگی", parent: null, productCount: 0 },
+                            { id: 5, name: "پوشاک", parent: null, productCount: 0 },
+                            { id: 6, name: "موبایل و تبلت", parent: 1, productCount: 3 },
+                            { id: 7, name: "لپ تاپ", parent: 1, productCount: 0 }
                         ],
                         sold_items: []
                     };
@@ -192,6 +200,24 @@
                     document.getElementById('resetAllData').addEventListener('click', () => this.resetAllData());
                     document.getElementById('viewAllData').addEventListener('click', () => this.viewAllData());
                     
+                    // دکمه خروجی محصولات
+                    document.getElementById('exportProducts').addEventListener('click', () => this.exportProducts());
+                    
+                    // مدیریت تبهای کاربر و ادمین
+                    document.querySelectorAll('#userDashboard .tab').forEach(tab => {
+                        tab.addEventListener('click', (e) => {
+                            const tabName = e.target.getAttribute('data-tab');
+                            this.switchUserTab(tabName);
+                        });
+                    });
+                    
+                    document.querySelectorAll('#adminDashboard .tab').forEach(tab => {
+                        tab.addEventListener('click', (e) => {
+                            const tabName = e.target.getAttribute('data-tab');
+                            this.switchAdminTab(tabName);
+                        });
+                    });
+                    
                     // کلیک خارج از مودال برای بستن
                     window.addEventListener('click', (e) => {
                         if (e.target.classList.contains('modal')) {
@@ -225,6 +251,8 @@
                     const userDashboard = document.getElementById('userDashboard');
                     const adminDashboard = document.getElementById('adminDashboard');
                     const userInfo = document.getElementById('userInfo');
+                    const userLogout = document.getElementById('userLogout');
+                    const adminLogout = document.getElementById('adminLogout');
                     
                     // مخفی کردن تمام صفحات
                     loginPage.classList.add('hidden');
@@ -237,9 +265,13 @@
                         userInfo.style.display = 'flex';
                         if (this.isAdmin) {
                             adminDashboard.classList.remove('hidden');
+                            userLogout.style.display = 'none';
+                            adminLogout.style.display = 'block';
                             this.renderAdminDashboard();
                         } else {
                             userDashboard.classList.remove('hidden');
+                            userLogout.style.display = 'block';
+                            adminLogout.style.display = 'none';
                             this.renderUserDashboard();
                         }
                     } else {
@@ -337,7 +369,13 @@
                         telegram_bot_token: "",
                         telegram_chat_id: "",
                         products: [],
-                        categories: [],
+                        categories: [
+                            { id: 1, name: "الکترونیک", parent: null, productCount: 0 },
+                            { id: 2, name: "مواد غذایی", parent: null, productCount: 0 },
+                            { id: 3, name: "ادویه جات", parent: null, productCount: 0 },
+                            { id: 4, name: "لوازم خانگی", parent: null, productCount: 0 },
+                            { id: 5, name: "پوشاک", parent: null, productCount: 0 }
+                        ],
                         sold_items: []
                     };
                     
@@ -387,7 +425,13 @@
                         telegram_bot_token: "",
                         telegram_chat_id: "",
                         products: [],
-                        categories: [],
+                        categories: [
+                            { id: 1, name: "الکترونیک", parent: null, productCount: 0 },
+                            { id: 2, name: "مواد غذایی", parent: null, productCount: 0 },
+                            { id: 3, name: "ادویه جات", parent: null, productCount: 0 },
+                            { id: 4, name: "لوازم خانگی", parent: null, productCount: 0 },
+                            { id: 5, name: "پوشاک", parent: null, productCount: 0 }
+                        ],
                         sold_items: []
                     };
                     
@@ -493,7 +537,7 @@
                     if (!this.currentUser.products || this.currentUser.products.length === 0) {
                         tbody.innerHTML = `
                             <tr>
-                                <td colspan="6" style="text-align: center; color: var(--secondary);">
+                                <td colspan="6" style="text-align: center; color: var(--text-light);">
                                     هیچ محصولی ثبت نشده است
                                 </td>
                             </tr>
@@ -574,7 +618,7 @@
                     if (!this.currentUser.categories || this.currentUser.categories.length === 0) {
                         tbody.innerHTML = `
                             <tr>
-                                <td colspan="4" style="text-align: center; color: var(--secondary);">
+                                <td colspan="4" style="text-align: center; color: var(--text-light);">
                                     هیچ دسته بندی ثبت نشده است
                                 </td>
                             </tr>
@@ -595,7 +639,7 @@
                             <td>-</td>
                             <td>${category.productCount || 0}</td>
                             <td class="actions">
-                                <button class="btn-success" onclick="SystemState.editCategory(${category.id})">ویرایش</button>
+                                <button class="btn-success" onclick="SystemState.editUserCategory(${category.id})">ویرایش</button>
                                 <button class="btn-danger" onclick="SystemState.deleteUserCategory(${category.id})">حذف</button>
                             </td>
                         `;
@@ -611,7 +655,7 @@
                                 <td>${category.name}</td>
                                 <td>${child.productCount || 0}</td>
                                 <td class="actions">
-                                    <button class="btn-success" onclick="SystemState.editCategory(${child.id})">ویرایش</button>
+                                    <button class="btn-success" onclick="SystemState.editUserCategory(${child.id})">ویرایش</button>
                                     <button class="btn-danger" onclick="SystemState.deleteUserCategory(${child.id})">حذف</button>
                                 </td>
                             `;
@@ -654,7 +698,7 @@
                     ) : [];
                     
                     if (todaySales.length === 0) {
-                        soldItemsList.innerHTML = '<p style="text-align: center; color: var(--secondary);">هیچ فروشی برای امروز ثبت نشده است</p>';
+                        soldItemsList.innerHTML = '<p style="text-align: center; color: var(--text-light);">هیچ فروشی برای امروز ثبت نشده است</p>';
                         return;
                     }
                     
@@ -754,7 +798,7 @@
                     const availableProducts = this.currentUser.products ? this.currentUser.products.filter(p => !p.isSold) : [];
                     
                     if (availableProducts.length === 0) {
-                        checklist.innerHTML = '<p style="text-align: center; color: var(--secondary);">هیچ محصولی برای فروش موجود نیست</p>';
+                        checklist.innerHTML = '<p style="text-align: center; color: var(--text-light);">هیچ محصولی برای فروش موجود نیست</p>';
                         return;
                     }
                     
@@ -1218,7 +1262,13 @@
                     this.currentUser = {
                         ...userBase,
                         products: [],
-                        categories: [],
+                        categories: [
+                            { id: 1, name: "الکترونیک", parent: null, productCount: 0 },
+                            { id: 2, name: "مواد غذایی", parent: null, productCount: 0 },
+                            { id: 3, name: "ادویه جات", parent: null, productCount: 0 },
+                            { id: 4, name: "لوازم خانگی", parent: null, productCount: 0 },
+                            { id: 5, name: "پوشاک", parent: null, productCount: 0 }
+                        ],
                         sold_items: []
                     };
                     
@@ -1578,7 +1628,7 @@
                     }
                     
                     // فعال کردن تب انتخاب شده
-                    const activeTab = document.querySelector(`#userDashboard .tab[onclick="SystemState.switchUserTab('${tabName}')"]`);
+                    const activeTab = document.querySelector(`#userDashboard .tab[data-tab="${tabName}"]`);
                     if (activeTab) {
                         activeTab.classList.add('active');
                     }
@@ -1602,7 +1652,7 @@
                     }
                     
                     // فعال کردن تب انتخاب شده
-                    const activeTab = document.querySelector(`#adminDashboard .tab[onclick="SystemState.switchAdminTab('${tabName}')"]`);
+                    const activeTab = document.querySelector(`#adminDashboard .tab[data-tab="${tabName}"]`);
                     if (activeTab) {
                         activeTab.classList.add('active');
                     }
@@ -1638,7 +1688,7 @@
                     storesList.innerHTML = '';
                     
                     if (this.users.length === 0) {
-                        storesList.innerHTML = '<p style="text-align: center; color: var(--secondary);">هیچ فروشگاهی ثبت نام نکرده است</p>';
+                        storesList.innerHTML = '<p style="text-align: center; color: var(--text-light);">هیچ فروشگاهی ثبت نام نکرده است</p>';
                         return;
                     }
                     
@@ -1670,7 +1720,7 @@
                     approvalList.innerHTML = '';
                     
                     if (this.pendingApprovals.length === 0) {
-                        approvalList.innerHTML = '<p style="text-align: center; color: var(--secondary);">هیچ درخواست تأییدی در انتظار نیست</p>';
+                        approvalList.innerHTML = '<p style="text-align: center; color: var(--text-light);">هیچ درخواست تأییدی در انتظار نیست</p>';
                         return;
                     }
                     
@@ -1732,7 +1782,7 @@
                     if (this.users.length === 0 && this.pendingApprovals.length === 0) {
                         userCredentialsTable.innerHTML = `
                             <tr>
-                                <td colspan="6" style="text-align: center; color: var(--secondary);">
+                                <td colspan="6" style="text-align: center; color: var(--text-light);">
                                     هیچ کاربری ثبت نام نکرده است
                                 </td>
                             </tr>
@@ -1953,6 +2003,24 @@
                     document.body.removeChild(link);
                     
                     this.showNotification('خروجی CSV با موفقیت دانلود شد', 'success');
+                },
+                
+                // توابع جدید برای رفع خطاها
+                editUserCategory(categoryId) {
+                    const category = this.currentUser.categories.find(c => c.id === categoryId);
+                    if (category) {
+                        const newName = prompt('نام جدید دسته بندی را وارد کنید:', category.name);
+                        if (newName && newName.trim() !== '') {
+                            category.name = newName.trim();
+                            this.saveUserToCloud(this.currentUser);
+                            this.renderUserDashboard();
+                            this.showNotification('دسته بندی ویرایش شد', 'success');
+                        }
+                    }
+                },
+                
+                editCategory(categoryId) {
+                    this.editUserCategory(categoryId);
                 }
             };
             
