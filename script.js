@@ -2,7 +2,7 @@
         (function() {
             'use strict';
             
-            // تنظیمات Supabase - این مقادیر را از پنل Supabase خود دریافت کنید
+            // تنظیمات Supabase
             const SUPABASE_CONFIG = {
                 url: 'https://atichswkxinwqewtpvkr.supabase.co',
                 anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF0aWNoc3dreGlud3Fld3RwdmtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE1ODA2NjAsImV4cCI6MjA3NzE1NjY2MH0.UmJ7mQt4bmwIpvlrnp7J1TigQ8JqB09w_0OgcIVCtFA'
@@ -22,7 +22,7 @@
                 isAdmin: false,
                 users: [],
                 pendingApprovals: [],
-                adminCredentials: { email: 'admin@example.com', password: 'admin123' },
+                adminCredentials: { email: 'wwtn6191@gmail.com', password: 'admin123' },
                 supabase: null,
                 
                 async init() {
@@ -33,30 +33,30 @@
                         // تست اتصال به Supabase
                         const { data, error } = await this.supabase.from('stores').select('*').limit(1);
                         if (error) {
-                            console.warn('اتصال به Supabase ناموفق، استفاده از localStorage');
-                            this.loadFromLocalStorage();
-                        } else {
-                            await this.loadFromCloud();
+                            console.warn('اتصال به Supabase ناموفق:', error);
+                            this.showNotification('خطا در اتصال به سرور. لطفا بعدا تلاش کنید.', 'error');
+                            return;
                         }
                         
+                        await this.loadFromCloud();
                         this.setupEventListeners();
                         this.showAppropriatePage();
                     } catch (error) {
                         console.error('خطا در مقداردهی اولیه سیستم:', error);
-                        this.loadFromLocalStorage();
-                        this.setupEventListeners();
-                        this.showAppropriatePage();
+                        this.showNotification('خطا در راه‌اندازی سیستم', 'error');
                     }
                 },
                 
                 async loadFromCloud() {
                     try {
-                        // بارگذاری کاربران از Supabase
+                        // بارگذاری تمام کاربران از Supabase
                         const { data: users, error } = await this.supabase
                             .from('stores')
                             .select('*');
                         
                         if (error) throw error;
+                        
+                        console.log('داده‌های بارگذاری شده از Supabase:', users);
                         
                         // تفکیک کاربران تأیید شده و در انتظار تأیید
                         this.users = users.filter(user => user.approved) || [];
@@ -68,8 +68,7 @@
                         }
                     } catch (error) {
                         console.error('خطا در بارگذاری داده ها از ابر:', error);
-                        // استفاده از دادههای محلی به عنوان پشتیبان
-                        this.loadFromLocalStorage();
+                        throw error;
                     }
                 },
                 
@@ -101,70 +100,40 @@
                     
                     if (!error && data && data.length > 0) {
                         this.users.push(data[0]);
+                        console.log('کاربر پیشفرض ایجاد شد:', data[0]);
                     } else {
-                        // اگر Supabase در دسترس نیست، از localStorage استفاده کن
-                        this.users.push(defaultUser);
-                        this.saveToLocalStorage();
+                        console.error('خطا در ایجاد کاربر پیشفرض:', error);
                     }
                 },
                 
-                loadFromLocalStorage() {
+                async saveUserToCloud(user) {
                     try {
-                        const savedUsers = localStorage.getItem('store_users');
-                        const savedPending = localStorage.getItem('pending_approvals');
-                        const savedCurrent = localStorage.getItem('current_user');
-                        
-                        this.users = savedUsers ? JSON.parse(savedUsers) : [];
-                        this.pendingApprovals = savedPending ? JSON.parse(savedPending) : [];
-                        this.currentUser = savedCurrent ? JSON.parse(savedCurrent) : null;
-                    } catch (error) {
-                        console.error('خطا در بارگذاری از localStorage:', error);
-                        this.users = [];
-                        this.pendingApprovals = [];
-                    }
-                },
-                
-                async saveToCloud() {
-                    if (!this.currentUser) return;
-                    
-                    try {
-                        // اگر کاربر جدید است و ID ندارد
-                        if (!this.currentUser.id) {
+                        if (!user.id) {
+                            // کاربر جدید - درج
                             const { data, error } = await this.supabase
                                 .from('stores')
-                                .insert([this.currentUser])
+                                .insert([user])
                                 .select();
                             
                             if (error) throw error;
                             
                             if (data && data.length > 0) {
-                                this.currentUser.id = data[0].id;
+                                return data[0];
                             }
                         } else {
-                            // به‌روزرسانی کاربر موجود
+                            // کاربر موجود - به‌روزرسانی
                             const { error } = await this.supabase
                                 .from('stores')
-                                .update(this.currentUser)
-                                .eq('id', this.currentUser.id);
+                                .update(user)
+                                .eq('id', user.id);
                             
                             if (error) throw error;
+                            
+                            return user;
                         }
                     } catch (error) {
-                        console.error('خطا در ذخیره داده ها در ابر:', error);
-                        // ذخیره در localStorage به عنوان پشتیبان
-                        this.saveToLocalStorage();
-                    }
-                },
-                
-                saveToLocalStorage() {
-                    try {
-                        localStorage.setItem('store_users', JSON.stringify(this.users));
-                        localStorage.setItem('pending_approvals', JSON.stringify(this.pendingApprovals));
-                        if (this.currentUser) {
-                            localStorage.setItem('current_user', JSON.stringify(this.currentUser));
-                        }
-                    } catch (error) {
-                        console.error('خطا در ذخیره در localStorage:', error);
+                        console.error('خطا در ذخیره کاربر در ابر:', error);
+                        throw error;
                     }
                 },
                 
@@ -293,30 +262,33 @@
                     const email = document.getElementById('userEmail').value;
                     const password = document.getElementById('userPassword').value;
                     
-                    // جستجو در کاربران تأیید شده
-                    let user = this.users.find(u => u.email === email && u.password === password && u.approved);
-                    
-                    if (!user) {
-                        // جستجو در کاربران در انتظار تأیید
-                        user = this.pendingApprovals.find(u => u.email === email && u.password === password);
+                    try {
+                        // جستجو در کاربران تأیید شده
+                        let user = this.users.find(u => u.email === email && u.password === password && u.approved);
+                        
+                        if (!user) {
+                            // جستجو در کاربران در انتظار تأیید
+                            user = this.pendingApprovals.find(u => u.email === email && u.password === password);
+                            if (user) {
+                                this.currentUser = user;
+                                this.isAdmin = false;
+                                this.showAppropriatePage();
+                                this.showNotification('حساب شما در انتظار تأیید مدیر است', 'warning');
+                                return;
+                            }
+                        }
+                        
                         if (user) {
                             this.currentUser = user;
                             this.isAdmin = false;
-                            await this.saveToCloud();
                             this.showAppropriatePage();
-                            this.showNotification('حساب شما در انتظار تأیید مدیر است', 'warning');
-                            return;
+                            this.showNotification('ورود موفقیتآمیز', 'success');
+                        } else {
+                            this.showNotification('ایمیل یا رمز عبور اشتباه است', 'error');
                         }
-                    }
-                    
-                    if (user) {
-                        this.currentUser = user;
-                        this.isAdmin = false;
-                        await this.saveToCloud();
-                        this.showAppropriatePage();
-                        this.showNotification('ورود موفقیتآمیز', 'success');
-                    } else {
-                        this.showNotification('ایمیل یا رمز عبور اشتباه است', 'error');
+                    } catch (error) {
+                        console.error('خطا در ورود:', error);
+                        this.showNotification('خطا در ورود به سیستم', 'error');
                     }
                 },
                 
@@ -328,7 +300,6 @@
                     if (email === this.adminCredentials.email && password === this.adminCredentials.password) {
                         this.currentUser = { store_name: 'مدیر سیستم', owner_name: 'مدیر', email: email };
                         this.isAdmin = true;
-                        await this.saveToCloud();
                         this.showAppropriatePage();
                         this.showNotification('ورود مدیر موفقیتآمیز', 'success');
                     } else {
@@ -371,15 +342,9 @@
                     };
                     
                     try {
-                        const { data, error } = await this.supabase
-                            .from('stores')
-                            .insert([newUser])
-                            .select();
-                        
-                        if (error) throw error;
-                        
-                        if (data && data.length > 0) {
-                            this.pendingApprovals.push(data[0]);
+                        const savedUser = await this.saveUserToCloud(newUser);
+                        if (savedUser) {
+                            this.pendingApprovals.push(savedUser);
                             this.showNotification('ثبت نام موفقیتآمیز. منتظر تأیید مدیر باشید', 'success');
                             this.showLoginPage();
                             
@@ -395,12 +360,7 @@
                         }
                     } catch (error) {
                         console.error('خطا در ثبت نام:', error);
-                        // ذخیره محلی در صورت خطا
-                        newUser.id = Date.now();
-                        this.pendingApprovals.push(newUser);
-                        this.saveToLocalStorage();
-                        this.showNotification('ثبت نام موفقیتآمیز. منتظر تأیید مدیر باشید', 'success');
-                        this.showLoginPage();
+                        this.showNotification('خطا در ثبت نام', 'error');
                     }
                 },
                 
@@ -432,16 +392,9 @@
                     };
                     
                     try {
-                        const { data, error } = await this.supabase
-                            .from('stores')
-                            .insert([newUser])
-                            .select();
-                        
-                        if (error) throw error;
-                        
-                        if (data && data.length > 0) {
-                            this.users.push(data[0]);
-                            await this.saveToCloud();
+                        const savedUser = await this.saveUserToCloud(newUser);
+                        if (savedUser) {
+                            this.users.push(savedUser);
                             this.closeAllModals();
                             this.renderAdminDashboard();
                             
@@ -458,20 +411,13 @@
                         }
                     } catch (error) {
                         console.error('خطا در ایجاد فروشگاه:', error);
-                        // ذخیره محلی در صورت خطا
-                        newUser.id = Date.now();
-                        this.users.push(newUser);
-                        this.saveToLocalStorage();
-                        this.closeAllModals();
-                        this.renderAdminDashboard();
-                        this.showNotification(`حساب فروشگاه ${storeName} با موفقیت ایجاد شد`, 'success');
+                        this.showNotification('خطا در ایجاد فروشگاه', 'error');
                     }
                 },
                 
                 async logout() {
                     this.currentUser = null;
                     this.isAdmin = false;
-                    await this.saveToCloud();
                     this.showAppropriatePage();
                     this.showNotification('خروج موفقیتآمیز', 'info');
                 },
@@ -871,7 +817,7 @@
                     }
                     
                     try {
-                        await this.saveToCloud();
+                        await this.saveUserToCloud(this.currentUser);
                         this.renderUserDashboard();
                         document.getElementById('productForm').reset();
                         this.showNotification('محصول با موفقیت اضافه شد', 'success');
@@ -914,7 +860,7 @@
                     this.currentUser.categories.push(newCategory);
                     
                     try {
-                        await this.saveToCloud();
+                        await this.saveUserToCloud(this.currentUser);
                         this.renderUserDashboard();
                         document.getElementById('categoryForm').reset();
                         this.showNotification('دسته بندی با موفقیت اضافه شد', 'success');
@@ -996,7 +942,7 @@
                     }
                     
                     try {
-                        await this.saveToCloud();
+                        await this.saveUserToCloud(this.currentUser);
                         this.renderUserDashboard();
                         this.closeAllModals();
                         this.showNotification('محصول با موفقیت ویرایش شد', 'success');
@@ -1039,7 +985,7 @@
                     this.currentUser.products = this.currentUser.products.filter(p => p.parent !== productId);
                     
                     try {
-                        await this.saveToCloud();
+                        await this.saveUserToCloud(this.currentUser);
                         this.renderUserDashboard();
                         this.showNotification('محصول با موفقیت حذف شد', 'success');
                         
@@ -1076,7 +1022,7 @@
                     }
                     
                     try {
-                        await this.saveToCloud();
+                        await this.saveUserToCloud(this.currentUser);
                         this.renderUserDashboard();
                         this.showNotification('دسته بندی با موفقیت حذف شد', 'success');
                     } catch (error) {
@@ -1123,7 +1069,7 @@
                     });
                     
                     try {
-                        await this.saveToCloud();
+                        await this.saveUserToCloud(this.currentUser);
                         this.renderUserDashboard();
                         
                         this.showNotification(
@@ -1172,7 +1118,7 @@
                     this.currentUser.sold_items.splice(soldItemIndex, 1);
                     
                     try {
-                        await this.saveToCloud();
+                        await this.saveUserToCloud(this.currentUser);
                         this.renderUserDashboard();
                         this.showNotification('محصول با موفقیت بازگردانده شد', 'success');
                         
@@ -1232,7 +1178,7 @@
                                 this.currentUser = data.user;
                                 
                                 try {
-                                    await this.saveToCloud();
+                                    await this.saveUserToCloud(this.currentUser);
                                     this.renderUserDashboard();
                                     this.showNotification('دادهها با موفقیت بازیابی شدند', 'success');
                                 } catch (error) {
@@ -1277,7 +1223,7 @@
                     };
                     
                     try {
-                        await this.saveToCloud();
+                        await this.saveUserToCloud(this.currentUser);
                         this.renderUserDashboard();
                         this.showNotification('تمامی داده ها پاک شدند', 'success');
                         
@@ -1519,7 +1465,7 @@
                     this.currentUser.telegram_chat_id = chatId;
                     
                     try {
-                        await this.saveToCloud();
+                        await this.saveUserToCloud(this.currentUser);
                         this.showNotification('تنظیمات تلگرام ذخیره شد', 'success');
                         
                         // تست ارسال پیام
