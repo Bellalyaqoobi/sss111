@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>سیستم مدیریت چندین فروشگاه</title>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>سیستم مدیریت چندین فروشگاه</h1>
+            <p>مدیریت فروشگاه ها، محصولات، دسته بندی ها و ثبت فروش با قابلیت ورود جداگانه برای هر فروشگاه</p>
+        </header>
+        
+        <!-- صفحه ورود -->
+        <div id="loginPage" class="login-container">
+            <div class="login-card">
+                <h2>ورود به سیستم</h2>
+                <div class="login-tabs">
+                    <div class="login-tab active" id="userLoginTab">ورود فروشگاه دار</div>
+                    <div class="login-tab" id="adminLoginTab">ورود مدیر</div>
+                </div>
+                
+                <form id="userLoginForm">
+                    <div class="form-group">
+                        <label for="userEmail">ایمیل</label>
+                        <input type="email" id="userEmail" placeholder="ایمیل خود را وارد کنید" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userPassword">رمز عبور</label>
+                        <input type="password" id="userPassword" placeholder="رمز عبور خود را وارد کنید" required>
+                    </div>
+                    <button type="submit">ورود به سیستم</button>
+                </form>
+                
+                <form id="adminLoginForm" style="display: none;">
+                    <div class="form-group">
+                        <label for="adminEmail">ایمیل مدیر</label>
+                        <input type="email" id="adminEmail" placeholder="ایمیل مدیر را وارد کنید" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="adminPassword">رمز عبور مدیر</label>
+                        <input type="password" id="adminPassword" placeholder="رمز عبور مدیر را وارد کنید" required>
+                    </div>
+                    <button type="submit">ورود به پنل مدیریت</button>
+                </form>
+                
+                <div style="margin-top: 20px; text-align: center;">
+                    <p>حساب کاربری ندارید؟</p>
+                    <button type="button" class="btn-success" id="showRegisterForm">ثبت نام فروشگاه جدید</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- فرم ثبت نام -->
+        <div id="registerPage" class="login-container" style="display: none;">
+            <div class="login-card">
+                <h2>ثبت نام فروشگاه جدید</h2>
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="storeName">نام فروشگاه</label>
+                        <input type="text" id="storeName" placeholder="نام فروشگاه خود را وارد کنید" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ownerName">نام صاحب فروشگاه</label>
+                        <input type="text" id="ownerName" placeholder="نام کامل خود را وارد کنید" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">ایمیل</label>
+                        <input type="email" id="registerEmail" placeholder="ایمیل خود را وارد کنید" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">رمز عبور</label>
+                        <input type="password" id="registerPassword" placeholder="رمز عبور خود را وارد کنید" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">تکرار رمز عبور</label>
+                        <input type="password" id="confirmPassword" placeholder="رمز عبور خود را تکرار کنید" required>
+                    </div>
+                    <button type="submit" class="btn-success">ثبتنام</button>
+                </form>
+                <div class="admin-contact">
+                    <p>پس از ثبتنام، حساب شما باید توسط مدیر سیستم تأیید شود.</p>
+                    <p>برای تسریع در فرآیند تأیید، با مدیر سیستم تماس بگیرید:</p>
+                    <p style="font-weight: bold; font-size: 1.1rem;">0796304080</p>
+                </div>
+                <div style="margin-top: 20px; text-align: center;">
+                    <button type="button" class="btn-warning" id="backToLogin">بازگشت به صفحه ورود</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- پنل کاربری فروشگاه دار -->
+        <div id="userDashboard" style="display: none;">
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">ف</div>
+                <div class="user-details">
+                    <div class="user-name" id="userName">نام فروشگاه</div>
+                    <div class="user-role" id="userRole">فروشگاه دار</div>
+                    <div id="userStatus"></div>
+                </div>
+                <button class="logout-btn" id="userLogout">خروج</button>
+            </div>
+            
+            <!-- بخش انتظار برای تأیید -->
+            <div id="pendingApproval" class="pending-approval" style="display: none;">
+                <h3>در انتظار تأیید</h3>
+                <p>حساب شما در حال حاضر در انتظار تأیید توسط مدیر سیستم میباشد.</p>
+                <p>پس از تأیید، میتوانید از تمامی امکانات سیستم استفاده کنید.</p>
+                <p>در صورت نیاز به تسریع فرآیند، با مدیر سیستم تماس بگیرید: <strong>0796304080</strong></p>
+            </div>
+            
+            <!-- محتوای اصلی پنل کاربری (فقط برای کاربران تأیید شده نمایش داده میشود) -->
+            <div id="userDashboardContent" style="display: none;">
+                <div class="stats">
+                    <div class="stat-card">
+                        <h3 id="totalProducts">۰</h3>
+                        <p>تعداد محصولات</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="totalCategories">۰</h3>
+                        <p>دسته بندی ها</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="totalParents">۰</h3>
+                        <p>محصولات Parent</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="totalSold">۰</h3>
+                        <p>فروش امروز</p>
+                    </div>
+                </div>
+                
+                <div class="dashboard">
+                    <div class="sidebar">
+                        <div class="card">
+                            <h2>افزودن محصول جدید</h2>
+                            <form id="productForm">
+                                <div class="form-group">
+                                    <label for="productName">نام محصول</label>
+                                    <input type="text" id="productName" placeholder="نام محصول را وارد کنید" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="productCategory">دسته بندی</label>
+                                    <select id="productCategory" required>
+                                        <option value="">انتخاب کنید</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="productPrice">قیمت (افغانی)</label>
+                                    <input type="number" id="productPrice" placeholder="قیمت محصول" required min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="productParent">محصول Parent (اختیاری)</label>
+                                    <select id="productParent">
+                                        <option value="">هیچکدام (محصول اصلی)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="productDescription">توضیحات محصول</label>
+                                    <textarea id="productDescription" rows="3" placeholder="توضیحات محصول را وارد کنید"></textarea>
+                                </div>
+                                <button type="submit">ذخیره محصول</button>
+                            </form>
+                        </div>
+                        
+                        <div class="card">
+                            <h2>افزودن دسته بندی جدید</h2>
+                            <form id="categoryForm">
+                                <div class="form-group">
+                                    <label for="categoryName">نام دسته بندی</label>
+                                    <input type="text" id="categoryName" placeholder="نام دسته بندی را وارد کنید" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="categoryParent">دسته بندی Parent (اختیاری)</label>
+                                    <select id="categoryParent">
+                                        <option value="">هیچکدام (دسته بندی اصلی)</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn-success">ذخیره دسته بندی</button>
+                            </form>
+                        </div>
+                        
+                        <div class="card">
+                            <h2>چکلیست فروش</h2>
+                            <div class="form-group">
+                                <label>انتخاب محصولات برای فروش:</label>
+                                <div class="checkbox-list" id="productsChecklist">
+                                </div>
+                            </div>
+                            <button type="button" class="btn-warning" id="markAsSold">ثبت به عنوان فروخته شده</button>
+                        </div>
+                        
+                        <div class="card">
+                            <h2>پشتیبانگیری و بازیابی</h2>
+                            <div class="backup-section">
+                                <p>برای حفظ امنیت داده ها، میتوانید از اطلاعات خود پشتیبان بگیرید:</p>
+                                <div class="backup-buttons">
+                                    <button type="button" class="btn-success" id="backupData">پشتیبانگیری</button>
+                                    <button type="button" class="btn-warning" id="restoreData">بازیابی اطلاعات</button>
+                                    <button type="button" class="btn-danger" id="clearData">پاک کردن تمام داده ها</button>
+                                </div>
+                                <input type="file" id="restoreFile" accept=".json" style="display: none;">
+                            </div>
+                            
+                            <div class="print-section">
+                                <h3>پرینت گزارشها</h3>
+                                <p>گزارشهای مختلف سیستم را پرینت بگیرید:</p>
+                                <div class="print-buttons">
+                                    <button type="button" class="btn-info" id="printProducts">پرینت محصولات</button>
+                                    <button type="button" class="btn-info" id="printCategories">پرینت دسته بندی ها</button>
+                                    <button type="button" class="btn-info" id="printSales">پرینت فروش امروز</button>
+                                    <button type="button" class="btn-info" id="printInventory">پرینت موجودی انبار</button>
+                                </div>
+                            </div>
+                            
+                            <div class="telegram-setup">
+                                <h3>تنظیمات تلگرام</h3>
+                                <p>برای دریافت گزارشهای خودکار در تلگرام، ربات زیر را نصب کنید:</p>
+                                
+                                <div class="form-group">
+                                    <label for="userTelegramToken">توکن ربات تلگرام</label>
+                                    <input type="text" id="userTelegramToken" placeholder="توکن ربات تلگرام خود را وارد کنید">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="userTelegramChatId">Chat ID تلگرام</label>
+                                    <input type="text" id="userTelegramChatId" placeholder="Chat ID خود را وارد کنید">
+                                </div>
+                                
+                                <button type="button" class="btn-info" id="saveTelegramSettings">ذخیره تنظیمات تلگرام</button>
+                                
+                                <div class="telegram-info">
+                                    <p><strong>راهنمای نصب ربات تلگرام:</strong></p>
+                                    <ol style="text-align: right; padding-right: 20px;">
+                                        <li>به @BotFather در تلگرام مراجعه کنید</li>
+                                        <li>دستور /newbot را ارسال کنید</li>
+                                        <li>برای ربات خود یک نام انتخاب کنید</li>
+                                        <li>یک نام کاربری منحصر به فرد برای ربات انتخاب کنید (باید با 'bot' پایان یابد)</li>
+                                        <li>توکن دریافتی را در فیلد بالا وارد کنید</li>
+                                        <li>ربات خود را شروع کنید و یک پیام به آن ارسال کنید</li>
+                                        <li>برای دریافت Chat ID، به آدرس زیر مراجعه کنید:
+                                            <code>https://api.telegram.org/bot[YOUR_BOT_TOKEN]/getUpdates</code>
+                                        </li>
+                                        <li>Chat ID خود را از پاسخ دریافت کرده و در فیلد مربوطه وارد کنید</li>
+                                    </ol>
+                                </div>
+                            </div>
+                            
+                            <div class="telegram-status" id="telegramStatus">
+                                وضعیت تلگرام: <span id="telegramStatusText">آماده</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="main-content">
+                        <div class="card">
+                            <h2>لیست محصولات</h2>
+                            <table id="productsTable">
+                                <thead>
+                                    <tr>
+                                        <th>نام محصول</th>
+                                        <th>دسته بندی</th>
+                                        <th>قیمت</th>
+                                        <th>Parent</th>
+                                        <th>وضعیت</th>
+                                        <th>عملیات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productsTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="card">
+                            <h2>لیست دسته بندی ها</h2>
+                            <table id="categoriesTable">
+                                <thead>
+                                    <tr>
+                                        <th>نام دسته بندی</th>
+                                        <th>Parent</th>
+                                        <th>تعداد محصولات</th>
+                                        <th>عملیات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="categoriesTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="card">
+                            <h2>محصولات فروخته شده امروز</h2>
+                            <div class="sold-items-list" id="soldItemsList">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- پنل مدیریت -->
+        <div id="adminDashboard" style="display: none;">
+            <div class="user-info">
+                <div class="user-avatar" style="background-color: var(--danger);">م</div>
+                <div class="user-details">
+                    <div class="user-name">مدیر سیستم</div>
+                    <div class="user-role">مدیر اصلی</div>
+                </div>
+                <button class="logout-btn" id="adminLogout">خروج</button>
+            </div>
+            
+            <div class="card">
+                <h2>مدیریت فروشگاهها</h2>
+                
+                <div class="admin-approval-section">
+                    <h3>درخواستهای تأیید فروشگاه</h3>
+                    <div class="approval-list" id="approvalList">
+                        <!-- لیست کاربران در انتظار تأیید اینجا نمایش داده میشود -->
+                    </div>
+                </div>
+                
+                <div class="admin-panel">
+                    <h3>فروشگاههای ثبت نام شده</h3>
+                    <div id="storesList">
+                        <!-- لیست فروشگاهها اینجا نمایش داده میشود -->
+                    </div>
+                </div>
+                
+                <div class="admin-panel">
+                    <h3>اطلاعات ورود کاربران</h3>
+                    <div class="card">
+                        <h4>ایمیل و رمز عبور تمام کاربران</h4>
+                        <table class="user-credentials-table">
+                            <thead>
+                                <tr>
+                                    <th>نام فروشگاه</th>
+                                    <th>نام صاحب</th>
+                                    <th>ایمیل</th>
+                                    <th>رمز عبور</th>
+                                    <th>وضعیت</th>
+                                    <th>تاریخ ثبتنام</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userCredentialsTable">
+                                <!-- اطلاعات کاربران اینجا نمایش داده میشود -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="admin-panel">
+                    <h3>آمار کلی سیستم</h3>
+                    <div class="stats">
+                        <div class="stat-card">
+                            <h3 id="adminTotalStores">۰</h3>
+                            <p>تعداد فروشگاهها</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="adminTotalProducts">۰</h3>
+                            <p>کل محصولات</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="adminTotalSales">۰</h3>
+                            <p>کل فروشها</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="adminNewStores">۰</h3>
+                            <p>فروشگاههای جدید</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="admin-panel">
+                    <h3>عملیات مدیریت</h3>
+                    <div class="admin-actions">
+                        <button type="button" class="btn-success" id="createStoreAccount">ایجاد حساب جدید برای فروشگاه</button>
+                        <button type="button" class="btn-info" id="viewAllData">مشاهده تمام داده ها</button>
+                        <button type="button" class="btn-warning" id="backupAllData">پشتیبانگیری از تمام داده ها</button>
+                        <button type="button" class="btn-danger" id="resetAllData">بازنشانی تمام داده ها</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- مودالها -->
+    <div class="modal" id="editProductModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">ویرایش محصول</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="editProductForm">
+                <input type="hidden" id="editProductId">
+                <div class="form-group">
+                    <label for="editProductName">نام محصول</label>
+                    <input type="text" id="editProductName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editProductCategory">دسته بندی</label>
+                    <select id="editProductCategory" required>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editProductPrice">قیمت (افغانی)</label>
+                    <input type="number" id="editProductPrice" required min="0">
+                </div>
+                <div class="form-group">
+                    <label for="editProductParent">محصول Parent (اختیاری)</label>
+                    <select id="editProductParent">
+                        <option value="">هیچکدام (محصول اصلی)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editProductDescription">توضیحات محصول</label>
+                    <textarea id="editProductDescription" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn-success">ذخیره تغییرات</button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="modal" id="createStoreModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">ایجاد حساب جدید برای فروشگاه</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="createStoreForm">
+                <div class="form-group">
+                    <label for="newStoreName">نام فروشگاه</label>
+                    <input type="text" id="newStoreName" required>
+                </div>
+                <div class="form-group">
+                    <label for="newOwnerName">نام صاحب فروشگاه</label>
+                    <input type="text" id="newOwnerName" required>
+                </div>
+                <div class="form-group">
+                    <label for="newStoreEmail">ایمیل</label>
+                    <input type="email" id="newStoreEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="newStorePassword">رمز عبور</label>
+                    <input type="password" id="newStorePassword" required>
+                </div>
+                <button type="submit" class="btn-success">ایجاد حساب</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="printArea" class="print-content" style="display: none;">
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
