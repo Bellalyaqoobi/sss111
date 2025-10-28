@@ -1,4 +1,4 @@
- // سیستم مدیریت چندین فروشگاه - نسخه ابری با Supabase و احراز هویت گوگل
+// سیستم مدیریت چندین فروشگاه - نسخه ابری با Supabase و احراز هویت گوگل
         (function() {
             'use strict';
             
@@ -14,7 +14,7 @@
                 telegramBotToken: '8207227177:AAEp7JifbIQUCWYscaOxokpvdvTxat7EbQ8',
                 telegramChatId: '8106254967',
                 version: '2.1.0',
-                googleClientId: '627857769759-9ji54kgpnafpklakavcvgjhaj976ettc.apps.googleusercontent.com'
+                googleClientId: '627857769759-7stscotup44r2aqmdpavr615bu20sk99.apps.googleusercontent.com'
             };
             
             // مدیریت وضعیت سیستم
