@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>سیستم مدیریت فروشگاه - نسخه ابری</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-    <!-- اضافه کردن کتابخانه Google Identity Services -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -266,7 +265,7 @@
                                     <th>نام محصول</th>
                                     <th>دستهبندی</th>
                                     <th>قیمت (افغانی)</th>
-                                    <th>محصول والد</th>
+                                    <th>زیرمجموعه</th>
                                     <th>وضعیت</th>
                                     <th>عملیات</th>
                                 </tr>
@@ -298,7 +297,7 @@
                                     <input type="number" id="productPrice" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="productParent">محصول والد:</label>
+                                    <label for="productParent">زیرمجموعه:</label>
                                     <select id="productParent">
                                         <option value="">هیچکدام (محصول اصلی)</option>
                                     </select>
@@ -326,7 +325,7 @@
                             <thead>
                                 <tr>
                                     <th>نام دستهبندی</th>
-                                    <th>دستهبندی والد</th>
+                                    <th>زیرمجموعه</th>
                                     <th>تعداد محصولات</th>
                                     <th>عملیات</th>
                                 </tr>
@@ -348,7 +347,7 @@
                                     <input type="text" id="categoryName" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="categoryParent">دستهبندی والد:</label>
+                                    <label for="categoryParent">زیرمجموعه:</label>
                                     <select id="categoryParent">
                                         <option value="">هیچکدام (دستهبندی اصلی)</option>
                                     </select>
@@ -643,7 +642,7 @@
                     <input type="number" id="editProductPrice" required>
                 </div>
                 <div class="form-group">
-                    <label for="editProductParent">محصول والد:</label>
+                    <label for="editProductParent">زیرمجموعه:</label>
                     <select id="editProductParent">
                         <option value="">هیچکدام (محصول اصلی)</option>
                     </select>
