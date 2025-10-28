@@ -14,7 +14,7 @@
                 telegramBotToken: '8207227177:AAEp7JifbIQUCWYscaOxokpvdvTxat7EbQ8',
                 telegramChatId: '8106254967',
                 version: '2.1.0',
-                googleClientId: '627857769759-v75t79pv4f2lu946gq6aq21888hqc8ge.apps.googleusercontent.com'
+                googleClientId: '627857769759-v75t79pv4f2lu946gq6aq21888hqc8ge.apps.googleusercontent.com' // باید از کنسول Google Cloud دریافت شود
             };
             
             // مدیریت وضعیت سیستم
@@ -36,12 +36,10 @@
                         if (error) {
                             console.warn('اتصال به Supabase ناموفق:', error);
                             this.showNotification('خطا در اتصال به سرور. لطفا بعدا تلاش کنید.', 'error');
-                            // استفاده از localStorage به عنوان جایگزین
-                            await this.loadFromLocalStorage();
-                        } else {
-                            await this.loadFromCloud();
+                            return;
                         }
                         
+                        await this.loadFromCloud();
                         this.setupEventListeners();
                         this.showAppropriatePage();
                     } catch (error) {
@@ -71,32 +69,7 @@
                         }
                     } catch (error) {
                         console.error('خطا در بارگذاری داده ها از ابر:', error);
-                        // استفاده از localStorage به عنوان جایگزین
-                        await this.loadFromLocalStorage();
-                    }
-                },
-                
-                async loadFromLocalStorage() {
-                    try {
-                        const usersData = localStorage.getItem('storeManagementUsers');
-                        const pendingData = localStorage.getItem('storeManagementPending');
-                        
-                        if (usersData) {
-                            this.users = JSON.parse(usersData);
-                        }
-                        
-                        if (pendingData) {
-                            this.pendingApprovals = JSON.parse(pendingData);
-                        }
-                        
-                        // ایجاد کاربر پیشفرض اگر هیچ کاربری وجود ندارد
-                        if (this.users.length === 0 && this.pendingApprovals.length === 0) {
-                            await this.createDefaultUser();
-                        }
-                        
-                        console.log('دادههای بارگذاری شده از localStorage:', this.users, this.pendingApprovals);
-                    } catch (error) {
-                        console.error('خطا در بارگذاری از localStorage:', error);
+                        throw error;
                     }
                 },
                 
@@ -129,25 +102,16 @@
                         sold_items: []
                     };
                     
-                    try {
-                        // سعی در ذخیره در Supabase
-                        const { data, error } = await this.supabase
-                            .from('stores')
-                            .insert([defaultUser])
-                            .select();
-                        
-                        if (!error && data && data.length > 0) {
-                            this.users.push(data[0]);
-                            console.log('کاربر پیشفرض ایجاد شد:', data[0]);
-                        } else {
-                            throw new Error('خطا در ایجاد کاربر پیشفرض در Supabase');
-                        }
-                    } catch (error) {
+                    const { data, error } = await this.supabase
+                        .from('stores')
+                        .insert([defaultUser])
+                        .select();
+                    
+                    if (!error && data && data.length > 0) {
+                        this.users.push(data[0]);
+                        console.log('کاربر پیشفرض ایجاد شد:', data[0]);
+                    } else {
                         console.error('خطا در ایجاد کاربر پیشفرض:', error);
-                        // ذخیره در localStorage
-                        this.users.push(defaultUser);
-                        this.saveToLocalStorage();
-                        console.log('کاربر پیشفرض در localStorage ایجاد شد:', defaultUser);
                     }
                 },
                 
@@ -163,7 +127,6 @@
                             if (error) throw error;
                             
                             if (data && data.length > 0) {
-                                this.saveToLocalStorage();
                                 return data[0];
                             }
                         } else {
@@ -175,43 +138,11 @@
                             
                             if (error) throw error;
                             
-                            this.saveToLocalStorage();
                             return user;
                         }
                     } catch (error) {
                         console.error('خطا در ذخیره کاربر در ابر:', error);
-                        // ذخیره در localStorage
-                        if (!user.id) {
-                            user.id = Date.now();
-                            if (user.approved) {
-                                this.users.push(user);
-                            } else {
-                                this.pendingApprovals.push(user);
-                            }
-                        } else {
-                            // به‌روزرسانی کاربر موجود
-                            const index = this.users.findIndex(u => u.id === user.id);
-                            if (index !== -1) {
-                                this.users[index] = user;
-                            } else {
-                                const pendingIndex = this.pendingApprovals.findIndex(u => u.id === user.id);
-                                if (pendingIndex !== -1) {
-                                    this.pendingApprovals[pendingIndex] = user;
-                                }
-                            }
-                        }
-                        
-                        this.saveToLocalStorage();
-                        return user;
-                    }
-                },
-                
-                saveToLocalStorage() {
-                    try {
-                        localStorage.setItem('storeManagementUsers', JSON.stringify(this.users));
-                        localStorage.setItem('storeManagementPending', JSON.stringify(this.pendingApprovals));
-                    } catch (error) {
-                        console.error('خطا در ذخیره در localStorage:', error);
+                        throw error;
                     }
                 },
                 
@@ -456,7 +387,7 @@
                         owner_name: ownerName,
                         email: email,
                         password: password,
-                        approved: false, // کاربران معمولی نیاز به تأیید دارند
+                        approved: false,
                         telegram_bot_token: "",
                         telegram_chat_id: "",
                         products: [],
@@ -2195,66 +2126,43 @@
                         const newName = prompt('نام جدید دسته بندی را وارد کنید:', category.name);
                         if (newName && newName.trim() !== '') {
                             category.name = newName.trim();
-                            this.saveUserToCloud(this.currentUser).then(() => {
-                                this.renderUserDashboard();
-                                this.showNotification('دسته بندی با موفقیت ویرایش شد', 'success');
-                                
-                                // ارسال پیام به تلگرام
-                                this.sendToUserTelegram(
-                                    `✏️ دسته بندی ویرایش شد\n\n` +
-                                    `نام جدید: ${newName}\n` +
-                                    `تاریخ: ${new Date().toLocaleDateString('fa-IR')}`
-                                );
-                            }).catch(error => {
-                                this.showNotification('خطا در ویرایش دسته بندی', 'error');
-                            });
+                            this.saveUserToCloud(this.currentUser);
+                            this.renderUserDashboard();
+                            this.showNotification('دسته بندی ویرایش شد', 'success');
                         }
                     }
+                },
+                
+                editCategory(categoryId) {
+                    this.editUserCategory(categoryId);
                 }
             };
-
-            // تابع callback برای ورود گوگل
-            window.handleGoogleSignIn = function(response) {
-                console.log('پاسخ احراز هویت گوگل:', response);
+            
+            // تابع callback برای احراز هویت گوگل
+            function handleGoogleSignIn(response) {
+                // این تابع زمانی فراخوانی میشود که کاربر با موفقیت با گوگل وارد شود
+                console.log('Google Sign-In response:', response);
                 
                 // استخراج اطلاعات کاربر از پاسخ گوگل
-                const { credential } = response;
-                const payload = JSON.parse(atob(credential.split('.')[1]));
+                const userData = parseJwt(response.credential);
                 
-                console.log('اطلاعات کاربر گوگل:', payload);
-                
-                const userEmail = payload.email;
-                const userName = payload.name;
-                const googleId = payload.sub;
-                
-                // بررسی وجود کاربر در سیستم
-                let existingUser = SystemState.users.find(u => u.email === userEmail);
-                
-                if (!existingUser) {
-                    // بررسی در لیست انتظار تأیید
-                    existingUser = SystemState.pendingApprovals.find(u => u.email === userEmail);
-                }
+                // جستجوی کاربر در سیستم با ایمیل گوگل
+                const existingUser = SystemState.users.find(u => u.email === userData.email);
                 
                 if (existingUser) {
-                    // کاربر موجود - ورود
+                    // کاربر موجود - ورود به سیستم
                     SystemState.currentUser = existingUser;
                     SystemState.isAdmin = false;
                     SystemState.showAppropriatePage();
-                    
-                    if (existingUser.approved) {
-                        SystemState.showNotification('ورود با گوگل موفقیت‌آمیز بود', 'success');
-                    } else {
-                        SystemState.showNotification('حساب شما در انتظار تأیید مدیر است', 'warning');
-                    }
+                    SystemState.showNotification('ورود با گوگل موفقیتآمیز بود', 'success');
                 } else {
-                    // کاربر جدید - ثبت نام خودکار
+                    // کاربر جدید - ایجاد حساب در انتظار تأیید
                     const newUser = {
-                        store_name: userName,
-                        owner_name: userName,
-                        email: userEmail,
-                        password: '', // رمز عبور برای ورود گوگل لازم نیست
-                        google_id: googleId,
-                        approved: false, // نیاز به تأیید مدیر
+                        store_name: userData.name || 'فروشگاه جدید',
+                        owner_name: userData.name || 'کاربر جدید',
+                        email: userData.email,
+                        password: '', // رمز عبور خالی برای کاربران گوگل
+                        approved: false, // کاربران گوگل نیز نیاز به تأیید مدیر دارند
                         telegram_bot_token: "",
                         telegram_chat_id: "",
                         products: [],
@@ -2265,37 +2173,51 @@
                             { id: 4, name: "لوازم خانگی", parent: null, productCount: 0 },
                             { id: 5, name: "پوشاک", parent: null, productCount: 0 }
                         ],
-                        sold_items: []
+                        sold_items: [],
+                        google_id: userData.sub // ذخیره شناسه گوگل برای احراز هویت بعدی
                     };
                     
-                    SystemState.saveUserToCloud(newUser).then(savedUser => {
-                        SystemState.pendingApprovals.push(savedUser);
-                        SystemState.currentUser = savedUser;
-                        SystemState.isAdmin = false;
-                        SystemState.showAppropriatePage();
-                        
-                        SystemState.showNotification('ثبت نام با گوگل موفقیت‌آمیز بود. منتظر تأیید مدیر باشید', 'success');
-                        
-                        // ارسال پیام به مدیر
-                        SystemState.sendToAdminTelegram(
-                            `🏪 درخواست ثبت نام جدید (گوگل)\n\n` +
-                            `فروشگاه: ${userName}\n` +
-                            `صاحب: ${userName}\n` +
-                            `ایمیل: ${userEmail}\n` +
-                            `تاریخ: ${new Date().toLocaleDateString('fa-IR')}\n\n` +
-                            `لطفا به پنل مدیریت مراجعه کنید.`
-                        );
-                    }).catch(error => {
-                        SystemState.showNotification('خطا در ثبت نام با گوگل', 'error');
-                    });
+                    // ذخیره کاربر جدید در سیستم
+                    SystemState.saveUserToCloud(newUser)
+                        .then(savedUser => {
+                            SystemState.pendingApprovals.push(savedUser);
+                            SystemState.currentUser = savedUser;
+                            SystemState.isAdmin = false;
+                            SystemState.showAppropriatePage();
+                            SystemState.showNotification('حساب جدید ایجاد شد. منتظر تأیید مدیر باشید', 'warning');
+                            
+                            // ارسال پیام به مدیر
+                            SystemState.sendToAdminTelegram(
+                                `🏪 درخواست ثبت نام جدید (گوگل)\n\n` +
+                                `فروشگاه: ${newUser.store_name}\n` +
+                                `صاحب: ${newUser.owner_name}\n` +
+                                `ایمیل: ${newUser.email}\n` +
+                                `تاریخ: ${new Date().toLocaleDateString('fa-IR')}\n\n` +
+                                `لطفا به پنل مدیریت مراجعه کنید.`
+                            );
+                        })
+                        .catch(error => {
+                            console.error('خطا در ایجاد حساب با گوگل:', error);
+                            SystemState.showNotification('خطا در ایجاد حساب', 'error');
+                        });
                 }
-            };
-
-            // مقداردهی اولیه سیستم وقتی DOM بارگذاری شد
+            }
+            
+            // تابع کمکی برای تجزیه JWT
+            function parseJwt(token) {
+                try {
+                    return JSON.parse(atob(token.split('.')[1]));
+                } catch (e) {
+                    return null;
+                }
+            }
+            
+            // مقداردهی اولیه سیستم
             document.addEventListener('DOMContentLoaded', function() {
                 SystemState.init();
             });
-
-            // در دسترس قرار دادن SystemState در سطح جهانی برای استفاده از توابع در event handlerها
+            
+            // در معرض قرار دادن SystemState برای استفاده در onclickها
             window.SystemState = SystemState;
+            window.handleGoogleSignIn = handleGoogleSignIn;
         })();
