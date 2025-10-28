@@ -14,7 +14,7 @@
                 telegramBotToken: '8207227177:AAEp7JifbIQUCWYscaOxokpvdvTxat7EbQ8',
                 telegramChatId: '8106254967',
                 version: '2.1.0',
-                googleClientId: '627857769759-7stscotup44r2aqmdpavr615bu20sk99.apps.googleusercontent.com'
+                googleClientId: '627857769759-v75t79pv4f2lu946gq6aq21888hqc8ge.apps.googleusercontent.com'
             };
             
             // مدیریت وضعیت سیستم
@@ -30,15 +30,6 @@
                     try {
                         // ایجاد کلاینت Supabase
                         this.supabase = supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
-                        
-                        // بازیابی وضعیت ورود از localStorage
-                        const savedUser = localStorage.getItem('currentUser');
-                        const savedIsAdmin = localStorage.getItem('isAdmin');
-                        
-                        if (savedUser && savedIsAdmin) {
-                            this.currentUser = JSON.parse(savedUser);
-                            this.isAdmin = JSON.parse(savedIsAdmin);
-                        }
                         
                         // تست اتصال به Supabase
                         const { data, error } = await this.supabase.from('stores').select('*').limit(1);
@@ -198,7 +189,7 @@
                                 this.pendingApprovals.push(user);
                             }
                         } else {
-                            // بهروزرسانی کاربر موجود
+                            // به‌روزرسانی کاربر موجود
                             const index = this.users.findIndex(u => u.id === user.id);
                             if (index !== -1) {
                                 this.users[index] = user;
@@ -219,12 +210,6 @@
                     try {
                         localStorage.setItem('storeManagementUsers', JSON.stringify(this.users));
                         localStorage.setItem('storeManagementPending', JSON.stringify(this.pendingApprovals));
-                        
-                        // ذخیره وضعیت ورود کاربر
-                        if (this.currentUser) {
-                            localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
-                            localStorage.setItem('isAdmin', JSON.stringify(this.isAdmin));
-                        }
                     } catch (error) {
                         console.error('خطا در ذخیره در localStorage:', error);
                     }
@@ -410,7 +395,6 @@
                             if (user) {
                                 this.currentUser = user;
                                 this.isAdmin = false;
-                                this.saveToLocalStorage(); // ذخیره وضعیت ورود
                                 this.showAppropriatePage();
                                 this.showNotification('حساب شما در انتظار تأیید مدیر است', 'warning');
                                 return;
@@ -420,7 +404,6 @@
                         if (user) {
                             this.currentUser = user;
                             this.isAdmin = false;
-                            this.saveToLocalStorage(); // ذخیره وضعیت ورود
                             this.showAppropriatePage();
                             this.showNotification('ورود موفقیتآمیز', 'success');
                         } else {
@@ -440,7 +423,6 @@
                     if (email === this.adminCredentials.email && password === this.adminCredentials.password) {
                         this.currentUser = { store_name: 'مدیر سیستم', owner_name: 'مدیر', email: email };
                         this.isAdmin = true;
-                        this.saveToLocalStorage(); // ذخیره وضعیت ورود
                         this.showAppropriatePage();
                         this.showNotification('ورود مدیر موفقیتآمیز', 'success');
                     } else {
@@ -616,7 +598,6 @@
                     
                     try {
                         await this.saveUserToCloud(this.currentUser);
-                        this.saveToLocalStorage(); // ذخیره وضعیت ورود بهروزرسانی شده
                         this.showNotification('پروفایل با موفقیت بهروزرسانی شد', 'success');
                         this.renderUserDashboard();
                         
@@ -653,11 +634,6 @@
                 async logout() {
                     this.currentUser = null;
                     this.isAdmin = false;
-                    
-                    // حذف وضعیت ورود از localStorage
-                    localStorage.removeItem('currentUser');
-                    localStorage.removeItem('isAdmin');
-                    
                     this.showAppropriatePage();
                     this.showNotification('خروج موفقیتآمیز', 'info');
                 },
@@ -1012,7 +988,7 @@
                             <input type="checkbox" id="product_${product.id}" value="${product.id}">
                             <label for="product_${product.id}">
                                 ${product.name} - ${product.price.toLocaleString('fa-IR')} افغانی
-                                ${product.parent ? ` (زیرمجموعه)` : ''}
+                                ${product.parent ? ` (فرعی)` : ''}
                             </label>
                         `;
                         checklist.appendChild(checkboxItem);
@@ -1559,7 +1535,7 @@
                             <thead>
                                 <tr style="background-color: #f8f9fa;">
                                     <th style="border: 1px solid #ddd; padding: 12px; text-align: right;">نام دسته بندی</th>
-                                    <th style="border: 1px solid #ddd; padding: 12px; text-align: right;">زیرمجموعه</th>
+                                    <th style="border: 1px solid #ddd; padding: 12px; text-align: right;">دسته بندی والد</th>
                                     <th style="border: 1px solid #ddd; padding: 12px; text-align: right;">تعداد محصولات</th>
                                 </tr>
                             </thead>
@@ -2191,14 +2167,14 @@
                         دستهبندی: this.getUserCategoryName(product.category),
                         قیمت: product.price,
                         وضعیت: product.isSold ? 'فروخته شده' : 'موجود',
-                        زیرمجموعه: product.parent ? this.currentUser.products.find(p => p.id === product.parent)?.name || '' : '',
+                        والد: product.parent ? this.currentUser.products.find(p => p.id === product.parent)?.name || '' : '',
                         توضیحات: product.description || ''
                     }));
                     
                     const csvContent = "data:text/csv;charset=utf-8,\uFEFF" 
-                        + "نام,دستهبندی,قیمت,وضعیت,زیرمجموعه,توضیحات\n"
+                        + "نام,دستهبندی,قیمت,وضعیت,محصول والد,توضیحات\n"
                         + productsData.map(row => 
-                            `"${row.نام}","${row.دستهبندی}",${row.قیمت},"${row.وضعیت}","${row.زیرمجموعه}","${row.توضیحات}"`
+                            `"${row.نام}","${row.دستهبندی}",${row.قیمت},"${row.وضعیت}","${row.والد}","${row.توضیحات}"`
                         ).join('\n');
                     
                     const encodedUri = encodeURI(csvContent);
@@ -2263,11 +2239,10 @@
                     // کاربر موجود - ورود
                     SystemState.currentUser = existingUser;
                     SystemState.isAdmin = false;
-                    SystemState.saveToLocalStorage(); // ذخیره وضعیت ورود
                     SystemState.showAppropriatePage();
                     
                     if (existingUser.approved) {
-                        SystemState.showNotification('ورود با گوگل موفقیتآمیز بود', 'success');
+                        SystemState.showNotification('ورود با گوگل موفقیت‌آمیز بود', 'success');
                     } else {
                         SystemState.showNotification('حساب شما در انتظار تأیید مدیر است', 'warning');
                     }
@@ -2297,10 +2272,9 @@
                         SystemState.pendingApprovals.push(savedUser);
                         SystemState.currentUser = savedUser;
                         SystemState.isAdmin = false;
-                        SystemState.saveToLocalStorage(); // ذخیره وضعیت ورود
                         SystemState.showAppropriatePage();
                         
-                        SystemState.showNotification('ثبت نام با گوگل موفقیتآمیز بود. منتظر تأیید مدیر باشید', 'success');
+                        SystemState.showNotification('ثبت نام با گوگل موفقیت‌آمیز بود. منتظر تأیید مدیر باشید', 'success');
                         
                         // ارسال پیام به مدیر
                         SystemState.sendToAdminTelegram(
