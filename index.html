@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+here<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -8,16 +8,20 @@
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
     <style>
         :root {
-            --primary: #6a11cb;
-            --secondary: #2575fc;
-            --accent: #ff6b6b;
-            --success: #4cd964;
-            --warning: #ffcc00;
-            --dark: #2d3748;
-            --light: #f8f9fa;
-            --gray: #718096;
+            --primary: #7C3AED;
+            --secondary: #06B6D4;
+            --accent: #F59E0B;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --dark: #1E293B;
+            --light: #F8FAFC;
+            --gray: #64748B;
             --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+            --gradient-accent: linear-gradient(135deg, var(--accent), #EF4444);
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
         }
         
         * {
@@ -28,7 +32,7 @@
         }
         
         body {
-            background-color: #f5f7fa;
+            background-color: var(--light);
             color: var(--dark);
             line-height: 1.6;
             overflow-x: hidden;
@@ -43,7 +47,8 @@
         
         /* Header Styles */
         header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
             color: white;
             padding: 1rem 0;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -67,12 +72,15 @@
         
         .logo-icon {
             font-size: 2rem;
-            color: white;
+            color: var(--secondary);
         }
         
         .logo-text {
             font-size: 1.8rem;
             font-weight: 700;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         nav ul {
@@ -98,7 +106,7 @@
             height: 2px;
             bottom: 0;
             right: 0;
-            background-color: white;
+            background: var(--gradient);
             transition: var(--transition);
         }
         
@@ -113,7 +121,7 @@
         
         .btn {
             padding: 0.5rem 1.5rem;
-            border-radius: 4px;
+            border-radius: 8px;
             border: none;
             cursor: pointer;
             font-weight: 600;
@@ -125,14 +133,14 @@
         }
         
         .btn-primary {
-            background-color: var(--accent);
+            background: var(--gradient);
             color: white;
         }
         
         .btn-outline {
             background-color: transparent;
             color: white;
-            border: 1px solid white;
+            border: 1px solid var(--glass-border);
         }
         
         .btn:hover {
@@ -140,9 +148,19 @@
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
         }
         
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
         /* Hero Section */
         .hero {
-            background: linear-gradient(rgba(106, 17, 203, 0.9), rgba(37, 117, 252, 0.9)), url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background: linear-gradient(rgba(30, 41, 59, 0.9), rgba(30, 41, 59, 0.9)), url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -184,6 +202,165 @@
             flex-wrap: wrap;
         }
         
+        /* Tutorial Section */
+        .tutorial {
+            padding: 6rem 0;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tutorial:before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: var(--gradient);
+            opacity: 0.05;
+            top: -150px;
+            left: -150px;
+        }
+        
+        .tutorial:after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: var(--gradient-accent);
+            opacity: 0.05;
+            bottom: -100px;
+            right: -100px;
+        }
+        
+        .tutorial-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .tutorial-step {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .tutorial-step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tutorial-step:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--gradient);
+            transform: scaleY(0);
+            transform-origin: bottom;
+            transition: var(--transition);
+        }
+        
+        .tutorial-step:hover:before {
+            transform: scaleY(1);
+        }
+        
+        .step-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--gradient);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(124, 58, 237, 0.3);
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-content h3 {
+            margin-bottom: 1rem;
+            color: var(--dark);
+            font-size: 1.4rem;
+        }
+        
+        .step-content p {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+        
+        .step-image {
+            width: 300px;
+            height: 180px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+        }
+        
+        .step-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+        
+        .tutorial-step:hover .step-image img {
+            transform: scale(1.05);
+        }
+        
+        .tutorial-cta {
+            text-align: center;
+            margin-top: 4rem;
+            padding: 3rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tutorial-cta:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--gradient);
+        }
+        
+        .tutorial-cta h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .tutorial-cta p {
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            font-size: 1.1rem;
+        }
+        
         /* Features Section */
         .features {
             padding: 6rem 0;
@@ -196,7 +373,9 @@
         
         .section-title h2 {
             font-size: 2.8rem;
-            color: var(--primary);
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 1.2rem;
             position: relative;
             display: inline-block;
@@ -207,7 +386,7 @@
             position: absolute;
             width: 60px;
             height: 4px;
-            background: linear-gradient(to left, var(--primary), var(--secondary));
+            background: var(--gradient);
             bottom: -10px;
             right: 50%;
             transform: translateX(50%);
@@ -229,7 +408,7 @@
         
         .feature-card {
             background-color: white;
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 2.5rem;
             box-shadow: var(--shadow);
             transition: var(--transition);
@@ -237,6 +416,7 @@
             position: relative;
             overflow: hidden;
             z-index: 1;
+            border: 1px solid rgba(0, 0, 0, 0.05);
         }
         
         .feature-card:before {
@@ -246,7 +426,7 @@
             right: 0;
             width: 100%;
             height: 5px;
-            background: linear-gradient(to left, var(--primary), var(--secondary));
+            background: var(--gradient);
             transform: scaleX(0);
             transform-origin: left;
             transition: var(--transition);
@@ -264,13 +444,14 @@
         
         .feature-icon {
             font-size: 3.5rem;
-            color: var(--primary);
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 1.5rem;
             transition: var(--transition);
         }
         
         .feature-card:hover .feature-icon {
-            color: var(--secondary);
             transform: scale(1.1);
         }
         
@@ -280,63 +461,91 @@
             font-size: 1.4rem;
         }
         
-        /* Dashboard Preview */
-        .dashboard-preview {
-            background-color: white;
+        /* Gallery Section */
+        .gallery {
             padding: 6rem 0;
-            position: relative;
-            overflow: hidden;
+            background-color: #f8f9fa;
         }
         
-        .dashboard-preview:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 100%;
-            height: 100%;
-            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            opacity: 0.5;
-        }
-        
-        .dashboard-container {
+        .gallery-filters {
             display: flex;
-            gap: 3rem;
-            align-items: center;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .dashboard-content {
-            flex: 1;
-        }
-        
-        .dashboard-image {
-            flex: 1;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 12px;
-            height: 450px;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-            position: relative;
-            overflow: hidden;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
         }
         
-        .dashboard-image:before {
-            content: '';
-            position: absolute;
+        .filter-btn {
+            padding: 0.5rem 1.5rem;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+        
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--gradient);
+            color: white;
+            border-color: transparent;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .gallery-item {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            height: 250px;
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .gallery-item img {
             width: 100%;
             height: 100%;
-            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            object-fit: cover;
+            transition: var(--transition);
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+            padding: 1.5rem;
+            transform: translateY(100%);
+            transition: var(--transition);
+        }
+        
+        .gallery-item:hover .gallery-overlay {
+            transform: translateY(0);
+        }
+        
+        .gallery-overlay h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
         }
         
         /* Statistics Section */
         .statistics {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: var(--gradient);
             color: white;
             padding: 5rem 0;
             text-align: center;
@@ -367,7 +576,7 @@
         /* Testimonials Section */
         .testimonials {
             padding: 6rem 0;
-            background-color: #f8f9fa;
+            background-color: white;
         }
         
         .testimonials-grid {
@@ -378,10 +587,11 @@
         
         .testimonial-card {
             background-color: white;
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 2rem;
             box-shadow: var(--shadow);
             transition: var(--transition);
+            position: relative;
         }
         
         .testimonial-card:hover {
@@ -414,7 +624,7 @@
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: var(--gradient);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -435,7 +645,7 @@
         /* Pricing Section */
         .pricing {
             padding: 6rem 0;
-            background-color: white;
+            background-color: #f8f9fa;
         }
         
         .pricing-grid {
@@ -446,7 +656,7 @@
         
         .pricing-card {
             background-color: white;
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 2.5rem;
             box-shadow: var(--shadow);
             text-align: center;
@@ -475,7 +685,7 @@
             top: -12px;
             left: 50%;
             transform: translateX(-50%);
-            background: var(--accent);
+            background: var(--gradient-accent);
             color: white;
             padding: 0.5rem 1.5rem;
             border-radius: 20px;
@@ -529,7 +739,7 @@
         
         /* CTA Section */
         .cta {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: var(--gradient);
             color: white;
             padding: 6rem 0;
             text-align: center;
@@ -617,7 +827,7 @@
         }
         
         .social-icons a:hover {
-            background-color: var(--primary);
+            background: var(--gradient);
             transform: translateY(-5px);
         }
         
@@ -636,7 +846,7 @@
             left: 30px;
             width: 50px;
             height: 50px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: var(--gradient);
             color: white;
             border-radius: 50%;
             display: flex;
@@ -669,18 +879,75 @@
             .pricing-card.featured:hover {
                 transform: translateY(-10px);
             }
+            
+            nav ul {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .mobile-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 80%;
+                height: 100vh;
+                background: var(--dark);
+                z-index: 1001;
+                transition: var(--transition);
+                padding: 2rem;
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            }
+            
+            .mobile-menu.active {
+                right: 0;
+            }
+            
+            .mobile-menu ul {
+                list-style: none;
+                margin-top: 3rem;
+            }
+            
+            .mobile-menu li {
+                margin-bottom: 1.5rem;
+            }
+            
+            .mobile-menu a {
+                color: white;
+                text-decoration: none;
+                font-size: 1.2rem;
+                display: block;
+                padding: 0.5rem 0;
+            }
+            
+            .close-menu {
+                position: absolute;
+                top: 1rem;
+                left: 1rem;
+                background: none;
+                border: none;
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+            
+            .tutorial-step {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .step-image {
+                width: 100%;
+                max-width: 400px;
+            }
         }
         
         @media (max-width: 768px) {
             .header-content {
-                flex-direction: column;
+                flex-direction: row;
                 gap: 1.5rem;
-            }
-            
-            nav ul {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 1rem;
             }
             
             .hero {
@@ -695,21 +962,24 @@
                 font-size: 1.1rem;
             }
             
-            .dashboard-container {
-                flex-direction: column;
-                gap: 2rem;
-            }
-            
             .section-title h2 {
                 font-size: 2.2rem;
             }
             
-            .features-grid, .pricing-grid, .testimonials-grid {
+            .features-grid, .pricing-grid, .testimonials-grid, .gallery-grid {
                 grid-template-columns: 1fr;
             }
             
             .stats-container {
                 grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .tutorial-cta {
+                padding: 2rem 1.5rem;
+            }
+            
+            .tutorial-cta h3 {
+                font-size: 1.7rem;
             }
         }
         
@@ -735,6 +1005,25 @@
             .feature-card, .pricing-card {
                 padding: 2rem 1.5rem;
             }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .gallery-filters {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .tutorial-step {
+                padding: 2rem 1.5rem;
+            }
+            
+            .step-number {
+                width: 50px;
+                height: 50px;
+                font-size: 1.3rem;
+            }
         }
     </style>
 </head>
@@ -753,20 +1042,40 @@
                 <nav>
                     <ul>
                         <li><a href="#">صفحه اصلی</a></li>
-                        <li><a href="#">امکانات</a></li>
-                        <li><a href="#">نمونه کارها</a></li>
-                        <li><a href="#">قیمت ها</a></li>
-                        <li><a href="#">تماس با ما</a></li>
+                        <li><a href="#features">امکانات</a></li>
+                        <li><a href="#tutorial">آموزش</a></li>
+                        <li><a href="#gallery">گالری</a></li>
+                        <li><a href="#pricing">قیمت ها</a></li>
+                        <li><a href="#contact">تماس با ما</a></li>
                     </ul>
                 </nav>
                 
                 <div class="user-actions">
-                    <button class="btn btn-outline">ورود</button>
-                    <button class="btn btn-primary">ثبت نام</button>
+                    <button class="btn btn-outline" id="loginBtn">ورود</button>
+                    <button class="btn btn-primary" id="signupBtn">ثبت نام</button>
                 </div>
+                
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
             </div>
         </div>
     </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="close-menu" id="closeMenu">
+            <i class="fas fa-times"></i>
+        </button>
+        <ul>
+            <li><a href="#">صفحه اصلی</a></li>
+            <li><a href="#features">امکانات</a></li>
+            <li><a href="#tutorial">آموزش</a></li>
+            <li><a href="#gallery">گالری</a></li>
+            <li><a href="#pricing">قیمت ها</a></li>
+            <li><a href="#contact">تماس با ما</a></li>
+        </ul>
+    </div>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -774,11 +1083,11 @@
             <h1>سیستم مدیریت جامع فروشگاه شما</h1>
             <p>با Silent تمامی عملیات فروشگاه خود را به ساده ترین شکل مدیریت کنید. ثبت کالاها، پیگیری درآمد و هزینه ها، گزارشگیری هوشمند و بسیاری امکانات دیگر در یک پنل کاربری زیبا و کاربرپسند.</p>
             <div class="hero-buttons">
-                <button class="btn btn-primary" style="font-size: 1.1rem; padding: 0.8rem 2rem;">
+                <button class="btn btn-primary" id="heroSignupBtn" style="font-size: 1.1rem; padding: 0.8rem 2rem;">
                     <i class="fas fa-rocket"></i>
                     شروع کنید
                 </button>
-                <button class="btn btn-outline" style="font-size: 1.1rem; padding: 0.8rem 2rem;">
+                <button class="btn btn-outline" id="demoBtn" style="font-size: 1.1rem; padding: 0.8rem 2rem;">
                     <i class="fas fa-play-circle"></i>
                     مشاهده دمو
                 </button>
@@ -786,8 +1095,77 @@
         </div>
     </section>
 
+    <!-- Tutorial Section -->
+    <section class="tutorial" id="tutorial">
+        <div class="container">
+            <div class="section-title">
+                <h2>آموزش استفاده از Silent</h2>
+                <p>در ۴ مرحله ساده، فروشگاه خود را با Silent راه اندازی کنید</p>
+            </div>
+            
+            <div class="tutorial-steps">
+                <div class="tutorial-step">
+                    <div class="step-number">۱</div>
+                    <div class="step-content">
+                        <h3>ثبت نام در سیستم</h3>
+                        <p>با کلیک بر روی دکمه ثبت نام، فرم مربوطه را پر کنید و حساب کاربری خود را ایجاد نمایید. این فرآیند تنها ۲ دقیقه زمان می‌برد.</p>
+                        <button class="btn btn-primary tutorial-signup-btn">
+                            <i class="fas fa-user-plus"></i>
+                            ثبت نام کنید
+                        </button>
+                    </div>
+                    <div class="step-image">
+                        <img src="https://images.unsplash.com/photo-1558655146-9f40138edfeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1064&q=80" alt="ثبت نام در سیستم">
+                    </div>
+                </div>
+                
+                <div class="tutorial-step">
+                    <div class="step-number">۲</div>
+                    <div class="step-content">
+                        <h3>پیکربندی فروشگاه</h3>
+                        <p>پس از ثبت نام، اطلاعات فروشگاه خود شامل نام، آدرس، لوگو و اطلاعات تماس را وارد کنید تا پنل مدیریت شما آماده شود.</p>
+                    </div>
+                    <div class="step-image">
+                        <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1064&q=80" alt="پیکربندی فروشگاه">
+                    </div>
+                </div>
+                
+                <div class="tutorial-step">
+                    <div class="step-number">۳</div>
+                    <div class="step-content">
+                        <h3>افزودن محصولات</h3>
+                        <p>محصولات خود را به همراه تصاویر، قیمت، موجودی و توضیحات به سیستم اضافه کنید. می‌توانید محصولات را در دسته‌بندی‌های مختلف سازماندهی کنید.</p>
+                    </div>
+                    <div class="step-image">
+                        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="افزودن محصولات">
+                    </div>
+                </div>
+                
+                <div class="tutorial-step">
+                    <div class="step-number">۴</div>
+                    <div class="step-content">
+                        <h3>شروع فروش و مدیریت</h3>
+                        <p>اکنون آماده اید! اولین فروش خود را ثبت کنید، موجودی را مدیریت نمایید و گزارش‌های مالی خود را مشاهده کنید.</p>
+                    </div>
+                    <div class="step-image">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="شروع فروش و مدیریت">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tutorial-cta">
+                <h3>آماده شروع هستید؟</h3>
+                <p>همین حالا ثبت نام کنید و در کمتر از ۱۰ دقیقه فروشگاه خود را راه اندازی نمایید. هیچ کارت اعتباری نیاز نیست و می‌توانید به صورت رایگان ۱۴ روز از تمامی امکانات استفاده کنید.</p>
+                <button class="btn btn-primary" id="tutorialSignupBtn" style="font-size: 1.2rem; padding: 1rem 2.5rem;">
+                    <i class="fas fa-rocket"></i>
+                    شروع دوره آزمایشی رایگان
+                </button>
+            </div>
+        </div>
+    </section>
+
     <!-- Features Section -->
-    <section class="features">
+    <section class="features" id="features">
         <div class="container">
             <div class="section-title">
                 <h2>امکانات جامع Silent</h2>
@@ -846,16 +1224,83 @@
         </div>
     </section>
 
+    <!-- Gallery Section -->
+    <section class="gallery" id="gallery">
+        <div class="container">
+            <div class="section-title">
+                <h2>گالری نمونه کارها</h2>
+                <p>نمایشی از رابط کاربری زیبا و امکانات متنوع Silent</p>
+            </div>
+            
+            <div class="gallery-filters">
+                <button class="filter-btn active" data-filter="all">همه</button>
+                <button class="filter-btn" data-filter="dashboard">داشبورد</button>
+                <button class="filter-btn" data-filter="products">محصولات</button>
+                <button class="filter-btn" data-filter="reports">گزارشات</button>
+            </div>
+            
+            <div class="gallery-grid">
+                <div class="gallery-item" data-category="dashboard">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="داشبورد مدیریت">
+                    <div class="gallery-overlay">
+                        <h3>داشبورد مدیریت</h3>
+                        <p>نمای کلی از عملکرد فروشگاه</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-category="products">
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1115&q=80" alt="مدیریت محصولات">
+                    <div class="gallery-overlay">
+                        <h3>مدیریت محصولات</h3>
+                        <p>ثبت و ویرایش اطلاعات کالاها</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-category="reports">
+                    <img src="https://images.unsplash.com/photo-1553028826-f4804a6dba3b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="گزارشات مالی">
+                    <div class="gallery-overlay">
+                        <h3>گزارشات مالی</h3>
+                        <p>تحلیل و بررسی عملکرد مالی</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-category="dashboard">
+                    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="آمار فروش">
+                    <div class="gallery-overlay">
+                        <h3>آمار فروش</h3>
+                        <p>نمایش گرافیکی عملکرد فروش</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-category="products">
+                    <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="مدیریت موجودی">
+                    <div class="gallery-overlay">
+                        <h3>مدیریت موجودی</h3>
+                        <p>پیگیری موجودی کالاها به صورت لحظه ای</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-category="reports">
+                    <img src="https://images.unsplash.com/photo-1543286386-713bdd548da4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="گزارشات مشتریان">
+                    <div class="gallery-overlay">
+                        <h3>گزارشات مشتریان</h3>
+                        <p>تحلیل رفتار و خرید مشتریان</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Statistics Section -->
     <section class="statistics">
         <div class="container">
             <div class="stats-container">
                 <div class="stat-item">
-                    <span class="stat-number" data-count="1500">0</span>
+                    <span class="stat-number" data-count="1250">0</span>
                     <span class="stat-text">فروشگاه فعال</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-number" data-count="50000">0</span>
+                    <span class="stat-number" data-count="48700">0</span>
                     <span class="stat-text">محصول مدیریت شده</span>
                 </div>
                 <div class="stat-item">
@@ -865,44 +1310,6 @@
                 <div class="stat-item">
                     <span class="stat-number" data-count="24">0</span>
                     <span class="stat-text">پشتیبانی 24/7</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Dashboard Preview -->
-    <section class="dashboard-preview">
-        <div class="container">
-            <div class="dashboard-container">
-                <div class="dashboard-content">
-                    <h2 style="font-size: 2.5rem; margin-bottom: 1.5rem; color: var(--primary);">پنل مدیریتی زیبا و کاربرپسند</h2>
-                    <p style="margin-bottom: 1.5rem; color: var(--gray); line-height: 1.8;">پنل مدیریت Silent با طراحی مدرن و رنگبندی زیبا، تجربهای لذتبخش از مدیریت فروشگاه را برای شما فراهم میکند. تمامی اطلاعات مهم در یک نگاه قابل دسترسی است.</p>
-                    <ul style="list-style: none; margin-bottom: 2.5rem;">
-                        <li style="padding: 0.7rem 0; display: flex; align-items: center;">
-                            <i class="fas fa-check-circle" style="color: var(--success); margin-left: 0.7rem; font-size: 1.2rem;"></i>
-                            طراحی ریسپانسیو و سازگار با تمام دستگاهها
-                        </li>
-                        <li style="padding: 0.7rem 0; display: flex; align-items: center;">
-                            <i class="fas fa-check-circle" style="color: var(--success); margin-left: 0.7rem; font-size: 1.2rem;"></i>
-                            رابط کاربری ساده و قابل درک برای همه
-                        </li>
-                        <li style="padding: 0.7rem 0; display: flex; align-items: center;">
-                            <i class="fas fa-check-circle" style="color: var(--success); margin-left: 0.7rem; font-size: 1.2rem;"></i>
-                            رنگبندی زیبا و متناسب با برند شما
-                        </li>
-                    </ul>
-                    <button class="btn btn-primary">
-                        <i class="fas fa-external-link-alt"></i>
-                        مشاهده دمو
-                    </button>
-                </div>
-                
-                <div class="dashboard-image">
-                    <div style="text-align: center; position: relative; z-index: 2;">
-                        <i class="fas fa-desktop" style="font-size: 5rem; margin-bottom: 1.5rem;"></i>
-                        <p style="font-size: 1.8rem; font-weight: 600;">پنل مدیریت Silent</p>
-                        <p>برای تایید ثبت نام خود به واتساپ مدیریت در تماس باشید</p>
-                    </div>
                 </div>
             </div>
         </div>
@@ -960,7 +1367,7 @@
     </section>
 
     <!-- Pricing Section -->
-    <section class="pricing">
+    <section class="pricing" id="pricing">
         <div class="container">
             <div class="section-title">
                 <h2>پلن های قیمت گذاری</h2>
@@ -981,7 +1388,7 @@
                         <li><i class="fas fa-check"></i> فضای ذخیرهسازی 1GB</li>
                         <li><i class="fas fa-times" style="color: var(--accent);"></i> اپلیکیشن موبایل</li>
                     </ul>
-                    <button class="btn btn-outline" style="color: var(--dark); border-color: var(--dark); width: 100%;">شروع کنید</button>
+                    <button class="btn btn-outline" style="color: var(--dark); border-color: var(--dark); width: 100%;" id="basicPlanBtn">شروع کنید</button>
                 </div>
                 
                 <div class="pricing-card featured">
@@ -998,7 +1405,7 @@
                         <li><i class="fas fa-check"></i> فضای ذخیرهسازی 10GB</li>
                         <li><i class="fas fa-check"></i> اپلیکیشن موبایل</li>
                     </ul>
-                    <button class="btn btn-primary" style="width: 100%;">انتخاب پلن</button>
+                    <button class="btn btn-primary" style="width: 100%;" id="proPlanBtn">انتخاب پلن</button>
                 </div>
                 
                 <div class="pricing-card">
@@ -1014,7 +1421,7 @@
                         <li><i class="fas fa-check"></i> فضای ذخیرهسازی نامحدود</li>
                         <li><i class="fas fa-check"></i> اپلیکیشن سفارشی</li>
                     </ul>
-                    <button class="btn btn-outline" style="color: var(--dark); border-color: var(--dark); width: 100%;">تماس با ما</button>
+                    <button class="btn btn-outline" style="color: var(--dark); border-color: var(--dark); width: 100%;" id="enterprisePlanBtn">تماس با ما</button>
                 </div>
             </div>
         </div>
@@ -1025,7 +1432,7 @@
         <div class="container">
             <h2>آماده اید فروشگاه خود را متحول کنید؟</h2>
             <p>همین امروز Silent را امتحان کنید و تفاوت را در مدیریت کسب و کار خود احساس کنید</p>
-            <button class="btn btn-primary" style="font-size: 1.2rem; padding: 1rem 2.5rem;">
+            <button class="btn btn-primary" id="ctaSignupBtn" style="font-size: 1.2rem; padding: 1rem 2.5rem;">
                 <i class="fas fa-rocket"></i>
                 شروع دوره آزمایشی رایگان
             </button>
@@ -1033,7 +1440,7 @@
     </section>
 
     <!-- Footer -->
-    <footer>
+    <footer id="contact">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-column">
@@ -1052,10 +1459,11 @@
                     <h3>لینک های مفید</h3>
                     <ul>
                         <li><a href="#"><i class="fas fa-chevron-left"></i> صفحه اصلی</a></li>
-                        <li><a href="https://silent.kesug.com/?i=2"><i class="fas fa-chevron-left"></i> امکانات</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-left"></i> نمونه کارها</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-left"></i> قیمت ها</a></li>
-                        <li><a href="https://silent.kesug.com/?i=2"><i class="fas fa-chevron-left"></i> وبلاگ</a></li>
+                        <li><a href="#features"><i class="fas fa-chevron-left"></i> امکانات</a></li>
+                        <li><a href="#tutorial"><i class="fas fa-chevron-left"></i> آموزش</a></li>
+                        <li><a href="#gallery"><i class="fas fa-chevron-left"></i> گالری</a></li>
+                        <li><a href="#pricing"><i class="fas fa-chevron-left"></i> قیمت ها</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> وبلاگ</a></li>
                     </ul>
                 </div>
                 
@@ -1065,7 +1473,7 @@
                         <li><a href="https://t.me/kapisa_2"><i class="fas fa-chevron-left"></i> مرکز راهنمایی</a></li>
                         <li><a href="https://t.me/kapisa_2"><i class="fas fa-chevron-left"></i> تماس با پشتیبانی</a></li>
                         <li><a href="https://wa.me/93796304080"><i class="fas fa-chevron-left"></i> سوالات متداول</a></li>
-                        <li><a href="https://silent.kesug.com/?i=2"><i class="fas fa-chevron-left"></i> مقالات آموزشی</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> مقالات آموزشی</a></li>
                     </ul>
                 </div>
                 
@@ -1078,7 +1486,7 @@
                         </li>
                         <li style="display: flex; align-items: center; margin-bottom: 1.2rem;">
                             <i class="fas fa-phone" style="margin-left: 0.7rem; color: var(--accent);"></i>
-                            0770777097
+                            ۰۷۷۰۷۷۷۰۹۷
                         </li>
                         <li style="display: flex; align-items: center;">
                             <i class="fas fa-envelope" style="margin-left: 0.7rem; color: var(--accent);"></i>
@@ -1089,7 +1497,7 @@
             </div>
             
             <div class="copyright">
-                <p>تمامی حقوق برای Silent محفوظ است © ۲۰۲۳</p>
+                <p>تمامی حقوق برای Silent محفوظ است © ۱۴۰۲</p>
             </div>
         </div>
     </footer>
@@ -1139,7 +1547,7 @@
         }, observerOptions);
         
         // Observe elements for animation
-        document.querySelectorAll('.feature-card, .pricing-card, .testimonial-card, .stat-number').forEach(element => {
+        document.querySelectorAll('.feature-card, .pricing-card, .testimonial-card, .gallery-item, .stat-number, .tutorial-step').forEach(element => {
             element.style.opacity = '0';
             element.style.transform = 'translateY(20px)';
             element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
@@ -1190,51 +1598,93 @@
                 header.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
             }
         });
-                // کدهای جاوااسکریپت قبلی در اینجا قرار دارند
-        // ...
         
-        // اضافه کردن رویداد کلیک برای دکمههای ثبت نام و ورود
-        document.addEventListener('DOMContentLoaded', function() {
-            // دکمه ثبت نام در هدر
-            const signupBtnHeader = document.querySelector('.user-actions .btn-primary');
-            if(signupBtnHeader) {
-                signupBtnHeader.addEventListener('click', function() {
-                    window.location.href = 'https://story-lovat-one.vercel.app/';
+        // Gallery filtering
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all buttons
+                filterBtns.forEach(b => b.classList.remove('active'));
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                const filter = this.getAttribute('data-filter');
+                
+                galleryItems.forEach(item => {
+                    if (filter === 'all' || item.getAttribute('data-category') === filter) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
                 });
-            }
-            
-            // دکمه ورود در هدر
-            const loginBtnHeader = document.querySelector('.user-actions .btn-outline');
-            if(loginBtnHeader) {
-                loginBtnHeader.addEventListener('click', function() {
-                    window.location.href = 'https://story-lovat-one.vercel.app/';
-                });
-            }
-            
-            // دکمه شروع کنید در بخش Hero
-            const startBtnHero = document.querySelector('.hero-buttons .btn-primary');
-            if(startBtnHero) {
-                startBtnHero.addEventListener('click', function() {
-                    window.location.href = 'https://story-lovat-one.vercel.app/';
-                });
-            }
-            
-            // دکمه شروع دوره آزمایشی رایگان در بخش CTA
-            const trialBtnCTA = document.querySelector('.cta .btn-primary');
-            if(trialBtnCTA) {
-                trialBtnCTA.addEventListener('click', function() {
-                    window.location.href = 'https://story-lovat-one.vercel.app/';
-                });
-            }
-            
-            // دکمه انتخاب پلن در بخش قیمتگذاری
-            const selectPlanBtn = document.querySelector('.pricing-card.featured .btn-primary');
-            if(selectPlanBtn) {
-                selectPlanBtn.addEventListener('click', function() {
-                    window.location.href = 'https://story-lovat-one.vercel.app/';
-                });
-            }
+            });
+        });
+        
+        // Mobile menu functionality
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const closeMenu = document.getElementById('closeMenu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.add('active');
+        });
+        
+        closeMenu.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+        });
+        
+        // Close mobile menu when clicking on a link
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+            });
+        });
+        
+        // Button click handlers
+        document.getElementById('loginBtn').addEventListener('click', function() {
+            window.location.href = 'https://story-lovat-one.vercel.app/';
+        });
+        
+        document.getElementById('signupBtn').addEventListener('click', function() {
+            window.location.href = 'https://story-lovat-one.vercel.app/';
+        });
+        
+        document.getElementById('heroSignupBtn').addEventListener('click', function() {
+            window.location.href = 'https://story-lovat-one.vercel.app/';
+        });
+        
+        document.getElementById('demoBtn').addEventListener('click', function() {
+            window.location.href = 'https://story-lovat-one.vercel.app/';
+        });
+        
+        document.getElementById('basicPlanBtn').addEventListener('click', function() {
+            window.location.href = 'https://story-lovat-one.vercel.app/';
+        });
+        
+        document.getElementById('proPlanBtn').addEventListener('click', function() {
+            window.location.href = 'https://story-lovat-one.vercel.app/';
+        });
+        
+        document.getElementById('enterprisePlanBtn').addEventListener('click', function() {
+            window.location.href = 'https://story-lovat-one.vercel.app/';
+        });
+        
+        document.getElementById('ctaSignupBtn').addEventListener('click', function() {
+            window.location.href = 'https://story-lovat-one.vercel.app/';
+        });
+        
+        // Tutorial section buttons
+        document.querySelectorAll('.tutorial-signup-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                window.location.href = 'https://story-lovat-one.vercel.app/';
+            });
+        });
+        
+        document.getElementById('tutorialSignupBtn').addEventListener('click', function() {
+            window.location.href = 'https://story-lovat-one.vercel.app/';
         });
     </script>
 </body>
-</html>
+    </html>
